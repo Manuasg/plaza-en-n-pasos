@@ -1,0 +1,279 @@
+D b=AL n=2
+¿Cuáles son las soluciones reales de $x^4 - 5x^2 + 4 = 0$?
+* $\pm1$ y $\pm2$
+- $1$ y $4$
+- $\pm1$ y $\pm4$
+- $\pm2$ solamente
+E Bicuadrada: $t = x^2$, $t^2 - 5t + 4 = 0$, $t = 1$ o $t = 4$.
+
+D b=AL n=3
+¿Para qué valor de $k$ es incompatible el sistema $x + y = 1$, $2x + ky = 3$?
+* $k = 2$
+- $k = 3$
+- $k = 0$
+- $k = -2$
+E $\det = k - 2 = 0$. Con $k=2$ queda $2x+2y = 3$ frente a $2x+2y=2$.
+
+D b=AL n=4
+¿Qué dimensión tiene el núcleo de $f(x,y,z) = (x+y,\ y+z,\ x+2y+z)$?
+* 1
+- 0
+- 2
+- 3
+E La tercera fila de la matriz es la suma de las otras dos: rango 2, núcleo $3-2 = 1$.
+
+D b=NU n=5
+¿Cuál es el resto de dividir $3^{100}$ entre 7?
+* 4
+- 1
+- 3
+- 2
+E $3^6\equiv1 \pmod 7$ (Fermat) y $100 = 96 + 4$; $3^4 = 81 \equiv 4$.
+
+D b=NU n=6
+¿En cuántos ceros termina $100!$?
+* 24
+- 20
+- 25
+- 30
+E Fórmula de Legendre: $\lfloor 100/5\rfloor + \lfloor 100/25\rfloor = 20 + 4$.
+
+D b=NU n=7
+¿Para cuántos $n\in\{1,2,\dots,100\}$ es $n^2+n+1$ divisible por 3?
+* 34
+- 33
+- 0
+- 67
+E Módulo 3: si $n\equiv0$ da 1, si $n\equiv1$ da 0, si $n\equiv2$ da 1. Hay que contar $n\equiv1$: $1, 4, \dots, 100$.
+
+D b=AN n=1
+¿Cuál es el vértice de la parábola $y = x^2 - 6x + 5$?
+* $(3, -4)$
+- $(-3, 32)$
+- $(3, 4)$
+- $(6, 5)$
+E $x_v = 6/2 = 3$ e $y(3) = 9 - 18 + 5 = -4$.
+
+D b=AN n=2
+¿Cuánto vale $\displaystyle\lim_{x\to\infty}\frac{3x^2+1}{2x^2-x}$?
+* $\dfrac32$
+- $0$
+- $\infty$
+- $3$
+E Mismo grado: cociente de los coeficientes principales.
+
+D b=AN n=3
+¿Cuánto vale $\displaystyle\int_0^{\pi/2}\sin x\cos x\,dx$?
+* $\dfrac12$
+- $1$
+- $0$
+- $\dfrac{\pi}{4}$
+E Primitiva $\tfrac{\sin^2 x}{2}$, que vale $\tfrac12$ en $\pi/2$ y $0$ en $0$.
+
+D b=AN n=4
+¿Cuánto vale $\displaystyle\lim_{x\to0}\frac{1-\cos x}{x^2}$?
+* $\dfrac12$
+- $1$
+- $0$
+- $2$
+E $\cos x = 1 - \tfrac{x^2}{2} + o(x^2)$.
+
+D b=AN n=5
+¿Cuánto vale $\displaystyle\int_0^{\infty} e^{-x^2}\,dx$?
+* $\dfrac{\sqrt\pi}{2}$
+- $\sqrt\pi$
+- $1$
+- Diverge
+E Integral de Gauss: su cuadrado se calcula en polares y da $\pi/4$.
+
+D b=AN n=6
+¿Cuánto vale $\displaystyle\lim_{n\to\infty}\sum_{k=1}^{n}\frac{1}{n+k}$?
+* $\ln 2$
+- $1$
+- $\infty$
+- $\dfrac12$
+E Suma de Riemann: $\frac1n\sum\frac{1}{1+k/n} \to \int_0^1\frac{dx}{1+x}$.
+
+D b=AN n=7
+Si $f$ es continua y $f(x) = 1 + 2\displaystyle\int_0^x f(t)\,dt$ para todo $x$, entonces $f(x) =$
+* $e^{2x}$
+- $e^{x}$
+- $1 + 2x$
+- $2e^{x} - 1$
+E Derivando: $f' = 2f$ con $f(0) = 1$.
+
+D b=GE n=1
+¿Cuál es el área de un hexágono regular de lado 2?
+* $6\sqrt3$
+- $12$
+- $3\sqrt3$
+- $6$
+E Son 6 triángulos equiláteros de área $\tfrac{\sqrt3}{4}\cdot 4 = \sqrt3$.
+
+D b=GE n=2
+¿Cuál es la distancia del punto $(1,2)$ a la recta $3x + 4y - 1 = 0$?
+* 2
+- 10
+- $\dfrac{11}{5}$
+- 1
+E $\frac{|3 + 8 - 1|}{5} = 2$.
+
+D b=GE n=3
+¿Qué ángulo forman los planos $x + y = 0$ e $y + z = 0$?
+* $60^\circ$
+- $45^\circ$
+- $90^\circ$
+- $30^\circ$
+E Normales $(1,1,0)$ y $(0,1,1)$: $\cos\alpha = \frac{1}{\sqrt2\sqrt2} = \frac12$.
+
+D b=GE n=4
+¿Cuál es la excentricidad de la hipérbola $x^2 - y^2 = 1$?
+* $\sqrt2$
+- $1$
+- $2$
+- $\dfrac{\sqrt2}{2}$
+E $a = b = 1$, $c = \sqrt2$, $e = c/a$.
+
+D b=GE n=5
+¿Cuál es la potencia del origen respecto de la circunferencia $x^2+y^2-4x+2y-4 = 0$?
+* $-4$
+- $4$
+- $9$
+- $0$
+E Se sustituye el punto en la ecuación normalizada: $-4 < 0$, el origen es interior.
+
+D b=GE n=6
+¿Cuánto mide el radio de la circunferencia inscrita en el triángulo de lados 13, 14 y 15?
+* 4
+- $\dfrac{65}{8}$
+- 6
+- 3
+E $r = S/s = 84/21$.
+
+D b=GE n=7
+¿Cuál es el lugar geométrico de los puntos $P$ del plano con $PA = 2\,PB$, siendo $A(0,0)$ y $B(3,0)$?
+* La circunferencia de centro $(4,0)$ y radio 2
+- La mediatriz de $AB$
+- La circunferencia de centro $(2,0)$ y radio 1
+- Una elipse de focos $A$ y $B$
+E $x^2+y^2 = 4\big((x-3)^2+y^2\big) \iff (x-4)^2 + y^2 = 4$ (circunferencia de Apolonio).
+
+D b=PR n=1
+Se lanzan dos dados. ¿Qué probabilidad hay de que la suma sea 7?
+* $\dfrac16$
+- $\dfrac{7}{36}$
+- $\dfrac{1}{12}$
+- $\dfrac{1}{11}$
+E 6 casos favorables de 36.
+
+D b=PR n=2
+Si $A$ y $B$ son independientes con $P(A) = 0{,}5$ y $P(B) = 0{,}3$, ¿cuánto vale $P(A\cup B)$?
+* $0{,}65$
+- $0{,}8$
+- $0{,}15$
+- $0{,}35$
+E $0{,}5 + 0{,}3 - 0{,}5\cdot0{,}3$.
+
+D b=PR n=3
+Si $X\sim B(4, \tfrac12)$, ¿cuánto vale $P(X = 2)$?
+* $\dfrac38$
+- $\dfrac12$
+- $\dfrac14$
+- $\dfrac{1}{16}$
+E $\binom42\frac{1}{16} = \frac{6}{16}$.
+
+D b=PR n=4
+¿Cuál es la varianza de una uniforme en $[0,2]$?
+* $\dfrac13$
+- $\dfrac23$
+- $1$
+- $\dfrac{1}{12}$
+E $\frac{(b-a)^2}{12} = \frac{4}{12}$.
+
+D b=PR n=5
+Se lanza una moneda equilibrada hasta que sale cara. ¿Cuál es el número esperado de lanzamientos?
+* 2
+- $\dfrac32$
+- 1
+- $\infty$
+E Geométrica de parámetro $p = \tfrac12$: $E = 1/p$.
+
+D b=PR n=6
+Si $X$ e $Y$ son uniformes en $[0,1]$ e independientes, ¿cuánto vale $P\left(|X - Y| < \tfrac12\right)$?
+* $\dfrac34$
+- $\dfrac12$
+- $\dfrac14$
+- $\dfrac78$
+E Se quitan del cuadrado dos triángulos de área $\tfrac18$ cada uno.
+
+D b=PR n=7
+Se lanza un dado hasta que sale un 6. ¿Qué probabilidad hay de que el número de lanzamientos sea par?
+* $\dfrac{5}{11}$
+- $\dfrac12$
+- $\dfrac{6}{11}$
+- $\dfrac{5}{36}$
+E $\sum_{j\ge1} \left(\tfrac56\right)^{2j-1}\tfrac16 = \frac{5/36}{1 - 25/36} = \frac{5}{11}$.
+
+D b=NU n=1
+¿Cuál es el mínimo común múltiplo de 12 y 18?
+* 36
+- 6
+- 72
+- 216
+E $12 = 2^2\cdot 3$ y $18 = 2\cdot3^2$: se toman los exponentes máximos, $2^2\cdot3^2$.
+
+D b=NU n=2
+¿Cuántos divisores positivos tiene 72?
+* 12
+- 6
+- 8
+- 9
+E $72 = 2^3\cdot3^2$, así que tiene $(3+1)(2+1) = 12$ divisores.
+
+D b=NU n=3
+¿Cuántas diagonales tiene un decágono convexo?
+* 35
+- 45
+- 40
+- 20
+E $\binom{10}{2} - 10 = 45 - 10 = 35$.
+
+D b=NU n=4
+¿Cuál es la solución general en $\mathbb{Z}$ de $2x + 3y = 5$?
+* $x = 1 + 3k,\ y = 1 - 2k$
+- $x = 1 + 2k,\ y = 1 - 3k$
+- $x = 1 - 3k,\ y = 1 - 2k$
+- No tiene solución entera
+E Solución particular $(1,1)$; la general suma $\frac{b}{d}k$ a $x$ y resta $\frac{a}{d}k$ a $y$.
+
+D b=AL n=1
+¿Qué valor de $x$ cumple $3(x-2) = x + 4$?
+* 5
+- 3
+- 1
+- 2
+E $3x - 6 = x + 4 \Rightarrow 2x = 10$.
+
+D b=AL n=5
+Si $x_1, x_2, x_3$ son las raíces de $x^3 - 2x + 5 = 0$, ¿cuánto vale $x_1^2 + x_2^2 + x_3^2$?
+* 4
+- $-4$
+- 0
+- 25
+E $\sigma_1 = 0$ y $\sigma_2 = -2$, así que $\sum x_i^2 = \sigma_1^2 - 2\sigma_2 = 4$.
+
+D b=AL n=6
+Si $A$ es una matriz cuadrada invertible con $A^2 = A$, entonces…
+* $A$ es la identidad
+- $A$ es la matriz nula
+- $A$ es simétrica pero no necesariamente la identidad
+- $\det A = -1$
+E Multiplicando $A^2 = A$ por $A^{-1}$ se obtiene $A = I$.
+
+D b=AL n=7
+¿Cuál es el valor mínimo de $x^2 + y^2 + z^2$ si $x + y + z = 3$?
+* 3
+- 1
+- 9
+- 0
+E $x^2+y^2+z^2 \ge \frac{(x+y+z)^2}{3} = 3$, con igualdad en $x = y = z = 1$ (es la idea del problema 1 de Murcia 2021).

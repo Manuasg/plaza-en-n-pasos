@@ -1,0 +1,283 @@
+# Rúbricas específicas por problema. Formato: R id / dim puntos | indicador
+# Dimensiones: pla (1), con (1), tec (1), des (3), res (2). Rigor y presentación usan indicadores comunes.
+R m21p1
+pla 1 | Traduce la segunda condición: $\binom{a_i}{2} = \frac{a_i(a_i-1)}{2}$, y obtiene $\sum a_i^2 = 4n$
+con 1 | Usa que una suma de cuadrados de reales es nula solo si cada sumando es nulo
+tec 1 | Construye la expresión $\sum (a_i-2)^2$ y la desarrolla
+des 2 | Sustituye las dos condiciones: $\sum (a_i-2)^2 = 4n - 8n + 4n = 0$
+des 1 | Deduce $a_i - 2 = 0$ para cada $i$ citando la propiedad de la suma de cuadrados
+res 2 | Conclusión explícita $a_i = 2$ para todo $i$ y comprobación de que cumple ambas condiciones
+R m21p2
+pla 1 | Busca una estructura en las columnas antes de desarrollar (no expande el determinante 4×4)
+con 1 | Usa que un determinante es nulo si sus columnas son linealmente dependientes
+tec 1 | Saca factores comunes de filas o columnas y nombra la propiedad usada
+des 2 | Expresa la cuarta columna como combinación lineal de las otras (o reduce a una matriz con columnas dependientes)
+des 1 | Justifica que la combinación vale para todo $x$, sin casos olvidados
+res 2 | Concluye $D = 0$ para todo $x\in\mathbb{R}$
+R m21p3
+pla 1 | Separa los casos $x>0$, $x<0$ y el punto $x=0$
+con 1 | Justifica que $f$ es continua (y después derivable) en $x\ne0$ antes de derivar, usando el teorema fundamental del cálculo
+tec 1 | Deriva la identidad y obtiene $x f'(x) = 0$
+des 2 | Deduce que $f$ es constante en $(0,+\infty)$ y en $(-\infty,0)$, con constantes posiblemente distintas
+des 1 | Discute el valor en $0$: no interviene en la condición y puede ser arbitrario
+res 2 | Da la familia completa ($a$, $b$, $c$ arbitrarios) y comprueba que cumple la condición
+R m21p4
+pla 1 | Llama $m$ a la pendiente de un par de lados y escribe las cuatro rectas en función de $m$
+con 1 | Usa que en un cuadrado los lados opuestos son paralelos y la distancia entre ellos es el lado
+tec 1 | Aplica la fórmula de la distancia entre rectas paralelas
+des 2 | Iguala las dos distancias entre lados opuestos y resuelve la ecuación con valor absoluto
+des 1 | Estudia los dos signos del valor absoluto, sin perder ninguna solución
+res 2 | Da los dos lados posibles, $\sqrt{10}$ y $7\sqrt2$, y comprueba al menos uno
+R m21p5
+pla 1 | Declara la interpretación del enunciado («el doble que las dos anteriores») y define los sucesos
+con 1 | Enuncia el teorema de la probabilidad total y el de Bayes
+tec 1 | Calcula las proporciones de producción de cada fábrica a partir del enunciado
+des 2 | Aplica la probabilidad total con los porcentajes ponderados por la producción
+des 1 | Aplica Bayes con el resultado del apartado anterior
+res 2 | Resultados numéricos correctos para la interpretación declarada
+R m25p1
+pla 1 | Identifica que la suma tiene $n$ sumandos y que no es una suma de Riemann directa
+con 1 | Enuncia el criterio del sándwich (sucesiones encajadas)
+tec 1 | Acota cada sumando entre $\frac{1}{\sqrt{n^2+n}}$ y $\frac{1}{\sqrt{n^2+1}}$
+des 2 | Multiplica las cotas por el número de sumandos y calcula los límites de ambas cotas
+des 1 | Justifica las desigualdades (monotonía de la raíz y de $1/x$)
+res 2 | Concluye que el límite vale 1
+R m25p2
+pla 1 | Interpreta $x_1, x_2, x_3$ con las funciones simétricas $\sigma_1, \sigma_2, \sigma_3$ (Cardano-Vieta)
+con 1 | Usa las relaciones de Cardano-Vieta entre raíces y coeficientes
+tec 1 | Transforma la segunda ecuación en $\sigma_2 = \sigma_3/a$ (con raíces no nulas)
+des 2 | Llega a $(x_1+x_2)(x_2+x_3)(x_3+x_1) = 0$ o a que $a$ es raíz del polinomio
+des 1 | Deduce que una incógnita vale $a$ y las otras dos son opuestas
+res 2 | Da todas las soluciones $(a, b, -b)$ con $b\ne0$ y sus permutaciones, y las comprueba
+R m25p3
+pla 1 | Detecta que el integrando no está acotado en 0 y plantea la integral impropia como límite
+con 1 | Usa la definición de integral impropia de segunda especie
+tec 1 | Integra por partes con $u = \ln x$, $dv = x^{-1/2}dx$
+des 2 | Obtiene la primitiva $2\sqrt x\ln x - 4\sqrt x$ sin errores
+des 1 | Resuelve el límite $\sqrt\varepsilon\ln\varepsilon\to0$ (L'Hôpital) justificándolo
+res 2 | Concluye que la integral converge y vale $-4$, coherente con el signo del integrando
+R m25p4
+pla 1 | Distingue el caso general del caso particular que pide el enunciado
+con 1 | Usa que los puntos equidistantes de dos puntos forman su plano mediador
+tec 1 | Calcula correctamente los planos mediadores (punto medio y vector normal)
+des 2 | Caso general: estudia puntos alineados (lugar vacío) y no alineados (recta perpendicular por el circuncentro)
+des 1 | Caso particular: interseca los dos planos mediadores y comprueba que no están alineados
+res 2 | Da la recta $(8,0,8)+t(1,1,0)$ y la comprueba con un punto
+R m25p5
+pla 1 | Escribe la definición completa de independencia de tres sucesos (cuatro igualdades)
+con 1 | Usa las leyes de De Morgan y la fórmula de inclusión-exclusión
+tec 1 | Expresa $P(\overline A\cap\overline B)$ como $1-P(A\cup B)$ y desarrolla
+des 2 | Prueba las tres igualdades dos a dos
+des 1 | Prueba la igualdad triple con inclusión-exclusión para tres sucesos
+res 2 | Concluye la independencia de los complementarios habiendo comprobado las cuatro igualdades
+R m02p1
+pla 1 | Reformula: existe $x>0$ con $a^x = x \iff \ln a = \frac{\ln x}{x}$
+con 1 | Usa el teorema de los valores intermedios para el recorrido de una función continua
+tec 1 | Estudia $h(x) = \frac{\ln x}{x}$ con su derivada: máximo en $x=e$
+des 2 | Calcula los límites en $0^+$ y en $+\infty$ y obtiene el recorrido $(-\infty, \frac1e]$
+des 1 | No olvida las bases $0<a<1$ ni excluye correctamente $a=1$
+res 2 | Concluye $a\in(0,1)\cup(1, e^{1/e}]$ y da un ejemplo comprobado
+R m02p2
+pla 1 | Plantea $A+B+C=\pi$ con tangentes enteras positivas (ángulos agudos)
+con 1 | Usa la fórmula de la tangente de la suma
+tec 1 | Deduce la identidad $\tan A+\tan B+\tan C = \tan A\tan B\tan C$
+des 2 | Ordena $x\le y\le z$ y acota $xy\le3$
+des 1 | Estudia todos los casos posibles y descarta los imposibles
+res 2 | Concluye que las tangentes son 1, 2 y 3 y comprueba que el triángulo existe
+R m02p3
+pla 1 | Define sucesos adecuados («los otros dos están en el arco que empieza en $P_i$»)
+con 1 | Usa la aditividad para sucesos incompatibles y la independencia de los puntos
+tec 1 | Calcula $P(E_i) = (1/4)^2$ por probabilidad geométrica
+des 2 | Justifica que el suceso pedido es la unión de los $E_i$
+des 1 | Justifica que los $E_i$ son incompatibles (salvo probabilidad nula)
+res 2 | Concluye $P = 3/16$
+R m04p1
+pla 1 | Identifica la distribución exponencial y los sistemas en paralelo (máximo) y en serie (mínimo)
+con 1 | Usa las condiciones de densidad y la fórmula $E[X] = \int_0^\infty P(X>t)\,dt$ o la densidad del máximo
+tec 1 | Calcula integrales con exponenciales por partes sin errores
+des 1 | a) Obtiene $\beta<0$, $\alpha=-\beta$, media $1/\lambda$ y varianza $1/\lambda^2$
+des 1 | b) Calcula $E[\max] = 5{,}5$ meses y la media binomial de arranques con éxito
+des 1 | c) y d) Obtiene el mínimo exponencial de parámetro 1 y plantea la binomial $B(10, e^{-1})$
+res 2 | Los cuatro resultados son correctos y quedan indicados sin calculadora
+R m04p2a
+pla 1 | Trata la posición general del rectángulo (no supone un lado paralelo al eje)
+con 1 | Usa $V = \iint 2\pi r\,dA$ o enuncia el teorema de Pappus-Guldin
+tec 1 | Justifica que la media de la distancia al eje sobre el rectángulo es la distancia del centro
+des 2 | Desarrolla el cálculo hasta $V = 2\pi d\,ab$
+des 1 | Comprueba el caso particular del lado paralelo (cilindro hueco)
+res 2 | Concluye $V = 2\pi d ab$ indicando qué es $d$
+R m04p2b
+pla 1 | Escribe $F = G\circ u$ con $G(y) = \int_0^y f$ y $u(x) = x^2-3x+2$
+con 1 | Cita el teorema fundamental del cálculo (con $f$ continua)
+tec 1 | Aplica la regla de la cadena: $F'(x) = f(u(x))(2x-3)$
+des 2 | Deduce que el signo de $f(y)$ es el de $y$ y estudia el signo de $(x-1)(x-2)(2x-3)$
+des 1 | Da los intervalos de crecimiento y decrecimiento completos
+res 2 | Mínimos locales en 1 y 2, máximo local en 3/2, con el signo de $F(3/2)$ justificado
+R m04p2c
+pla 1 | Justifica con Fermat que el cociente es entero y escribe $p-1 = 2k$
+con 1 | Usa el pequeño teorema de Fermat y el lema de que dos coprimos cuyo producto es $p\cdot m^2$ reparten el cuadrado
+tec 1 | Factoriza $2^{2k}-1 = (2^k-1)(2^k+1)$ y prueba que los factores son coprimos
+des 2 | Caso $2^k+1 = b^2$: llega a $p = 7$
+des 1 | Caso $2^k-1 = a^2$: usa los restos módulo 4 y llega a $p = 3$
+res 2 | Concluye $p\in\{3, 7\}$ y comprueba ambos
+R m06c1
+pla 1 | Divide $[0,1]$ en $n$ intervalos iguales
+con 1 | Enuncia el teorema del valor medio y comprueba sus hipótesis en cada intervalo
+tec 1 | Usa una suma telescópica
+des 2 | Aplica el teorema en cada intervalo y suma
+des 1 | Justifica que los $q_i$ son distintos y están ordenados
+res 2 | Concluye $\sum f'(q_i) = n$
+R m06c3
+pla 1 | Plantea la propiedad $(a-b)\mid P(a)-P(b)$ para polinomios de coeficientes enteros
+con 1 | Demuestra o cita correctamente esa propiedad
+tec 1 | Usa los divisores de un primo: $\pm1, \pm p$
+des 1 | a) Caracteriza las raíces enteras: $r\in\{m\pm1, m\pm p\}$ con $P(r) = \mp p$
+des 2 | b) Intersecta los candidatos de $(r-4)\mid11$ y $(r-8)\mid7$ y obtiene 15
+res 2 | Concluye $x = 15$ y justifica que el grado es irrelevante (con un ejemplo de existencia)
+R m06c4
+pla 1 | Plantea la regla de Laplace con $n^3$ y $n^4$ casos equiprobables
+con 1 | Cuenta los pares con suma $s$: $N(s)$
+tec 1 | Usa las fórmulas de $\sum k$ y $\sum k^2$
+des 1 | a) Casos favorables $\frac{n(n-1)}2$
+des 2 | b) Casos favorables $\sum N(s)^2 = \frac{n(2n^2+1)}3$
+res 2 | $P_a = \frac{n-1}{2n^2}$ y $P_b = \frac{2n^2+1}{3n^3}$, comprobadas con $n = 2$
+R g21p1a
+pla 1 | Traduce $\binom{a+1}{2} = \frac{a(a+1)}{2}$ (no $\frac{a(a-1)}2$)
+con 1 | Usa que una suma de cuadrados nula exige cada sumando nulo
+tec 1 | Construye $\sum (a_i-1)^2$
+des 2 | Obtiene $\sum a_i^2 = n$ y $\sum (a_i-1)^2 = 0$
+des 1 | Deduce $a_i = 1$ para cada $i$
+res 2 | Concluye $a_i = 1$ y lo comprueba
+R g21p1b
+pla 1 | Plantea las dos condiciones como sistema y busca una suma de cuadrados
+con 1 | Usa la desigualdad entre media cuadrática y aritmética (o Cauchy-Schwarz)
+tec 1 | Desarrolla $\sum (x-1)^2$
+des 2 | Primer caso: obtiene $(x-1)^2+(y-1)^2+(z-1)^2 = 0$
+des 1 | Segundo caso: prueba que no hay solución real
+res 2 | $x=y=z=1$ en el primer caso y ninguna solución real en el segundo
+R g21p2a
+pla 1 | Saca los factores $x-1$, $x-2$, $x-3$ de las filas antes de desarrollar
+con 1 | Usa la linealidad del determinante por filas
+tec 1 | Reconoce el determinante resultante (Vandermonde o reducción por filas)
+des 2 | Calcula el determinante reducido sin errores
+des 1 | Justifica qué pasa si $x\in\{1,2,3\}$ (fila nula)
+res 2 | Concluye $D = 2(x-1)(x-2)(x-3)$ y lo comprueba con un valor
+R g21p2b
+pla 1 | Descompone la cuarta columna en suma de dos columnas
+con 1 | Usa la linealidad por columnas y el determinante de Vandermonde
+tec 1 | Saca $abcd$ multiplicando cada fila por la variable correspondiente
+des 2 | Llega a dos determinantes iguales con signo opuesto
+des 1 | Trata el caso en que alguna variable es 0
+res 2 | Concluye que el determinante es 0 para todos $a, b, c, d$
+R g21p3a
+pla 1 | Separa $x>0$ y $x<0$
+con 1 | Usa el teorema fundamental del cálculo con $f$ continua
+tec 1 | Deriva y resuelve $x f'(x) = f(x)$ o usa $(f(x)/x)' = 0$
+des 2 | Obtiene $f(x) = \lambda x$ en $x>0$ y $f(x) = \mu x$ en $x<0$
+des 1 | Comprueba que todas son continuas en 0 y cumplen la ecuación
+res 2 | Da la familia con dos constantes independientes
+R g21p3b
+pla 1 | Observa que el segundo miembro es derivable y deriva la identidad
+con 1 | Usa el teorema fundamental del cálculo
+tec 1 | Obtiene $x f'(x) = 2x$
+des 2 | Deduce $f(x) = 2x + c$ en cada semirrecta
+des 1 | Usa la continuidad en 0 para unificar las constantes
+res 2 | Concluye $f(x) = 2x + c$ y lo comprueba
+R g21p4a
+pla 1 | Escribe las cuatro rectas en función de la pendiente $m$
+con 1 | Usa la distancia entre rectas paralelas como lado del cuadrado
+tec 1 | Resuelve la ecuación con valor absoluto
+des 2 | Iguala las distancias entre los dos pares de lados opuestos
+des 1 | Estudia los dos signos
+res 2 | Da los dos lados: 5 y $\frac{5\sqrt{29}}{29}$
+R g21p4b
+pla 1 | Identifica la dirección de los lados y la de la perpendicular
+con 1 | Usa la distancia de un punto a una recta como lado
+tec 1 | Calcula la recta perpendicular por el origen y la paralela a distancia el lado
+des 2 | Calcula el lado y el área
+des 1 | Encuentra los dos cuadrados posibles
+res 2 | Área $\frac{121}5$ y cuarto lado $2x-y = \pm11$
+R g21p5a
+pla 1 | Calcula las proporciones de producción (1/8, 3/8, 4/8)
+con 1 | Enuncia la probabilidad total y Bayes
+tec 1 | Construye el diagrama de árbol o la tabla
+des 2 | Aplica la probabilidad total ponderando por la producción
+des 1 | Aplica Bayes
+res 2 | $0{,}01875$ y $\frac13$
+R g21p5b
+pla 1 | Define la variable «número de defectuosas en dos piezas» con reemplazamiento
+con 1 | Usa la independencia de las dos extracciones
+tec 1 | Usa la binomial $B(2, p)$
+des 2 | Calcula la probabilidad de exactamente una defectuosa con el factor 2
+des 1 | Calcula la procedencia con Bayes
+res 2 | Resultados numéricos correctos
+R g25p1a
+pla 1 | Cuenta los $n$ sumandos y busca cotas
+con 1 | Enuncia el criterio del sándwich
+tec 1 | Acota cada sumando por arriba y por abajo
+des 2 | Multiplica por $n$ y calcula los límites de las cotas
+des 1 | Justifica las desigualdades
+res 2 | Límite igual a 1
+R g25p1b
+pla 1 | Detecta que acotar también el numerador no sirve
+con 1 | Usa el criterio del sándwich
+tec 1 | Acota solo el denominador y suma $\sum k = \frac{n(n+1)}2$
+des 2 | Obtiene cotas con el mismo límite
+des 1 | Calcula ambos límites
+res 2 | Límite igual a $\frac12$
+R g25p2a
+pla 1 | Usa las funciones simétricas $\sigma_1, \sigma_2, \sigma_3$
+con 1 | Cardano-Vieta: las incógnitas son raíces de $t^3-\sigma_1t^2+\sigma_2t-\sigma_3$
+tec 1 | Obtiene $\sigma_2$ de la segunda ecuación
+des 2 | Escribe y factoriza el polinomio $t^3-2t^2-4t+8$
+des 1 | Obtiene las raíces 2, 2, −2
+res 2 | Da las tres ternas ordenadas y las comprueba
+R g25p2b
+pla 1 | Quita denominadores: $(x+y+z)(xy+yz+zx) = xyz$
+con 1 | Conoce la identidad $(x+y)(y+z)(z+x) = \sigma_1\sigma_2-\sigma_3$
+tec 1 | Desarrolla la identidad sin saltos
+des 2 | Llega a $(x+y)(y+z)(z+x) = 0$
+des 1 | Deduce que una de las variables vale $a$
+res 2 | Conclusión demostrada para todos los casos
+R g25p3a
+pla 1 | Plantea la integral impropia como límite
+con 1 | Usa la definición de integral impropia
+tec 1 | Integra por partes con la primitiva $\frac32x^{2/3}$
+des 2 | Obtiene la primitiva y evalúa
+des 1 | Resuelve el límite $\varepsilon^{2/3}\ln\varepsilon\to0$
+res 2 | Valor $-\frac94$
+R g25p3b
+pla 1 | Distingue los casos $\alpha>-1$ y $\alpha\le-1$
+con 1 | Usa los criterios de convergencia de integrales impropias
+tec 1 | Integra por partes con parámetro
+des 2 | Caso $\alpha>-1$: calcula el valor
+des 1 | Caso $\alpha\le-1$: prueba la divergencia
+res 2 | Converge si y solo si $\alpha>-1$, con $I = -\frac1{(\alpha+1)^2}$
+R g25p4a
+pla 1 | Plantea la igualdad de distancias a los dos planos
+con 1 | Usa la fórmula de la distancia de un punto a un plano
+tec 1 | Resuelve la igualdad de valores absolutos con los dos signos
+des 2 | Obtiene los dos planos bisectores
+des 1 | Comprueba que son perpendiculares y contienen a la recta intersección
+res 2 | Da los planos $y = -1$ y $x+z = 2$
+R g25p4b
+pla 1 | Escribe las dos condiciones del lugar
+con 1 | Plano mediador y distancia a un plano
+tec 1 | Calcula el plano mediador de $AB$
+des 2 | Interseca con $z = 1$ y con $z = -1$
+des 1 | Describe el lugar como dos rectas paralelas
+res 2 | Da las dos rectas
+R g25p5a
+pla 1 | Escribe lo que hay que probar: $P(A\cap(B\cup C)) = P(A)P(B\cup C)$
+con 1 | Usa la independencia mutua (incluida la igualdad triple)
+tec 1 | Usa la distributiva y la inclusión-exclusión
+des 2 | Desarrolla $P((A\cap B)\cup(A\cap C))$
+des 1 | Factoriza $P(A)$
+res 2 | Conclusión demostrada
+R g25p5b
+pla 1 | Define los sucesos de acierto y usa sus complementarios
+con 1 | Usa la independencia de los tres tiradores
+tec 1 | Calcula «al menos uno» por el contrario
+des 2 | Calcula «exactamente uno» como suma de tres sucesos incompatibles
+des 1 | Comprueba que las probabilidades son coherentes (menores que 1)
+res 2 | $\frac34$ y $\frac{11}{24}$

@@ -1,0 +1,844 @@
+P id=s01 n=1 b=NU t=7 sb=NU8 | Subir y bajar un 20 %
+Un abrigo cuesta 150 €. En noviembre sube un 20 % y en enero rebajan su nuevo precio un 20 %. ¿Cuánto cuesta en enero? ¿Qué porcentaje ha variado respecto al precio inicial?
+> Subir un 20 % es multiplicar por 1,2. ¿Por cuánto se multiplica al bajar un 20 %?
+> Multiplica los dos índices de variación y compara con 1.
+---
+Subir un 20 % es multiplicar por $1{,}2$ y bajar un 20 % es multiplicar por $0{,}8$:
+$$150 \cdot 1{,}2 \cdot 0{,}8 = 150 \cdot 0{,}96 = 144 \text{ €}.$$
+El índice de variación total es $0{,}96$: el precio ha **bajado un 4 %**. Los porcentajes sucesivos no se suman, se multiplican sus índices.
+!! Sumar los porcentajes (+20 − 20 = 0) y concluir que el precio no cambia.
+===
+P id=s02 n=1 b=AN t=21 sb=AN3 | Lanzamiento vertical
+La altura de una pelota, en metros, viene dada por $h(t) = 20t - 5t^2$, con $t$ en segundos. ¿Cuál es la altura máxima y en qué instante se alcanza? ¿Cuándo vuelve al suelo?
+> La gráfica es una parábola con las ramas hacia abajo: el máximo está en el vértice.
+> Para saber cuándo cae, resuelve $h(t) = 0$ sacando factor común.
+---
+Es una parábola con las ramas hacia abajo. El vértice está en $t_v = -\dfrac{b}{2a} = -\dfrac{20}{-10} = 2$ s, con $h(2) = 40 - 20 = 20$ m.
+
+Vuelve al suelo cuando $h(t) = 0$: $5t(4 - t) = 0$, es decir, en $t = 4$ s. Por la simetría de la parábola, tarda lo mismo en subir que en bajar.
+!! Dar como altura máxima el instante $t = 2$ en lugar de $h(2)$.
+===
+P id=s03 n=1 b=GE t=35 sb=GE6 | Cono
+Un cono tiene 3 cm de radio y 5 cm de generatriz. Calcula su altura, su área lateral y su volumen.
+> Radio, altura y generatriz forman un triángulo rectángulo.
+> Usa $A_L = \pi r g$ y $V = \frac{1}{3}\pi r^2 h$.
+---
+Por Pitágoras, $h = \sqrt{5^2 - 3^2} = 4$ cm.
+
+Área lateral: $A_L = \pi r g = 15\pi \approx 47{,}1$ cm².
+
+Volumen: $V = \dfrac{\pi r^2 h}{3} = \dfrac{\pi\cdot 9\cdot 4}{3} = 12\pi \approx 37{,}7$ cm³.
+!! Usar la generatriz en lugar de la altura en la fórmula del volumen.
+===
+P id=s04 n=1 b=PR t=63 sb=PR1 | Dos dados
+Se lanzan dos dados. Calcula la probabilidad de que la suma sea 7 y la de que salga al menos un 6.
+> Hay 36 resultados igual de probables. Cuenta los pares que suman 7.
+> Para «al menos un 6» es más fácil calcular el suceso contrario.
+---
+Hay 36 casos equiprobables.
+
+Suma 7: $(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)$, es decir, $\dfrac{6}{36} = \dfrac16$.
+
+Al menos un 6: por el suceso contrario, $1 - \left(\dfrac56\right)^2 = 1 - \dfrac{25}{36} = \dfrac{11}{36}$.
+!! Contar «al menos un 6» como $\frac16 + \frac16$ olvidando que el (6,6) se cuenta dos veces.
+===
+P id=s05 n=2 b=AL t=22 sb=AL2 | Ecuación logarítmica
+Resuelve $\log_2(x+1) + \log_2(x-1) = 3$.
+> Primero el dominio: los dos argumentos deben ser positivos.
+> La suma de logaritmos es el logaritmo del producto.
+---
+Hace falta $x > 1$. Por las propiedades de los logaritmos, $\log_2\big((x+1)(x-1)\big) = 3$, así que $x^2 - 1 = 8$ y $x = \pm 3$.
+
+Se descarta $x = -3$ porque no está en el dominio. **Solución: $x = 3$.**
+!! No descartar $x = -3$, que no está en el dominio.
+===
+P id=s06 n=2 b=AN t=25 sb=AN1 | Límite 0/0
+Calcula $\displaystyle\lim_{x\to 2}\frac{x^2-4}{x^2-3x+2}$ y estudia la continuidad de la función en $x = 2$.
+> Sustituir da 0/0: factoriza numerador y denominador.
+> Simplifica el factor $(x-2)$ y vuelve a sustituir.
+---
+Factorizamos: $\dfrac{(x-2)(x+2)}{(x-2)(x-1)} = \dfrac{x+2}{x-1}$ para $x \ne 2$. El límite vale $\dfrac{4}{1} = 4$.
+
+La función no está definida en $x=2$ (ni en $x=1$). En $x=2$ tiene una **discontinuidad evitable**: se arreglaría definiendo $f(2) = 4$. En $x = 1$ hay una asíntota vertical.
+!! Concluir que el límite no existe porque al sustituir sale 0/0.
+===
+P id=s07 n=2 b=GE t=51 sb=GE2 | Recta perpendicular y distancia
+Halla la recta que pasa por $A(1,2)$ y es perpendicular a $r: 3x - 4y + 1 = 0$, y calcula la distancia de $A$ a $r$.
+> El vector normal de $r$ sirve como vector director de la perpendicular.
+> Para la distancia usa $\frac{|Ax_0 + By_0 + C|}{\sqrt{A^2+B^2}}$.
+---
+El vector normal de $r$, $(3,-4)$, es un vector director de la perpendicular. Una recta con ese director tiene normal $(4,3)$: $4x + 3y + C = 0$. Al pasar por $A$, $C = -10$:
+$$s: 4x + 3y - 10 = 0.$$
+Distancia: $d(A,r) = \dfrac{|3 - 8 + 1|}{\sqrt{9+16}} = \dfrac{4}{5}$.
+!! Usar el vector director de $r$ en lugar del normal y obtener una paralela.
+===
+P id=s08 n=2 b=NU t=9 sb=NU8 | Raíces cuartas de −16
+Resuelve $z^4 = -16$ en $\mathbb{C}$ y calcula el área del polígono que forman sus afijos.
+> Escribe $-16$ en forma polar: módulo 16 y argumento $\pi$.
+> Las raíces cuartas tienen módulo $\sqrt[4]{16}$ y argumentos separados $\frac{2\pi}{4}$.
+---
+$-16 = 16_{\pi}$. Las raíces tienen módulo $2$ y argumentos $\dfrac{\pi + 2k\pi}{4}$: $\tfrac\pi4, \tfrac{3\pi}4, \tfrac{5\pi}4, \tfrac{7\pi}4$.
+$$z = \pm\sqrt2 \pm \sqrt2\, i.$$
+Los afijos forman un cuadrado inscrito en la circunferencia de radio 2: su diagonal mide 4, el lado $2\sqrt2$ y el área $8$.
+!! Quedarse solo con las raíces reales y decir que no hay solución.
+===
+P id=s09 n=2 b=PR t=64 sb=PR2 | Dos urnas y un dado
+La urna A tiene 3 bolas blancas y 2 negras; la urna B, 1 blanca y 4 negras. Se lanza un dado: si sale 1 o 2 se extrae una bola de A, y en otro caso, de B. Si la bola es blanca, ¿qué probabilidad hay de que proceda de A?
+> Haz un diagrama de árbol: primero el dado, después la urna.
+> Probabilidad total para $P(\text{blanca})$ y después el teorema de Bayes.
+---
+$P(A) = \tfrac13$, $P(B) = \tfrac23$, $P(\text{bl}\mid A) = \tfrac35$, $P(\text{bl}\mid B) = \tfrac15$.
+
+Probabilidad total: $P(\text{bl}) = \tfrac13\cdot\tfrac35 + \tfrac23\cdot\tfrac15 = \tfrac15 + \tfrac{2}{15} = \tfrac13$.
+
+Bayes:
+$$P(A\mid \text{bl}) = \frac{1/5}{1/3} = \frac35.$$
+!! Responder $P(\text{blanca}\mid A)$ en lugar de $P(A\mid\text{blanca})$.
+===
+P id=s10 n=3 b=AL t=16 sb=AL4 | Sistema con parámetro
+Discute y resuelve según los valores de $a$:
+$$\begin{cases} ax + y + z = 1 \\ x + ay + z = a \\ x + y + az = a^2 \end{cases}$$
+> Calcula el determinante de la matriz de coeficientes y factorízalo.
+> Estudia aparte los valores que anulan el determinante con el teorema de Rouché-Frobenius.
+---
+$\det A = a^3 - 3a + 2 = (a-1)^2(a+2)$.
+
+**Si $a \ne 1$ y $a \ne -2$:** $\operatorname{rg}A = \operatorname{rg}A^* = 3$, sistema compatible determinado. Por Cramer:
+$$x = -\frac{a+1}{a+2},\quad y = \frac{1}{a+2},\quad z = \frac{(a+1)^2}{a+2}.$$
+
+**Si $a = 1$:** las tres ecuaciones son $x+y+z=1$. Compatible indeterminado con 2 parámetros: $(1-\lambda-\mu,\ \lambda,\ \mu)$.
+
+**Si $a = -2$:** $\operatorname{rg}A = 2$ (las filas de $A$ suman cero). En la ampliada, la suma de términos independientes es $1 - 2 + 4 = 3 \ne 0$, así que $\operatorname{rg}A^* = 3$: incompatible.
+
+Comprobación con $a = 0$: $x = -\tfrac12$, $y = \tfrac12$, $z = \tfrac12$ cumple $y+z=1$, $x+z=0$, $x+y=0$. ✓
+!! Olvidar estudiar la matriz ampliada en el caso $a = -2$.
+===
+P id=s11 n=3 b=AL t=17 sb=AL6 | Mesas y sillas
+Un taller fabrica mesas (40 € de beneficio, 2 h de carpintería y 1 h de pintura) y sillas (25 € de beneficio, 1 h de carpintería y 1 h de pintura). Dispone de 100 h de carpintería y 80 h de pintura. ¿Cuántas unidades de cada tipo maximizan el beneficio?
+> Plantea la función objetivo y las dos restricciones de horas.
+> Dibuja la región factible y evalúa la función en cada vértice.
+---
+Maximizar $z = 40x + 25y$ sujeto a $2x + y \le 100$, $x + y \le 80$, $x,y\ge0$.
+
+Vértices de la región factible: $(0,0)$, $(50,0)$, $(20,60)$ (corte de $2x+y=100$ con $x+y=80$) y $(0,80)$.
+
+Valores: $z(50,0) = 2000$, $z(20,60) = 800 + 1500 = 2300$, $z(0,80) = 2000$.
+
+Óptimo: **20 mesas y 60 sillas**, con 2300 € de beneficio.
+!! No calcular el vértice de corte de las dos rectas, que es justo el óptimo.
+===
+P id=s12 n=3 b=AN t=30 sb=AN5 | Área entre una parábola y una recta
+Calcula el área del recinto limitado por $y = x^2 - 2x$ e $y = x$.
+> Iguala las dos expresiones para hallar los puntos de corte.
+> Comprueba qué función queda por encima en el intervalo antes de restar.
+---
+Puntos de corte: $x^2 - 2x = x \Rightarrow x(x-3) = 0$, es decir, $x=0$ y $x=3$.
+
+En $(0,3)$ la recta queda por encima (por ejemplo, en $x=1$: $1 > -1$).
+$$A = \int_0^3 \big(x - (x^2-2x)\big)\,dx = \int_0^3 (3x - x^2)\,dx = \left[\frac{3x^2}{2} - \frac{x^3}{3}\right]_0^3 = \frac{27}{2} - 9 = \frac92.$$
+!! Restar al revés y obtener un área negativa sin tomar valor absoluto.
+===
+P id=s13 n=3 b=AN t=28 sb=AN3 | Estudio de $xe^{-x}$
+Estudia la monotonía, los extremos y las asíntotas de $f(x) = x e^{-x}$.
+> Deriva con la regla del producto y saca $e^{-x}$ factor común.
+> Para las asíntotas, estudia los límites en $+\infty$ y en $-\infty$ por separado.
+---
+Dominio $\mathbb{R}$. $f'(x) = e^{-x} - xe^{-x} = (1-x)e^{-x}$, que se anula en $x=1$.
+
+$f$ crece en $(-\infty, 1)$ y decrece en $(1,\infty)$: tiene un **máximo absoluto** en $\left(1, \tfrac1e\right)$.
+
+No tiene asíntotas verticales (es continua). Cuando $x\to+\infty$, $\dfrac{x}{e^x}\to 0$ (por L'Hôpital o porque la exponencial crece más deprisa): asíntota horizontal $y = 0$. Cuando $x\to-\infty$, $f(x)\to-\infty$ y $f(x)/x = e^{-x}\to\infty$: no hay asíntota oblicua, sino una rama parabólica.
+!! Afirmar que hay asíntota horizontal también en $-\infty$.
+===
+P id=s14 n=3 b=GE t=53 sb=GE3 | Distancia entre rectas que se cruzan
+Halla la distancia entre $r: \dfrac{x-1}{2} = \dfrac{y}{1} = \dfrac{z+1}{-2}$ y $s: (x,y,z) = (0,1,1) + \lambda(1,0,1)$.
+> Toma un punto y un vector director de cada recta.
+> La distancia es el volumen del paralelepípedo dividido por el área de la base: producto mixto entre módulo del producto vectorial.
+---
+$P = (1,0,-1)$, $\vec u = (2,1,-2)$; $Q = (0,1,1)$, $\vec v = (1,0,1)$.
+
+$\vec u\times\vec v = (1,\,-4,\,-1)$, con módulo $\sqrt{18} = 3\sqrt2$. No son paralelas.
+
+$\vec{PQ} = (-1,1,2)$ y $[\vec{PQ},\vec u,\vec v] = \vec{PQ}\cdot(\vec u\times\vec v) = -1 - 4 - 2 = -7 \ne 0$: se cruzan.
+$$d(r,s) = \frac{|[\vec{PQ},\vec u,\vec v]|}{|\vec u\times\vec v|} = \frac{7}{3\sqrt2} = \frac{7\sqrt2}{6}.$$
+!! Dividir por el módulo de un solo vector director en lugar de $|\vec u \times \vec v|$.
+===
+P id=s15 n=3 b=GE t=54 sb=GE4 | Lugar geométrico: elipse
+Halla el lugar geométrico de los puntos cuya suma de distancias a $F(3,0)$ y $F'(-3,0)$ es 10. Calcula la excentricidad y las directrices.
+> La suma de distancias a dos puntos fijos es constante: ¿qué cónica es?
+> Con $2a = 10$ y $c = 3$, calcula $b$ con $a^2 = b^2 + c^2$.
+---
+Es una elipse con $2a = 10$ y $c = 3$, así que $a=5$ y $b^2 = a^2 - c^2 = 16$:
+$$\frac{x^2}{25} + \frac{y^2}{16} = 1.$$
+También se obtiene desarrollando $\sqrt{(x-3)^2+y^2} + \sqrt{(x+3)^2+y^2} = 10$ (aislar una raíz y elevar al cuadrado dos veces).
+
+Excentricidad $e = c/a = 3/5$. Directrices $x = \pm a/e = \pm\dfrac{25}{3}$.
+!! Confundir la relación de la elipse con la de la hipérbola: $c^2 = a^2 + b^2$.
+===
+P id=s16 n=3 b=PR t=66 sb=PR5 | Examen tipo test al azar
+Un examen tiene 100 preguntas con 4 opciones cada una. Un alumno responde todas al azar. Aproximando por la normal, ¿qué probabilidad tiene de acertar al menos 35?
+> Identifica la binomial y calcula su media y su desviación típica.
+> Aproxima por la normal y no olvides la corrección de continuidad.
+---
+$X\sim B(100, \tfrac14)$: $\mu = 25$ y $\sigma = \sqrt{100\cdot\tfrac14\cdot\tfrac34} = \sqrt{18{,}75} \approx 4{,}33$.
+
+Como $np = 25 > 5$ y $nq = 75 > 5$, aproximamos por $N(25;\ 4{,}33)$ con corrección de continuidad:
+$$P(X\ge35) \approx P(Y \ge 34{,}5) = P\!\left(Z \ge \frac{9{,}5}{4{,}33}\right) = P(Z\ge 2{,}19) \approx 1 - 0{,}9857 = 0{,}0143.$$
+Aproximadamente un 1,4 %.
+!! Tipificar 35 en lugar de 34,5.
+===
+P id=s17 n=4 b=NU t=3 sb=NU6 | Caminos mínimos en una cuadrícula
+En una cuadrícula, ¿cuántos caminos de longitud mínima van de $(0,0)$ a $(6,4)$ moviéndose solo hacia la derecha o hacia arriba? ¿Cuántos de ellos **no** pasan por el punto $(3,2)$?
+> Cada camino es una palabra con 6 letras D y 4 letras A.
+> Los caminos que pasan por (3,2) son: caminos hasta (3,2) por caminos desde (3,2).
+---
+Cada camino mínimo es una palabra con 6 letras D y 4 letras A: hay $\binom{10}{4} = 210$ caminos.
+
+Los que pasan por $(3,2)$ se forman con un camino de $(0,0)$ a $(3,2)$ y otro de $(3,2)$ a $(6,4)$:
+$$\binom{5}{2}\cdot\binom{5}{2} = 10\cdot10 = 100.$$
+
+Por tanto, no pasan por $(3,2)$: $210 - 100 = 110$ caminos.
+!! Sumar en vez de multiplicar los dos tramos que pasan por (3,2).
+===
+P id=s18 n=4 b=AL t=18 sb=AL3 | Diagonalización y potencias
+Diagonaliza $A = \begin{pmatrix}2&1\\1&2\end{pmatrix}$ y calcula $A^n$.
+> Calcula los valores propios con $\det(A - \lambda I) = 0$.
+> Si $A = PDP^{-1}$, entonces $A^n = PD^nP^{-1}$.
+---
+$|A - \lambda I| = (2-\lambda)^2 - 1 = 0 \Rightarrow \lambda = 1,\ 3$.
+
+Vectores propios: para $\lambda=1$, $(1,-1)$; para $\lambda = 3$, $(1,1)$.
+
+$P = \begin{pmatrix}1&1\\-1&1\end{pmatrix}$, $D = \begin{pmatrix}1&0\\0&3\end{pmatrix}$ y $A = PDP^{-1}$. Por tanto
+$$A^n = PD^nP^{-1} = \frac12\begin{pmatrix} 3^n + 1 & 3^n - 1 \\ 3^n - 1 & 3^n + 1\end{pmatrix}.$$
+Comprobación con $n=1$: $\tfrac12\begin{pmatrix}4&2\\2&4\end{pmatrix} = A$. ✓
+!! Escribir $A^n = P^{-1}D^nP$ con las matrices en el orden equivocado.
+===
+P id=s19 n=4 b=AN t=28 sb=AN3 | Cilindro de volumen máximo
+De todos los cilindros inscritos en una esfera de radio $R$, halla las dimensiones del que tiene volumen máximo y ese volumen.
+> Relaciona el radio $r$ y la altura $h$ del cilindro con Pitágoras.
+> Escribe el volumen en función de una sola variable y deriva.
+---
+Sean $r$ el radio y $h$ la altura del cilindro. Por Pitágoras, $r^2 + \left(\tfrac h2\right)^2 = R^2$, así que
+$$V(h) = \pi r^2 h = \pi\left(R^2 h - \frac{h^3}{4}\right),\qquad 0 < h < 2R.$$
+$V'(h) = \pi\left(R^2 - \tfrac{3h^2}{4}\right) = 0 \Rightarrow h = \dfrac{2R}{\sqrt3}$.
+
+$V''(h) = -\tfrac{3\pi h}{2} < 0$: es un máximo.
+
+Entonces $r^2 = R^2 - \tfrac{R^2}{3} = \tfrac{2R^2}{3}$, es decir, $r = R\sqrt{2/3}$, y
+$$V_{\max} = \pi\cdot\frac{2R^2}{3}\cdot\frac{2R}{\sqrt3} = \frac{4\pi R^3}{3\sqrt3}.$$
+Es $1/\sqrt3 \approx 57{,}7\,\%$ del volumen de la esfera.
+!! No comprobar que el punto crítico es un máximo.
+===
+P id=s20 n=4 b=AN t=27 sb=AN4 | Límites con desarrollos de Taylor
+Calcula $\displaystyle\lim_{x\to0}\frac{\sin x - x}{x^3}$ y $\displaystyle\lim_{x\to0}\frac{e^x - 1 - x - \frac{x^2}{2}}{x^3}$.
+> Escribe el desarrollo de Taylor de $\sin x$ y de $e^x$ hasta orden 3.
+> Simplifica y fíjate en qué término sobrevive al dividir por $x^3$.
+---
+$\sin x = x - \dfrac{x^3}{6} + o(x^3)$, luego $\dfrac{\sin x - x}{x^3} = -\dfrac16 + o(1) \to -\dfrac16$.
+
+$e^x = 1 + x + \dfrac{x^2}{2} + \dfrac{x^3}{6} + o(x^3)$, luego el segundo límite vale $\dfrac16$.
+
+También puede hacerse aplicando L'Hôpital tres veces, pero con Taylor se ve el orden de la indeterminación de un vistazo.
+!! Cortar el desarrollo en orden 1 y obtener 0/0 otra vez.
+===
+P id=s21 n=4 b=GE t=54 sb=GE5 | Clasificar una cónica
+Clasifica la cónica $x^2 + 4xy + y^2 = 1$ y halla su ecuación reducida.
+> Escribe la matriz de la forma cuadrática y calcula su determinante.
+> Los valores propios dan la ecuación reducida tras el giro de ejes.
+---
+Matriz de la forma cuadrática: $M = \begin{pmatrix}1&2\\2&1\end{pmatrix}$, con $\det M = -3 < 0$: es de tipo **hiperbólico**.
+
+Valores propios: $(1-\lambda)^2 - 4 = 0 \Rightarrow \lambda = 3,\ -1$. Girando los ejes a las direcciones propias $\tfrac{1}{\sqrt2}(1,1)$ y $\tfrac{1}{\sqrt2}(1,-1)$, es decir, $45^\circ$:
+$$3X^2 - Y^2 = 1 \iff \frac{X^2}{1/3} - \frac{Y^2}{1} = 1.$$
+Es una hipérbola con $a = \tfrac{1}{\sqrt3}$, $b = 1$, $c = \sqrt{a^2+b^2} = \tfrac{2}{\sqrt3}$ y excentricidad $e = c/a = 2$.
+!! Clasificarla mirando solo los coeficientes de $x^2$ e $y^2$, sin tener en cuenta el término $xy$.
+===
+P id=s22 n=4 b=PR t=66 sb=PR5 | Variable continua
+La variable $X$ tiene densidad $f(x) = kx^2$ en $[0,3]$ y $0$ fuera de ese intervalo. Halla $k$, $E[X]$ y $P(X > 2)$.
+> La integral de la densidad en todo su soporte vale 1.
+> $E[X] = \int x f(x)\,dx$ y $P(X>2) = \int_2^3 f(x)\,dx$.
+---
+$\displaystyle\int_0^3 kx^2\,dx = 9k = 1 \Rightarrow k = \tfrac19$.
+
+$E[X] = \displaystyle\int_0^3 x\cdot\frac{x^2}{9}\,dx = \frac19\cdot\frac{81}{4} = \frac94$.
+
+$P(X>2) = \displaystyle\int_2^3 \frac{x^2}{9}\,dx = \frac{27 - 8}{27} = \frac{19}{27} \approx 0{,}70$.
+!! Olvidar que la densidad vale 0 fuera de $[0,3]$ e integrar en otro intervalo.
+===
+P id=s23 n=5 b=NU t=4 sb=NU3 | Divisibilidad de n⁵ − n
+Demuestra que $n^5 - n$ es divisible por 30 para todo $n \in \mathbb{Z}$.
+> Factoriza $n^5 - n$ al máximo.
+> Estudia por separado la divisibilidad entre 2, 3 y 5.
+---
+Factorizamos: $n^5 - n = n(n^4-1) = (n-1)\,n\,(n+1)\,(n^2+1)$.
+
+**Divisible por 2 y por 3.** $(n-1)n(n+1)$ es el producto de tres enteros consecutivos, así que entre ellos hay un múltiplo de 2 y uno de 3.
+
+**Divisible por 5.** Por el pequeño teorema de Fermat, $n^5 \equiv n \pmod 5$ para todo $n$. También se puede ver con restos: si $n \equiv 0, \pm1 \pmod 5$, lo divide $n$, $n-1$ o $n+1$; si $n\equiv \pm2$, entonces $n^2+1 \equiv 5 \equiv 0$.
+
+Como 2, 3 y 5 son primos entre sí dos a dos, $30 \mid n^5 - n$. $\blacksquare$
+!! Comprobarlo con algunos valores de $n$ y darlo por demostrado.
+===
+P id=s24 n=5 b=NU t=8 sb=NU7 | Recurrencia lineal de orden 2
+Resuelve la recurrencia $a_{n+2} = 5a_{n+1} - 6a_n$ con $a_0 = 1$, $a_1 = 4$ y calcula $a_{10}$.
+> Escribe la ecuación característica $r^2 = 5r - 6$.
+> La solución general es $A\cdot 2^n + B\cdot 3^n$; usa $a_0$ y $a_1$.
+---
+Ecuación característica: $r^2 - 5r + 6 = 0$, con raíces $r = 2$ y $r = 3$. La solución general es
+$$a_n = A\cdot 2^n + B\cdot 3^n.$$
+Condiciones iniciales: $A + B = 1$ y $2A + 3B = 4$, de donde $B = 2$ y $A = -1$:
+$$a_n = 2\cdot 3^n - 2^n.$$
+Comprobación: $a_2 = 5\cdot4 - 6\cdot1 = 14$ y $2\cdot9 - 4 = 14$. ✓
+
+$a_{10} = 2\cdot 59049 - 1024 = 117074$.
+!! Imponer las condiciones iniciales con $n = 1$ y $n = 2$ en lugar de $n = 0$ y $n = 1$.
+===
+P id=s25 n=5 b=AN t=26 sb=AN3 | Derivable pero no de clase C¹
+Sea $f(x) = x^2\sin\frac1x$ si $x\ne0$ y $f(0) = 0$. Estudia la continuidad y la derivabilidad de $f$ en $x=0$, y si $f'$ es continua en 0.
+> Acota $|x^2 \sin(1/x)|$ para la continuidad.
+> Calcula $f'(0)$ con la definición y $f'(x)$ para $x \ne 0$ por separado.
+---
+**Continuidad:** $|f(x)| \le x^2 \to 0$, así que $f$ es continua en 0.
+
+**Derivabilidad:**
+$$f'(0) = \lim_{h\to0}\frac{h^2\sin(1/h)}{h} = \lim_{h\to0} h\sin\frac1h = 0,$$
+por el criterio del sándwich.
+
+**Continuidad de $f'$:** para $x\ne0$, $f'(x) = 2x\sin\frac1x - \cos\frac1x$. El primer sumando tiende a 0, pero $\cos\frac1x$ no tiene límite cuando $x\to0$ (con $x_n = \frac{1}{2n\pi}$ vale 1 y con $x_n = \frac{1}{(2n+1)\pi}$ vale $-1$). Así que $f'$ no es continua en 0: $f$ es derivable pero no de clase $C^1$.
+!! Calcular $f'(0)$ como el límite de $f'(x)$, que no existe.
+===
+P id=s26 n=5 b=GE t=39 sb=GE1 | Triángulo a partir del baricentro
+Un triángulo tiene vértices $A(0,0)$ y $B(6,0)$, y su baricentro es $G(3,2)$. Halla el tercer vértice, la longitud de los lados y el área. ¿Qué tipo de triángulo es?
+> El baricentro es la media de los tres vértices.
+> Con el tercer vértice, calcula las tres distancias.
+---
+$G = \left(\dfrac{0+6+x}{3}, \dfrac{0+0+y}{3}\right) = (3,2)$, de donde $C = (3,6)$.
+
+Lados: $AB = 6$, $AC = \sqrt{9+36} = 3\sqrt5$ y $BC = \sqrt{9+36} = 3\sqrt5$. Es **isósceles**, con $C$ sobre la mediatriz $x = 3$ de $AB$.
+
+Área: $\dfrac{\text{base}\cdot\text{altura}}{2} = \dfrac{6\cdot 6}{2} = 18$.
+
+Como comprobación, el baricentro está sobre la altura desde $C$, a un tercio de su longitud desde la base: $6/3 = 2$. ✓
+!! Tomar el baricentro como el punto medio de un lado.
+===
+P id=s27 n=5 b=GE t=52 sb=GE1 | Medianas concurrentes
+Demuestra con vectores que las tres medianas de un triángulo se cortan en un punto que divide a cada una en razón $2:1$ desde el vértice.
+> Escribe el punto medio de $BC$ con vectores de posición.
+> Calcula el punto de la mediana a $\frac{2}{3}$ del vértice y fíjate en su simetría.
+---
+Sean $\vec a, \vec b, \vec c$ los vectores de posición de los vértices. El punto medio de $BC$ es $\tfrac{\vec b + \vec c}{2}$.
+
+El punto de la mediana desde $A$ que está a $\tfrac23$ del recorrido es
+$$\vec a + \tfrac23\left(\tfrac{\vec b+\vec c}{2} - \vec a\right) = \frac{\vec a + \vec b + \vec c}{3}.$$
+Esta expresión es simétrica en $\vec a, \vec b, \vec c$, así que el mismo punto $G$ está en las otras dos medianas, también a $\tfrac23$ de cada vértice. Por tanto las medianas concurren en $G$ y $AG : GM = 2 : 1$. $\blacksquare$
+!! Probarlo para una sola mediana y no justificar que el punto es común a las tres.
+===
+P id=s28 n=5 b=PR t=63 sb=PR1 | Cartas y sobres
+Se meten al azar 4 cartas en sus 4 sobres. ¿Qué probabilidad hay de que ninguna vaya a su sobre? ¿A qué valor tiende esa probabilidad con $n$ cartas cuando $n\to\infty$?
+> Cuenta las permutaciones con al menos un punto fijo por inclusión-exclusión.
+> La fórmula de los desarreglos es $D_n = n!\sum_{k=0}^n \frac{(-1)^k}{k!}$.
+---
+Por inclusión-exclusión, el número de desarreglos de $n$ elementos es
+$$D_n = n!\sum_{k=0}^{n}\frac{(-1)^k}{k!}.$$
+Para $n=4$: $D_4 = 24\left(1 - 1 + \tfrac12 - \tfrac16 + \tfrac1{24}\right) = 12 - 4 + 1 = 9$, así que $P = \dfrac{9}{24} = \dfrac38$.
+
+En general $P_n = \dfrac{D_n}{n!} = \displaystyle\sum_{k=0}^n \frac{(-1)^k}{k!} \to e^{-1} \approx 0{,}368$.
+!! Restar solo las permutaciones con exactamente un punto fijo.
+===
+P id=s29 n=6 b=NU t=8 sb=NU7 | Suma telescópica con factoriales
+Calcula $\displaystyle S_n = \sum_{k=1}^{n} k\cdot k!$ y demuestra el resultado.
+> Prueba a escribir $k\cdot k!$ como diferencia de dos factoriales.
+> $(k+1)! - k! = k!\,(k+1-1)$.
+---
+Observamos que $k\cdot k! = (k+1)! - k!$. La suma es telescópica:
+$$S_n = \sum_{k=1}^n \big((k+1)! - k!\big) = (n+1)! - 1.$$
+Comprobación: $S_3 = 1 + 4 + 18 = 23 = 4! - 1$. ✓
+
+También puede demostrarse por inducción: $S_{n+1} = (n+1)! - 1 + (n+1)(n+1)! = (n+2)(n+1)! - 1 = (n+2)! - 1$. $\blacksquare$
+!! No justificar la suma telescópica y dar el resultado a partir de unos casos.
+===
+P id=s30 n=6 b=AN t=29 sb=AN6 | Convergencia de una serie
+Estudia la convergencia de $\displaystyle\sum_{n=2}^{\infty} \frac{1}{n\ln n}$.
+> Usa el criterio de la integral: la función es positiva y decreciente.
+> Haz el cambio $u = \ln x$ para integrar $\frac{1}{x\ln x}$.
+---
+$f(x) = \dfrac{1}{x\ln x}$ es positiva, continua y decreciente en $[2,\infty)$, así que podemos aplicar el criterio de la integral:
+$$\int_2^{M} \frac{dx}{x\ln x} = \Big[\ln(\ln x)\Big]_2^M = \ln\ln M - \ln\ln 2 \xrightarrow[M\to\infty]{} \infty.$$
+La integral diverge, luego **la serie diverge**, aunque muy despacio. Es un buen ejemplo de que $\tfrac{1}{n\ln n}\to 0$ más deprisa que $\tfrac1n$ y aun así la serie no converge.
+!! Concluir que converge porque el término general tiende a 0.
+===
+P id=s31 n=6 b=GE t=39 sb=GE1 m=estilo | Triángulo 13–14–15
+En el triángulo de lados 13, 14 y 15, calcula el área, el inradio $r$, el circunradio $R$ y la distancia entre el incentro y el circuncentro.
+> Empieza por el área con la fórmula de Herón.
+> Usa $r = S/s$, $R = \frac{abc}{4S}$ y la relación de Euler $OI^2 = R(R - 2r)$.
+---
+**Área (Herón):** $s = 21$, $\;S = \sqrt{21\cdot8\cdot7\cdot6} = 84$.
+
+**Inradio:** $r = S/s = 84/21 = 4$.
+
+**Circunradio:** $R = \dfrac{abc}{4S} = \dfrac{13\cdot14\cdot15}{336} = \dfrac{65}{8}$.
+
+**Distancia $OI$ (relación de Euler):**
+$$OI^2 = R(R - 2r) = \frac{65}{8}\left(\frac{65}{8} - 8\right) = \frac{65}{64},\qquad OI = \frac{\sqrt{65}}{8}.$$
+!! Usar el perímetro en lugar del semiperímetro en $r = S/s$.
+===
+P id=s32 n=6 b=PR t=66 sb=PR5 | El palo roto
+Se eligen al azar e independientemente dos puntos en un segmento de longitud 1. ¿Qué probabilidad hay de que con los tres trozos se pueda formar un triángulo?
+> Representa los dos puntos como un punto del cuadrado unidad.
+> Con tres trozos se forma triángulo si cada uno mide menos que $\frac{1}{2}$.
+---
+Sean $X, Y \sim U(0,1)$ independientes, de modo que $(X,Y)$ es uniforme en el cuadrado unidad. Por simetría, supongamos $X<Y$ (triángulo de área $\tfrac12$). Los trozos miden $X$, $Y-X$ y $1-Y$.
+
+Se forma triángulo si cada trozo es menor que $\tfrac12$: $X < \tfrac12$, $Y - X < \tfrac12$ e $Y > \tfrac12$. Esa región es un triángulo de vértices $(0,\tfrac12)$, $(\tfrac12,\tfrac12)$ y $(\tfrac12, 1)$, de área $\tfrac18$.
+$$P = \frac{1/8}{1/2} = \frac14.$$
+!! Olvidar el caso simétrico $Y < X$ o no dividir por el área correcta.
+===
+P id=s33 n=7 b=NU t=4 sb=NU3 m=estilo | Suma de factoriales cuadrado
+Halla todos los $n\in\mathbb{N}$ tales que $1! + 2! + \cdots + n!$ es un cuadrado perfecto.
+> Calcula la suma para $n = 1, 2, 3, 4$.
+> Para $n \ge 5$, ¿qué resto tiene $k!$ al dividir entre 5? Compara con los restos de los cuadrados.
+---
+Valores pequeños: $n=1$ da $1 = 1^2$; $n=2$ da $3$; $n=3$ da $9 = 3^2$; $n=4$ da $33$.
+
+Para $k\ge5$, $5 \mid k!$. Entonces, si $n\ge4$:
+$$1!+2!+\cdots+n! \equiv 1+2+6+24 = 33 \equiv 3 \pmod 5.$$
+Los cuadrados módulo 5 solo pueden ser $0, 1, 4$ ($0^2, (\pm1)^2, (\pm2)^2$), así que para $n \ge 4$ la suma no es un cuadrado.
+
+**Soluciones: $n = 1$ y $n = 3$.**
+
+*Criterios: casos pequeños (2 puntos), idea de trabajar módulo 5 (4 puntos), restos cuadráticos (3 puntos), conclusión (1 punto).*
+!! Trabajar módulo 10 sin justificar qué cifras finales puede tener un cuadrado.
+===
+P id=s34 n=7 b=AL t=13 sb=AL2 m=estilo ref=2021-P1 | Desigualdad con reales no negativos
+Sean $a, b, c \ge 0$ con $a+b+c = 3$. Demuestra que $ab + bc + ca \le 3$ y determina cuándo se da la igualdad. ¿Cuál es el valor mínimo de $ab+bc+ca$?
+> Desarrolla $(a+b+c)^2$.
+> Usa que $(a-b)^2 + (b-c)^2 + (c-a)^2 \ge 0$.
+---
+Como $(a-b)^2 + (b-c)^2 + (c-a)^2 \ge 0$, se cumple $a^2+b^2+c^2 \ge ab+bc+ca$. Entonces
+$$9 = (a+b+c)^2 = a^2+b^2+c^2 + 2(ab+bc+ca) \ge 3(ab+bc+ca),$$
+luego $ab+bc+ca \le 3$, con igualdad si y solo si $a = b = c = 1$.
+
+**Mínimo:** al ser $a,b,c\ge0$, $ab+bc+ca \ge 0$, y vale $0$ en $(3,0,0)$. El mínimo es $0$, que se alcanza cuando dos de las variables son nulas.
+!! Olvidar decir cuándo se da la igualdad, que también se pide.
+===
+P id=s35 n=7 b=AN t=29 sb=AN6 m=estilo ref=2025-P1 | Límite de una suma
+Calcula $\displaystyle\lim_{n\to\infty}\sum_{k=1}^{n}\frac{n}{n^2+k^2}$.
+> Saca $\frac{1}{n}$ factor común dentro de la suma.
+> Reconoce una suma de Riemann de $\frac{1}{1+x^2}$ en $[0,1]$.
+---
+Sacamos $\tfrac1n$ factor común:
+$$\sum_{k=1}^n \frac{n}{n^2+k^2} = \frac1n\sum_{k=1}^n \frac{1}{1 + (k/n)^2}.$$
+Es una suma de Riemann de $f(x) = \dfrac{1}{1+x^2}$ en $[0,1]$ con la partición regular y los extremos derechos. Como $f$ es continua (luego integrable),
+$$\lim_{n\to\infty} = \int_0^1 \frac{dx}{1+x^2} = \arctan 1 = \frac{\pi}{4}.$$
+!! Hacer el límite de cada sumando por separado: cada uno tiende a 0, pero hay $n$.
+===
+P id=s36 n=7 b=AN t=30 sb=AN7 m=gemelo ref=2021-P3 | Ecuación integral
+Halla todas las funciones continuas $f:\mathbb{R}\to\mathbb{R}$ tales que
+$$f(x) = 1 + \int_0^x t\,f(t)\,dt \quad \text{para todo } x\in\mathbb{R}.$$
+> Como $f$ es continua, el segundo miembro es derivable.
+> Deriva y resuelve $f' = x f$ con $f(0) = 1$.
+---
+Como $f$ es continua, el segundo miembro es derivable (teorema fundamental del cálculo), así que $f$ es derivable y
+$$f'(x) = x f(x),\qquad f(0) = 1.$$
+Sea $g(x) = f(x)e^{-x^2/2}$. Entonces $g'(x) = (f'(x) - xf(x))e^{-x^2/2} = 0$, luego $g$ es constante, $g = g(0) = 1$, y por tanto
+$$f(x) = e^{x^2/2}.$$
+**Comprobación:** $1 + \int_0^x t e^{t^2/2}\,dt = 1 + \left[e^{t^2/2}\right]_0^x = e^{x^2/2}$. ✓ La solución es única.
+
+*Error típico: dividir por $f$ sin justificar que no se anula. El truco del factor integrante lo evita.*
+!! Dividir entre $f(x)$ sin justificar que no se anula.
+===
+P id=s37 n=7 b=GE t=53 sb=GE4 m=gemelo ref=2025-P4 | Lugar geométrico en el espacio
+Dados $A(1,0,0)$, $B(0,1,0)$ y $C(0,0,1)$, describe y halla el lugar geométrico de los puntos del espacio que equidistan de $A$, $B$ y $C$.
+> Equidistar de dos puntos es estar en su plano mediador.
+> Interseca los planos mediadores de $AB$ y de $BC$.
+---
+Equidistar de $A$ y $B$ equivale a estar en el plano mediador de $AB$:
+$$(x-1)^2 + y^2 + z^2 = x^2 + (y-1)^2 + z^2 \iff x = y.$$
+Análogamente, equidistar de $B$ y $C$ equivale a $y = z$. El lugar es la recta
+$$x = y = z.$$
+**Descripción:** es la recta perpendicular al plano $ABC$ ($x+y+z=1$, de normal $(1,1,1)$) que pasa por el circuncentro del triángulo $ABC$, que por ser equilátero coincide con su baricentro $\left(\tfrac13,\tfrac13,\tfrac13\right)$.
+!! Calcular un solo punto (el circuncentro) en lugar de toda la recta.
+===
+P id=s38 n=7 b=PR t=64 sb=PR3 m=gemelo ref=2025-P5 | Independencia de complementarios
+**a)** Demuestra que si $A$ y $B$ son independientes, también lo son $\overline{A}$ y $\overline{B}$.
+**b)** ¿Pueden dos sucesos ser a la vez independientes e incompatibles? Justifícalo.
+> Usa la ley de De Morgan: $\overline A\cap\overline B = \overline{A\cup B}$.
+> Si son incompatibles, $P(A\cap B) = 0$. ¿Qué pasa con $P(A)P(B)$?
+---
+**a)** Por De Morgan, $\overline A\cap\overline B = \overline{A\cup B}$, así que
+$$P(\overline A\cap\overline B) = 1 - P(A) - P(B) + P(A)P(B) = (1-P(A))(1-P(B)) = P(\overline A)P(\overline B).$$
+**b)** Si son incompatibles, $P(A\cap B) = 0$. Si además son independientes, $P(A)P(B) = 0$, así que alguno tiene probabilidad nula. **Solo pueden serlo si $P(A) = 0$ o $P(B) = 0$**. Con probabilidades positivas, incompatibilidad implica dependencia: saber que ocurre $A$ garantiza que no ocurre $B$.
+!! Confundir sucesos incompatibles con sucesos independientes.
+===
+
+P id=s39 n=4 b=NU t=4 sb=NU2 | Primos y el número 24
+Demuestra que si $p$ es un número primo mayor que 3, entonces $p^2 - 1$ es divisible por 24.
+> Factoriza $p^2 - 1$ como producto de dos números consecutivos pares.
+> $24 = 8\cdot 3$: estudia la divisibilidad por 8 y por 3 por separado.
+---
+$p^2 - 1 = (p-1)(p+1)$.
+
+**Divisible por 8.** Como $p$ es impar, $p-1$ y $p+1$ son dos pares consecutivos, así que uno de ellos es múltiplo de 4. El producto es múltiplo de $2\cdot 4 = 8$.
+
+**Divisible por 3.** De los tres números consecutivos $p-1, p, p+1$ uno es múltiplo de 3, y no es $p$ porque $p$ es primo mayor que 3. Por tanto $3 \mid (p-1)(p+1)$.
+
+Como $\operatorname{mcd}(8,3) = 1$, se concluye que $24 \mid p^2 - 1$. $\blacksquare$
+
+Ejemplo: $p = 7$ da $48 = 2\cdot 24$.
+!! Decir solo «el producto de dos pares es múltiplo de 4» y no llegar a 8.
+===
+P id=s40 n=5 b=AL t=13 sb=AL1 | Resto de una división de polinomios
+Halla el resto de dividir $x^{100}$ entre $x^2 - 1$.
+> El resto tiene grado menor que 2: escríbelo como $ax + b$.
+> Evalúa la identidad $x^{100} = (x^2-1)Q(x) + ax + b$ en las raíces del divisor.
+---
+Por el algoritmo de la división, $x^{100} = (x^2-1)\,Q(x) + ax + b$.
+
+En $x = 1$: $1 = a + b$. En $x = -1$: $1 = -a + b$.
+
+Resolviendo, $a = 0$ y $b = 1$. **El resto es 1.**
+
+Comprobación: $x^{100} - 1 = (x^2)^{50} - 1$ es divisible por $x^2 - 1$, porque $y^{50} - 1$ es divisible por $y - 1$.
+!! Aplicar el teorema del resto como si el divisor fuera de grado 1.
+===
+P id=s41 n=6 b=AL t=13 sb=AL1 m=estilo ref=2025-P2 | Relaciones de Cardano-Vieta
+Sean $a, b, c$ las raíces de $x^3 - 3x^2 + 2x - 5 = 0$. Calcula $a^2 + b^2 + c^2$ y $\dfrac1a + \dfrac1b + \dfrac1c$ sin hallar las raíces.
+> Escribe $a+b+c$, $ab+bc+ca$ y $abc$ a partir de los coeficientes.
+> $a^2+b^2+c^2 = (a+b+c)^2 - 2(ab+bc+ca)$.
+---
+Por las relaciones de Cardano-Vieta: $a+b+c = 3$, $ab+bc+ca = 2$ y $abc = 5$.
+
+$$a^2+b^2+c^2 = (a+b+c)^2 - 2(ab+bc+ca) = 9 - 4 = 5.$$
+$$\frac1a+\frac1b+\frac1c = \frac{ab+bc+ca}{abc} = \frac25.$$
+!! Equivocarse de signo: para $x^3 + px^2 + qx + r$, la suma de raíces es $-p$ y el producto es $-r$.
+===
+P id=s42 n=7 b=AL t=13 sb=AL1 m=gemelo ref=2025-P2 | Sistema simétrico
+Resuelve en $\mathbb{R}$ el sistema
+$$\begin{cases} x + y + z = 6 \\ xy + yz + zx = 11 \\ xyz = 6 \end{cases}$$
+> Por las relaciones de Cardano-Vieta, $x, y, z$ son las raíces de un polinomio de grado 3. ¿Cuál?
+> Busca raíces enteras entre los divisores de 6.
+---
+Si $(x,y,z)$ es solución, entonces
+$$(t-x)(t-y)(t-z) = t^3 - (x+y+z)t^2 + (xy+yz+zx)t - xyz = t^3 - 6t^2 + 11t - 6.$$
+Por Ruffini, $t^3 - 6t^2 + 11t - 6 = (t-1)(t-2)(t-3)$. Así que $\{x,y,z\} = \{1,2,3\}$.
+
+Recíprocamente, cualquier ordenación de $1, 2, 3$ cumple las tres ecuaciones.
+
+**Soluciones:** las 6 permutaciones de $(1,2,3)$.
+!! Dar solo la solución $(1,2,3)$ y olvidar las otras cinco permutaciones.
+===
+P id=s43 n=7 b=NU t=4 sb=NU3 m=estilo | Divisibilidad por 7
+Demuestra que $7$ divide a $3^{2n+1} + 2^{n+2}$ para todo $n \ge 0$.
+> Escribe $3^{2n+1} = 3\cdot 9^n$ y trabaja módulo 7.
+> $9 \equiv 2 \pmod 7$.
+---
+**Con congruencias.** $3^{2n+1} = 3\cdot 9^n \equiv 3\cdot 2^n \pmod 7$ y $2^{n+2} = 4\cdot 2^n$. Por tanto
+$$3^{2n+1} + 2^{n+2} \equiv 3\cdot 2^n + 4\cdot 2^n = 7\cdot 2^n \equiv 0 \pmod 7. \quad\blacksquare$$
+
+**Por inducción.** Para $n = 0$: $3 + 4 = 7$. Si $a_n = 3^{2n+1}+2^{n+2}$ es múltiplo de 7, entonces
+$$a_{n+1} = 9\cdot 3^{2n+1} + 2\cdot 2^{n+2} = 2a_n + 7\cdot 3^{2n+1},$$
+que también es múltiplo de 7.
+!! En la inducción, no conseguir escribir $a_{n+1}$ en función de $a_n$ y probar solo casos sueltos.
+===
+P id=s44 n=6 b=NU t=3 sb=NU6 | Cifras en orden creciente
+¿Cuántos números de cinco cifras tienen sus cifras en orden estrictamente creciente (por ejemplo, 13479)?
+> Una vez elegidas las cinco cifras, ¿de cuántas formas se pueden ordenar de manera creciente?
+> ¿Puede aparecer el 0?
+---
+Si las cifras son estrictamente crecientes, el 0 solo podría ir el primero, y un número de cinco cifras no puede empezar por 0. Por tanto las cifras se eligen entre $\{1,\dots,9\}$.
+
+Cada elección de 5 cifras distintas da exactamente un número creciente:
+$$\binom{9}{5} = 126.$$
+!! Elegir entre las 10 cifras y contar los números que empiezan por 0.
+===
+P id=s45 n=5 b=AL t=12 sb=AL5 | Núcleo e imagen
+Sea $f:\mathbb{R}^3\to\mathbb{R}^3$, $f(x,y,z) = (x+y,\ y+z,\ x-z)$. Halla una base del núcleo y unas ecuaciones de la imagen.
+> Escribe la matriz de $f$ y calcula su rango.
+> La imagen está generada por las columnas de la matriz.
+---
+$$A = \begin{pmatrix}1&1&0\\0&1&1\\1&0&-1\end{pmatrix}.$$
+La tercera fila es la primera menos la segunda, así que $\operatorname{rg} A = 2$.
+
+**Núcleo:** $x + y = 0$ e $y + z = 0$ dan $(t, -t, t)$. Base: $\{(1,-1,1)\}$, de dimensión $3 - 2 = 1$.
+
+**Imagen:** está generada por las columnas $(1,0,1)$, $(1,1,0)$ y $(0,1,-1)$. La segunda es la suma de las otras dos, así que la imagen es $\langle (1,0,1), (0,1,-1)\rangle$. Un vector $(a,b,c)$ de la imagen es $\alpha(1,0,1)+\beta(0,1,-1)$, es decir, $a = \alpha$, $b = \beta$ y $c = \alpha - \beta$:
+$$\operatorname{Im} f:\ x - y - z = 0.$$
+Comprobación: $\dim\ker f + \dim\operatorname{Im} f = 1 + 2 = 3$.
+!! Dar como base de la imagen las tres columnas sin comprobar que son dependientes.
+===
+P id=s46 n=3 b=AL t=19 sb=AL3 | Determinante de Vandermonde
+Calcula $\begin{vmatrix} 1&1&1\\ a&b&c\\ a^2&b^2&c^2 \end{vmatrix}$ y deduce para qué valores es nulo.
+> Resta la primera columna a las otras dos.
+> Saca factor común $(b-a)$ y $(c-a)$.
+---
+Restando la primera columna a la segunda y a la tercera:
+$$\begin{vmatrix} 1&0&0\\ a&b-a&c-a\\ a^2&b^2-a^2&c^2-a^2 \end{vmatrix} = (b-a)(c-a)\begin{vmatrix} 1&1\\ b+a&c+a \end{vmatrix} = (b-a)(c-a)(c-b).$$
+Se anula si y solo si dos de los tres valores $a$, $b$, $c$ coinciden.
+!! Desarrollar por Sarrus sin factorizar y no saber decir cuándo se anula.
+===
+P id=s47 n=2 b=AN t=25 sb=AN1 | Límite con raíces
+Calcula $\displaystyle\lim_{x\to+\infty}\left(\sqrt{x^2+3x} - x\right)$.
+> Es una indeterminación $\infty - \infty$: multiplica y divide por el conjugado.
+> Después divide numerador y denominador por $x$.
+---
+$$\sqrt{x^2+3x} - x = \frac{(x^2+3x) - x^2}{\sqrt{x^2+3x} + x} = \frac{3x}{\sqrt{x^2+3x}+x} = \frac{3}{\sqrt{1+\frac3x} + 1} \xrightarrow[x\to\infty]{} \frac32.$$
+!! Concluir que el límite es 0 porque «$\sqrt{x^2+3x} \approx x$».
+===
+P id=s48 n=5 b=AN t=26 sb=AN3 | Una única solución
+Demuestra que la ecuación $e^x = 1 + x$ tiene una única solución real.
+> Estudia $f(x) = e^x - 1 - x$: ¿dónde crece y dónde decrece?
+> ¿Cuál es el valor mínimo de $f$?
+---
+Sea $f(x) = e^x - 1 - x$. Entonces $f'(x) = e^x - 1$, que es negativa para $x<0$ y positiva para $x>0$.
+
+$f$ decrece en $(-\infty,0]$ y crece en $[0,\infty)$, así que tiene su mínimo absoluto en $x = 0$, con $f(0) = 0$.
+
+Por tanto $f(x) > 0$ para todo $x \ne 0$, y **la única solución es $x = 0$**. De paso queda probada la desigualdad $e^x \ge 1 + x$.
+!! Encontrar la solución $x = 0$ a ojo y no demostrar que es la única.
+===
+P id=s49 n=6 b=AN t=27 sb=AN3 | Una desigualdad y el número e
+Demuestra que $\ln(1+x) \le x$ para todo $x > -1$, y deduce que $\left(1+\frac1n\right)^n < e$ para todo $n \ge 1$.
+> Estudia $g(x) = x - \ln(1+x)$ con su derivada.
+> Aplica la desigualdad con $x = \frac1n$ y multiplica por $n$.
+---
+Sea $g(x) = x - \ln(1+x)$ en $(-1,\infty)$. $g'(x) = 1 - \frac{1}{1+x} = \frac{x}{1+x}$, que es negativa en $(-1,0)$ y positiva en $(0,\infty)$. El mínimo está en $x = 0$ y vale $g(0) = 0$, así que $g(x) \ge 0$, con igualdad solo en $x = 0$.
+
+Con $x = \frac1n > 0$ la desigualdad es estricta: $\ln\left(1+\frac1n\right) < \frac1n$. Multiplicando por $n$:
+$$n\ln\left(1+\frac1n\right) < 1 \ \Rightarrow\ \left(1+\frac1n\right)^n < e^1 = e. \quad\blacksquare$$
+!! No justificar que la desigualdad es estricta para $x \ne 0$, que es lo que da el signo $<$.
+===
+P id=s50 n=7 b=AN t=29 sb=AN6 m=estilo ref=2025-P1 | Límite de un producto
+Calcula $\displaystyle\lim_{n\to\infty}\frac{\sqrt[n]{(n+1)(n+2)\cdots(2n)}}{n}$.
+> Toma logaritmos: el producto se convierte en suma.
+> Reconoce una suma de Riemann de $\ln(1+x)$ en $[0,1]$.
+---
+Sea $L_n$ la expresión. Entonces
+$$\ln L_n = \frac1n\sum_{k=1}^n \ln(n+k) - \ln n = \frac1n\sum_{k=1}^n \ln\left(1+\frac kn\right).$$
+Es una suma de Riemann de $\ln(1+x)$, continua en $[0,1]$:
+$$\ln L_n \to \int_0^1 \ln(1+x)\,dx = \Big[(1+x)\ln(1+x) - x\Big]_0^1 = 2\ln 2 - 1.$$
+Como la exponencial es continua, $L_n \to e^{2\ln 2 - 1} = \dfrac{4}{e}$.
+!! Al pasar a logaritmos, no restar $\ln n$ y obtener una suma que no es de Riemann.
+===
+P id=s51 n=7 b=AN t=30 sb=AN5 m=gemelo ref=2025-P3 | Integral con logaritmo
+Calcula $\displaystyle\int_0^1 \ln(1+x^2)\,dx$.
+> Integra por partes con $u = \ln(1+x^2)$ y $dv = dx$.
+> Para la integral que queda, escribe $\frac{x^2}{1+x^2} = 1 - \frac{1}{1+x^2}$.
+---
+Por partes:
+$$\int_0^1 \ln(1+x^2)\,dx = \Big[x\ln(1+x^2)\Big]_0^1 - \int_0^1 \frac{2x^2}{1+x^2}\,dx = \ln 2 - 2\int_0^1\left(1 - \frac{1}{1+x^2}\right)dx.$$
+$$= \ln 2 - 2\left(1 - \frac{\pi}{4}\right) = \ln 2 - 2 + \frac{\pi}{2} \approx 0{,}264.$$
+Como el integrando es positivo en $(0,1]$, el resultado debe ser positivo, y lo es.
+!! Equivocarse en la derivada de $\ln(1+x^2)$: es $\frac{2x}{1+x^2}$, no $\frac{1}{1+x^2}$.
+===
+P id=s52 n=5 b=AN t=30 sb=AN5 | Área de la elipse
+Calcula el área encerrada por la elipse $\dfrac{x^2}{a^2} + \dfrac{y^2}{b^2} = 1$.
+> Por simetría, calcula el área del primer cuadrante y multiplica por 4.
+> Haz el cambio $x = a\sin t$.
+---
+En el primer cuadrante, $y = \frac{b}{a}\sqrt{a^2 - x^2}$, así que
+$$A = 4\cdot\frac ba\int_0^a\sqrt{a^2-x^2}\,dx.$$
+Con $x = a\sin t$, $dx = a\cos t\,dt$ y $t\in[0,\pi/2]$:
+$$\int_0^a\sqrt{a^2-x^2}\,dx = a^2\int_0^{\pi/2}\cos^2 t\,dt = a^2\cdot\frac{\pi}{4}.$$
+Por tanto $A = 4\cdot\frac ba\cdot\frac{\pi a^2}{4} = \pi ab$. Con $a = b = r$ se recupera el área del círculo.
+!! No cambiar los límites de integración al hacer el cambio de variable.
+===
+P id=s53 n=6 b=AN t=25 sb=AN2 m=estilo | Cuerda horizontal
+Sea $f$ continua en $[0,1]$ con $f(0) = f(1)$. Demuestra que existe $c\in\left[0,\frac12\right]$ tal que $f(c) = f\left(c + \frac12\right)$.
+> Define $g(x) = f\left(x+\frac12\right) - f(x)$ en $\left[0,\frac12\right]$.
+> Compara $g(0)$ y $g\left(\frac12\right)$.
+---
+$g(x) = f\left(x + \frac12\right) - f(x)$ es continua en $\left[0, \frac12\right]$ y cumple
+$$g(0) = f\left(\tfrac12\right) - f(0), \qquad g\left(\tfrac12\right) = f(1) - f\left(\tfrac12\right) = -g(0).$$
+Si $g(0) = 0$, basta tomar $c = 0$. Si no, $g(0)$ y $g\left(\frac12\right)$ tienen signos opuestos y por el teorema de Bolzano existe $c\in\left(0,\frac12\right)$ con $g(c) = 0$, es decir, $f(c) = f\left(c+\frac12\right)$. $\blacksquare$
+
+Interpretación: la gráfica tiene una cuerda horizontal de longitud $\frac12$.
+!! Olvidar el caso $g(0) = 0$, en el que Bolzano no se puede aplicar tal cual.
+===
+P id=s54 n=4 b=AN t=28 sb=AN3 | Rectángulo en un semicírculo
+De todos los rectángulos inscritos en un semicírculo de radio $R$, con un lado sobre el diámetro, halla el de área máxima.
+> Si la base mide $2x$, ¿cuánto mide la altura?
+> Para simplificar, maximiza el cuadrado del área.
+---
+Con base $2x$ y altura $\sqrt{R^2-x^2}$, el área es $A(x) = 2x\sqrt{R^2 - x^2}$ para $0<x<R$.
+
+Maximizamos $A^2 = 4(R^2x^2 - x^4)$: su derivada $4(2R^2x - 4x^3) = 0$ da $x = \frac{R}{\sqrt2}$. Es un máximo porque $A \to 0$ en los extremos del intervalo.
+
+Base $R\sqrt2$, altura $\frac{R}{\sqrt2}$ y **área máxima $R^2$**.
+!! Tomar como base $x$ en lugar de $2x$ y obtener la mitad del área.
+===
+P id=s55 n=4 b=GE t=53 sb=GE3 | Simétrico respecto de un plano
+Halla el punto simétrico de $P(1,2,3)$ respecto del plano $\pi: x + y + z = 0$.
+> Traza la recta que pasa por $P$ y es perpendicular a $\pi$.
+> El punto de corte con el plano es el punto medio entre $P$ y su simétrico.
+---
+La recta perpendicular por $P$ es $(1+t,\ 2+t,\ 3+t)$. Corta al plano cuando $6 + 3t = 0$, es decir, en $t = -2$: el pie es $M(-1, 0, 1)$.
+
+Como $M$ es el punto medio de $P$ y $P'$:
+$$P' = 2M - P = (-3, -2, -1).$$
+Comprobación: $d(P,\pi) = \frac{6}{\sqrt3} = d(P',\pi) = \frac{|-6|}{\sqrt3}$. ✓
+!! Dar como respuesta el pie $M$ de la perpendicular en lugar del simétrico.
+===
+P id=s56 n=5 b=GE t=40 sb=GE1 | Tangentes desde un punto exterior
+Desde un punto $P$ situado a 13 cm del centro de una circunferencia de 5 cm de radio se trazan las dos tangentes. Halla la longitud de cada tangente y el ángulo que forman.
+> El radio en el punto de tangencia es perpendicular a la tangente.
+> El segmento $OP$ es la bisectriz del ángulo entre las tangentes.
+---
+En el triángulo rectángulo $O T P$ (recto en $T$): $PT = \sqrt{13^2 - 5^2} = 12$ cm. También coincide con la raíz de la potencia de $P$: $\sqrt{169-25}$.
+
+Si $2\alpha$ es el ángulo entre las tangentes, $\sin\alpha = \frac{5}{13}$, así que
+$$2\alpha = 2\arcsin\frac{5}{13} \approx 45{,}2^\circ.$$
+!! No ver el ángulo recto en el punto de tangencia.
+===
+P id=s57 n=6 b=GE t=39 sb=GE1 | Teorema de Apolonio
+Demuestra que en todo triángulo la mediana $m_a$ sobre el lado $a$ cumple $m_a^2 = \dfrac{2b^2 + 2c^2 - a^2}{4}$, y calcula la mediana sobre el lado 7 en el triángulo de lados 5, 6 y 7.
+> Coloca el origen en el punto medio $M$ de $BC$ y usa vectores.
+> $\vec{MB} = -\vec{MC}$.
+---
+Con origen en $M$, sean $\vec m = \vec{MA}$ y $\vec u = \vec{MC} = -\vec{MB}$, con $|\vec u| = \frac a2$. Entonces
+$$b^2 = |\vec m - \vec u|^2 = m_a^2 - 2\vec m\cdot\vec u + \tfrac{a^2}{4},\qquad c^2 = |\vec m + \vec u|^2 = m_a^2 + 2\vec m\cdot\vec u + \tfrac{a^2}{4}.$$
+Sumando: $b^2 + c^2 = 2m_a^2 + \frac{a^2}{2}$, de donde sale la fórmula. $\blacksquare$
+
+Con $a = 7$, $b = 5$, $c = 6$: $m_a^2 = \frac{50 + 72 - 49}{4} = \frac{73}{4}$, luego $m_a = \frac{\sqrt{73}}{2}\approx 4{,}27$.
+!! Aplicar la fórmula con el lado equivocado en el lugar de $a$.
+===
+P id=s58 n=7 b=GE t=54 sb=GE4 m=estilo | Lugar geométrico en la parábola
+Halla el lugar geométrico de los puntos medios de las cuerdas de la parábola $y^2 = 4x$ que pasan por su foco.
+> Parametriza los puntos de la parábola como $(t^2, 2t)$. ¿Qué condición cumplen $a$ y $b$ si la cuerda que une $(a^2,2a)$ y $(b^2,2b)$ pasa por el foco $(1,0)$?
+> Escribe el punto medio en función de $s = a + b$.
+---
+El foco es $F(1,0)$. La recta que une $(a^2, 2a)$ y $(b^2, 2b)$ tiene pendiente $\frac{2}{a+b}$. Imponiendo que pase por $F$:
+$$-2a = \frac{2}{a+b}(1 - a^2) \iff ab = -1.$$
+El punto medio es $M = \left(\frac{a^2+b^2}{2},\ a+b\right)$. Con $s = a+b$, $a^2 + b^2 = s^2 - 2ab = s^2 + 2$, así que
+$$M = \left(\frac{s^2}{2} + 1,\ s\right) \Rightarrow x = \frac{y^2}{2} + 1 \iff y^2 = 2(x-1).$$
+**El lugar es la parábola $y^2 = 2(x-1)$**, de vértice $F$. Cuando $s$ recorre $\mathbb{R}$ (con $ab = -1$ siempre hay $a$, $b$ reales), se obtiene toda la parábola. La cuerda vertical $x = 1$ da $M = F$.
+!! No comprobar que todos los puntos de la parábola obtenida se alcanzan.
+===
+P id=s59 n=7 b=GE t=39 sb=GE1 m=estilo | Distancias al baricentro
+En un triángulo $ABC$ de lados $a$, $b$ y $c$ y baricentro $G$, demuestra que
+$$GA^2 + GB^2 + GC^2 = \frac{a^2+b^2+c^2}{3}.$$
+> Toma $G$ como origen: entonces $\vec A + \vec B + \vec C = \vec 0$.
+> Desarrolla $a^2 = |\vec B - \vec C|^2$ y suma los tres lados.
+---
+Con origen en $G$, $\vec A + \vec B + \vec C = \vec 0$. Llamemos $S = |\vec A|^2 + |\vec B|^2 + |\vec C|^2 = GA^2 + GB^2 + GC^2$ y $P = \vec A\cdot\vec B + \vec B\cdot\vec C + \vec C\cdot\vec A$.
+
+Sumando $a^2 = |\vec B - \vec C|^2$ y las dos análogas: $a^2 + b^2 + c^2 = 2S - 2P$.
+
+Además $0 = |\vec A + \vec B + \vec C|^2 = S + 2P$, así que $2P = -S$.
+
+Por tanto $a^2 + b^2 + c^2 = 2S + S = 3S$. $\blacksquare$
+
+Comprobación con el equilátero de lado 1: $GA = \frac{\sqrt3}{3}$ y $3\cdot\frac13 = 1 = \frac{3}{3}$. ✓
+!! Tomar el origen en un vértice y perderse en los cálculos: elegir bien el origen es la clave.
+===
+P id=s60 n=3 b=GE t=51 sb=GE3 | Plano perpendicular a una recta
+Halla la ecuación del plano que pasa por $A(1,0,2)$ y es perpendicular a la recta $r: (x,y,z) = (0,1,0) + t(2,-1,3)$.
+> El vector director de la recta es un vector normal del plano.
+> Impón que el plano pase por $A$.
+---
+Normal $\vec n = (2,-1,3)$. Plano: $2(x-1) - (y-0) + 3(z-2) = 0$, es decir,
+$$2x - y + 3z - 8 = 0.$$
+Comprobación: $A$ cumple $2 - 0 + 6 - 8 = 0$. ✓
+!! Usar el punto de la recta $(0,1,0)$ en lugar de $A$.
+===
+P id=s61 n=6 b=GE t=45 sb=GE6 | Ángulo diedro del tetraedro regular
+Calcula el ángulo diedro (el ángulo entre dos caras) de un tetraedro regular.
+> Toma el punto medio de una arista y une con los dos vértices opuestos: obtienes las alturas de las dos caras.
+> Aplica el teorema del coseno en ese triángulo.
+---
+Sea la arista 1. Desde el punto medio $M$ de una arista, las alturas de las dos caras que la contienen miden $\frac{\sqrt3}{2}$ y son perpendiculares a la arista. Por eso el ángulo entre ellas es el diedro $\theta$. El tercer lado de ese triángulo es la arista opuesta, de longitud 1:
+$$1 = \tfrac34 + \tfrac34 - 2\cdot\tfrac34\cos\theta \Rightarrow \cos\theta = \frac13.$$
+$$\theta = \arccos\frac13 \approx 70{,}53^\circ.$$
+!! Tomar como diedro el ángulo de $60^\circ$ de las caras.
+===
+P id=s62 n=4 b=PR t=64 sb=PR2 m=gemelo ref=2021-P5 | Tres máquinas
+Tres máquinas A, B y C fabrican el 50 %, el 30 % y el 20 % de las piezas, con un 1 %, un 2 % y un 3 % de defectuosas respectivamente. Se elige una pieza al azar y es defectuosa. ¿Qué probabilidad hay de que la haya fabricado C?
+> Calcula primero $P(D)$ con el teorema de la probabilidad total.
+> Aplica Bayes para $P(C\mid D)$.
+---
+$P(D) = 0{,}5\cdot0{,}01 + 0{,}3\cdot0{,}02 + 0{,}2\cdot0{,}03 = 0{,}005 + 0{,}006 + 0{,}006 = 0{,}017$.
+$$P(C\mid D) = \frac{0{,}006}{0{,}017} = \frac{6}{17}\approx 0{,}353.$$
+Aunque C fabrica solo el 20 %, aporta más de un tercio de las piezas defectuosas.
+!! Responder $P(D\mid C) = 0{,}03$.
+===
+P id=s63 n=5 b=PR t=65 sb=PR4 | Diez lanzamientos de moneda
+Se lanza una moneda equilibrada 10 veces. Calcula la probabilidad de obtener exactamente 5 caras y la de obtener al menos 8.
+> $X$ = número de caras sigue una binomial $B(10, \frac12)$.
+> «Al menos 8» es $X = 8$, $9$ o $10$.
+---
+$P(X = 5) = \binom{10}{5}\frac{1}{2^{10}} = \frac{252}{1024} = \frac{63}{256}\approx 0{,}246$.
+
+$P(X\ge 8) = \frac{\binom{10}{8}+\binom{10}{9}+\binom{10}{10}}{1024} = \frac{45+10+1}{1024} = \frac{7}{128}\approx 0{,}055$.
+!! Pensar que 5 caras de 10 es «lo normal» y darle probabilidad $\frac12$.
+===
+P id=s64 n=6 b=PR t=65 sb=PR4 | Coleccionar las seis caras
+¿Cuántas veces hay que lanzar un dado, de media, hasta que han salido todas las caras al menos una vez?
+> Divide el proceso en etapas: después de tener $k$ caras distintas, ¿cuánto se tarda de media en conseguir una nueva?
+> En cada etapa el número de lanzamientos sigue una geométrica.
+---
+Con $k$ caras ya vistas, cada lanzamiento da una nueva con probabilidad $\frac{6-k}{6}$, y el número de lanzamientos hasta conseguirla es geométrico de media $\frac{6}{6-k}$. Por la linealidad de la esperanza:
+$$E = \sum_{k=0}^{5}\frac{6}{6-k} = 6\left(1 + \frac12 + \frac13 + \frac14 + \frac15 + \frac16\right) = 6\cdot\frac{49}{20} = 14{,}7.$$
+!! Responder 6 o $6\cdot 6 = 36$ sin modelar las etapas.
+===
+P id=s65 n=7 b=PR t=64 sb=PR3 m=gemelo ref=2025-P5 | Independencia dos a dos y conjunta
+Se lanzan dos dados. Sean $A$ = «la suma es 7», $B$ = «el primero es 4» y $C$ = «el segundo es 3». Estudia si son independientes dos a dos y si son mutuamente independientes.
+> Calcula las tres probabilidades y las de las intersecciones dos a dos.
+> Para la independencia mutua hace falta además que $P(A\cap B\cap C) = P(A)P(B)P(C)$.
+---
+$P(A) = P(B) = P(C) = \frac16$.
+
+$A\cap B = \{(4,3)\}$, $A\cap C = \{(4,3)\}$ y $B\cap C = \{(4,3)\}$: cada intersección tiene probabilidad $\frac{1}{36} = \frac16\cdot\frac16$. **Son independientes dos a dos.**
+
+Pero $P(A\cap B\cap C) = P(\{(4,3)\}) = \frac{1}{36} \ne \frac{1}{216}$. **No son mutuamente independientes**: si se cumplen $B$ y $C$, entonces $A$ es seguro.
+!! Creer que la independencia dos a dos implica la independencia conjunta.
+===
+P id=s66 n=5 b=PR t=66 sb=PR5 | Parámetros de una normal
+Una variable $X\sim N(\mu,\sigma)$ cumple $P(X<60) = 0{,}0228$ y $P(X>90) = 0{,}1587$. Halla $\mu$ y $\sigma$.
+> Busca en la tabla los valores $z$ con $P(Z<z) = 0{,}0228$ y $P(Z>z) = 0{,}1587$.
+> Plantea un sistema con $\frac{60-\mu}{\sigma}$ y $\frac{90-\mu}{\sigma}$.
+---
+$P(Z<-2) = 0{,}0228$ y $P(Z>1) = 0{,}1587$, así que
+$$\frac{60-\mu}{\sigma} = -2,\qquad \frac{90-\mu}{\sigma} = 1.$$
+Restando: $\frac{30}{\sigma} = 3$, luego $\sigma = 10$ y $\mu = 80$.
+!! Equivocarse de signo en el primer valor tipificado: 60 queda por debajo de la media.
+===
+P id=s67 n=6 b=PR t=65 sb=PR4 | Media y varianza de la Poisson
+Si $X$ sigue una Poisson de parámetro $\lambda$, demuestra que $E[X] = \operatorname{Var}(X) = \lambda$.
+> Para la media, saca $\lambda$ factor común y reconoce la serie de $e^\lambda$.
+> Para la varianza, calcula primero $E[X(X-1)]$.
+---
+$$E[X] = \sum_{k\ge1} k\,e^{-\lambda}\frac{\lambda^k}{k!} = \lambda e^{-\lambda}\sum_{k\ge1}\frac{\lambda^{k-1}}{(k-1)!} = \lambda e^{-\lambda}e^{\lambda} = \lambda.$$
+Del mismo modo, $E[X(X-1)] = \lambda^2 e^{-\lambda}\sum_{k\ge2}\frac{\lambda^{k-2}}{(k-2)!} = \lambda^2$.
+
+Entonces $E[X^2] = \lambda^2 + \lambda$ y $\operatorname{Var}(X) = \lambda^2 + \lambda - \lambda^2 = \lambda$. $\blacksquare$
+!! Intentar calcular $E[X^2]$ directamente y no poder simplificar el factor $k^2$.
+===
+P id=s68 n=7 b=PR t=63 sb=PR1 m=estilo | Triángulos rectángulos en un polígono
+Se eligen al azar tres vértices distintos de un polígono regular de $2n$ lados. ¿Qué probabilidad hay de que formen un triángulo rectángulo?
+> Los vértices están en una circunferencia: ¿cuándo es rectángulo un triángulo inscrito?
+> Cuenta los diámetros que unen dos vértices.
+---
+Un triángulo inscrito es rectángulo si y solo si uno de sus lados es un diámetro (teorema de Tales). Hay $n$ diámetros con extremos en los vértices, y cada uno se completa con cualquiera de los $2n-2$ vértices restantes. Ningún triángulo tiene dos diámetros como lados, así que no se cuenta nada dos veces:
+$$P = \frac{n(2n-2)}{\binom{2n}{3}} = \frac{6n(2n-2)}{2n(2n-1)(2n-2)} = \frac{3}{2n-1}.$$
+Comprobación con el cuadrado ($n = 2$): $P = 1$, y en efecto cualquier tres vértices del cuadrado forman un triángulo rectángulo. ✓
+!! No justificar que ningún triángulo se cuenta dos veces.
+===
+P id=s69 n=2 b=PR t=60 sb=PR6 | Medidas de centralización
+Calcula la media, la mediana y la moda de $3, 5, 5, 6, 8, 9, 13$. ¿Cuál representa mejor a los datos si se cambia el 13 por un 80?
+> Hay 7 datos ya ordenados: la mediana es el cuarto.
+> Piensa en cuál de las medidas se ve afectada por un valor extremo.
+---
+Media: $\frac{49}{7} = 7$. Mediana: $6$. Moda: $5$.
+
+Si el 13 pasa a ser 80, la media sube a $\frac{116}{7}\approx 16{,}6$, pero la mediana sigue siendo 6. Con valores atípicos la **mediana** representa mejor a los datos.
+!! Calcular la mediana sin ordenar los datos.
+===
+P id=s70 n=3 b=PR t=66 sb=PR5 | Duración de un examen
+El tiempo que tarda un alumno en terminar un examen sigue una $N(120, 15)$ en minutos. ¿Qué probabilidad hay de que tarde entre 105 y 150 minutos?
+> Tipifica los dos extremos.
+> $P(a<Z<b) = P(Z<b) - P(Z<a)$.
+---
+$z_1 = \frac{105-120}{15} = -1$ y $z_2 = \frac{150-120}{15} = 2$.
+$$P(-1<Z<2) = 0{,}9772 - (1 - 0{,}8413) = 0{,}9772 - 0{,}1587 = 0{,}8185.$$
+!! Calcular $P(Z<-1)$ como $0{,}8413$ en lugar de $1 - 0{,}8413$.
+===

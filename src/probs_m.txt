@@ -1,0 +1,515 @@
+P id=m21p1 n=7 b=AL t=14 sb=AL2 m=oficial ref=2021-P1 src=Murcia-2021 | Murcia 2021 · Problema 1
+Los números reales no negativos $a_1, a_2, \dots, a_n$ cumplen las condiciones
+$$a_1 + a_2 + \cdots + a_n = 2n, \qquad \binom{a_1}{2} + \binom{a_2}{2} + \cdots + \binom{a_n}{2} = n.$$
+Probar que $a_i = 2$ para todo $i = 1, 2, \dots, n$.
+> Como los $a_i$ son reales, $\binom{a}{2}$ significa $\frac{a(a-1)}{2}$. Reescribe la segunda condición en términos de $\sum a_i^2$.
+> Calcula $\sum (a_i - 2)^2$ con las dos condiciones.
+---
+**Planteamiento.** Para un real $a$, $\binom{a}{2} = \frac{a(a-1)}{2}$. La idea es transformar las dos condiciones en una suma de cuadrados igual a cero.
+
+**Desarrollo.** La segunda condición equivale a
+$$\sum_{i=1}^n \frac{a_i^2 - a_i}{2} = n \iff \sum a_i^2 - \sum a_i = 2n \iff \sum a_i^2 = 2n + 2n = 4n.$$
+Entonces
+$$\sum_{i=1}^n (a_i - 2)^2 = \sum a_i^2 - 4\sum a_i + 4n = 4n - 8n + 4n = 0.$$
+Una suma de cuadrados de números reales es nula si y solo si cada sumando es nulo, luego $a_i - 2 = 0$ para todo $i$.
+
+**Conclusión.** $a_i = 2$ para todo $i = 1, \dots, n$. $\blacksquare$
+
+**Comprobación.** Con $a_i = 2$: $\sum a_i = 2n$ y $\sum \binom22 = n$. ✓ La hipótesis de no negatividad no hace falta en este argumento.
+!! Interpretar $\binom{a_i}{2}$ como número combinatorio de enteros y razonar por casos, sin ver que basta la identidad algebraica.
+===
+P id=m21p2 n=6 b=AL t=19 sb=AL3 m=oficial ref=2021-P2 src=Murcia-2021 | Murcia 2021 · Problema 2
+Calcular el valor de
+$$D = \begin{vmatrix} x-1 & x^2-1 & x^3-1 & x^4-x^3+x-1 \\ 2x-4 & x^2-4 & x^3-8 & x^4-2x^3+2x-4 \\ 3x-9 & x^2-9 & x^3-27 & x^4-3x^3+3x-9 \\ 4x-16 & x^2-16 & x^3-64 & x^4-4x^3+4x-16 \end{vmatrix}$$
+> La fila $i$ tiene todos sus elementos divisibles por $(x - i)$. Factoriza cada entrada.
+> Tras sacar los factores, mira cada columna como combinación de los vectores $(1,1,1,1)$, $(1,2,3,4)$ y $(1,4,9,16)$.
+---
+**Planteamiento.** En la fila $i$ ($i = 1,2,3,4$) las entradas son $ix - i^2$, $x^2 - i^2$, $x^3 - i^3$ y $x^4 - ix^3 + ix - i^2$. Todas se anulan en $x = i$, así que tienen el factor $(x - i)$.
+
+**Desarrollo.** Factorizando:
+$$ix - i^2 = i(x-i),\quad x^2-i^2 = (x-i)(x+i),\quad x^3 - i^3 = (x-i)(x^2+ix+i^2),$$
+$$x^4 - ix^3 + ix - i^2 = x^3(x-i) + i(x-i) = (x-i)(x^3+i).$$
+Sacando $(x-i)$ de cada fila (propiedad de linealidad del determinante por filas):
+$$D = (x-1)(x-2)(x-3)(x-4)\,\begin{vmatrix} 1 & x+1 & x^2+x+1 & x^3+1\\ 2 & x+2 & x^2+2x+4 & x^3+2\\ 3 & x+3 & x^2+3x+9 & x^3+3 \\ 4 & x+4 & x^2+4x+16 & x^3+4\end{vmatrix}.$$
+Sean $\mathbf u = (1,1,1,1)^t$, $\mathbf v = (1,2,3,4)^t$, $\mathbf w = (1,4,9,16)^t$. Las columnas del último determinante son
+$$\mathbf v,\quad x\mathbf u + \mathbf v,\quad x^2\mathbf u + x\mathbf v + \mathbf w,\quad x^3\mathbf u + \mathbf v.$$
+Las cuatro pertenecen al subespacio $\langle \mathbf u, \mathbf v, \mathbf w\rangle$, de dimensión 3. Cuatro vectores en un espacio de dimensión 3 son linealmente dependientes, luego el determinante es nulo.
+
+**Conclusión.** $D = 0$ para todo $x \in \mathbb{R}$.
+
+**Comprobación.** Con $x = 0$, la primera columna es $(-1,-4,-9,-16)$ y la segunda $(-1,-4,-9,-16)$: dos columnas iguales, $D = 0$. ✓
+!! Desarrollar el determinante por Sarrus o Laplace sin factorizar: el cálculo se hace inmanejable en el tiempo del examen.
+===
+P id=m21p3 n=7 b=AN t=29 sb=AN7 m=oficial ref=2021-P3 src=Murcia-2021 | Murcia 2021 · Problema 3
+¿Qué funciones $f:\mathbb{R}\to\mathbb{R}$ que sean integrables en cualquier intervalo $[0,x]$ si $x>0$ y $[x,0]$ si $x<0$ satisfacen la condición
+$$x\,f(x) = \int_0^x f(t)\,dt$$
+para cualquier número real distinto de 0?
+> Sea $F(x) = \int_0^x f(t)\,dt$. $F$ es continua por ser integral de una función integrable. ¿Qué dice entonces $f(x) = F(x)/x$ sobre la continuidad de $f$ fuera de 0?
+> Con $f$ continua en $x \ne 0$, $F$ es derivable allí. Estudia la derivada de $F(x)/x$ en cada semirrecta.
+---
+**Planteamiento.** Sea $F(x) = \int_0^x f(t)\,dt$. La condición es $xf(x) = F(x)$ para $x \ne 0$.
+
+**Resultados teóricos.** (1) Si $f$ es integrable en los intervalos indicados, $F$ es continua en $\mathbb{R}$. (2) Teorema fundamental del cálculo: si $f$ es continua en un punto, $F$ es derivable en él y $F' = f$.
+
+**Desarrollo.** Para $x \ne 0$, $f(x) = \frac{F(x)}{x}$ es cociente de funciones continuas, luego $f$ es continua en $\mathbb{R}\setminus\{0\}$. Por (2), $F$ es derivable en $x\ne0$ con $F'(x) = f(x) = \frac{F(x)}{x}$. Entonces
+$$\left(\frac{F(x)}{x}\right)' = \frac{xF'(x) - F(x)}{x^2} = 0 \quad (x\ne 0).$$
+En cada semirrecta (que es un intervalo) $F(x)/x$ es constante: existen $a, b\in\mathbb{R}$ con
+$$F(x) = ax \ (x>0), \qquad F(x) = bx \ (x<0),$$
+y por tanto $f(x) = a$ si $x>0$ y $f(x) = b$ si $x<0$. El valor $f(0)$ no interviene en la condición ni en las integrales.
+
+**Comprobación.** Si $x>0$: $\int_0^x a\,dt = ax = x f(x)$. Si $x<0$: $\int_0^x b\,dt = bx = xf(x)$. ✓
+
+**Conclusión.** Las funciones buscadas son
+$$f(x) = \begin{cases} a & x>0\\ c & x = 0\\ b & x<0\end{cases}\qquad a, b, c\in\mathbb{R} \text{ arbitrarios}.$$
+Si además se exige continuidad, $f$ es constante.
+!! Suponer desde el principio que $f$ es continua (o derivable) sin justificarlo, y concluir solo que $f$ es constante.
+===
+P id=m21p4 n=7 b=GE t=51 sb=GE2 m=oficial ref=2021-P4 src=Murcia-2021 | Murcia 2021 · Problema 4
+Los puntos $A(11,13)$, $B(8,14)$, $C(3,7)$ y $D(9,1)$, situados en el plano cartesiano, están sobre los lados consecutivos de un cuadrado o sobre sus prolongaciones. Hallar la longitud del lado del cuadrado.
+> Si el lado que contiene a $A$ tiene vector director unitario $\vec u$ y $\vec n$ es perpendicular, los lados por $A$ y por $C$ son paralelos, y los lados por $B$ y por $D$ también.
+> El lado del cuadrado es a la vez la distancia entre las rectas por $A$ y $C$ y la distancia entre las rectas por $B$ y $D$: $|\vec n\cdot\vec{AC}| = |\vec u\cdot\vec{BD}|$.
+---
+**Planteamiento.** Sea $\vec u = (p, q)$, con $p^2+q^2 = 1$, la dirección de los lados que contienen a $A$ y a $C$ (paralelos), y $\vec n = (-q, p)$ la de los lados que contienen a $B$ y a $D$. El lado $\ell$ del cuadrado es la distancia entre los lados opuestos:
+$$\ell = |\vec n\cdot \vec{AC}| = |\vec u\cdot\vec{BD}|.$$
+
+**Desarrollo.** $\vec{AC} = (-8, -6)$ y $\vec{BD} = (1, -13)$.
+$$\vec n\cdot\vec{AC} = 8q - 6p, \qquad \vec u\cdot\vec{BD} = p - 13q.$$
+Caso 1: $8q - 6p = p - 13q \Rightarrow 7p = 21q \Rightarrow \vec u = \frac{1}{\sqrt{10}}(3,1)$, y $\ell = |8q - 6p| = \frac{|8-18|}{\sqrt{10}} = \sqrt{10}$.
+
+Caso 2: $8q - 6p = -(p - 13q) \Rightarrow -5p = 5q \Rightarrow \vec u = \frac{1}{\sqrt2}(1,-1)$, y $\ell = \frac{|-8-6|}{\sqrt2} = 7\sqrt2$.
+
+En ambos casos las cuatro rectas (por $A$ y $C$ con dirección $\vec u$, por $B$ y $D$ con dirección $\vec n$) forman un cuadrado con los puntos en lados consecutivos o sus prolongaciones.
+
+**Conclusión.** Hay dos cuadrados posibles: de lado $\sqrt{10}$ y de lado $7\sqrt2$.
+
+**Comprobación (caso 1).** Recta por $A$ con dirección $(3,1)$: $x - 3y + 28 = 0$; recta por $C$: $x - 3y + 18 = 0$; distancia $\frac{10}{\sqrt{10}} = \sqrt{10}$. ✓
+!! Dar una sola solución sin estudiar los dos signos del valor absoluto.
+===
+P id=m21p5 n=5 b=PR t=64 sb=PR2 m=oficial ref=2021-P5 src=Murcia-2021 | Murcia 2021 · Problema 5
+Tres fábricas manufacturan un producto. Sabemos que las dos primeras producen el mismo número de productos y que la tercera produce el doble de productos que las dos anteriores durante un periodo de tiempo especificado, el mismo para las tres. Sabemos también que el 4 % de los productos manufacturados por la primera fábrica es defectuoso y que el 2 % de lo producido por cada una de las otras dos fábricas también es defectuoso.
+
+Si colocamos juntos todos los productos fabricados y se escoge uno al azar,
+**a)** ¿cuál es la probabilidad de que sea defectuoso?
+**b)** Suponiendo que elegimos un producto al azar y resulta defectuoso, ¿cuál es la probabilidad de que provenga de la primera fábrica?
+> Lo primero es fijar la interpretación de «el doble que las dos anteriores» y escribir $P(F_1)$, $P(F_2)$ y $P(F_3)$.
+> a) Teorema de la probabilidad total. b) Teorema de Bayes.
+---
+**Planteamiento.** Sean $F_i$ = «el producto procede de la fábrica $i$» (sistema completo de sucesos) y $D$ = «es defectuoso». Interpretamos que la tercera fábrica produce el doble que **las dos primeras juntas**: si cada una de estas produce $N$, la tercera produce $4N$. Entonces
+$$P(F_1) = P(F_2) = \tfrac16,\quad P(F_3) = \tfrac46 = \tfrac23.$$
+Además $P(D\mid F_1) = 0{,}04$ y $P(D\mid F_2) = P(D\mid F_3) = 0{,}02$.
+
+**a) Probabilidad total.**
+$$P(D) = \tfrac16\cdot0{,}04 + \tfrac16\cdot 0{,}02 + \tfrac23\cdot0{,}02 = \frac{0{,}04 + 0{,}02 + 0{,}08}{6} = \frac{0{,}14}{6} = \frac{7}{300}\approx 0{,}0233.$$
+**b) Bayes.**
+$$P(F_1\mid D) = \frac{P(F_1)P(D\mid F_1)}{P(D)} = \frac{0{,}04/6}{0{,}14/6} = \frac{2}{7}\approx 0{,}286.$$
+**Otra lectura del enunciado.** Si se entiende que la tercera produce el doble que **cada una** de las otras, las proporciones son $\frac14, \frac14, \frac12$, y resulta $P(D) = 0{,}025$ y $P(F_1\mid D) = 0{,}4$. En el examen conviene declarar la interpretación elegida: forma parte del planteamiento.
+!! No declarar la interpretación de «el doble que las dos anteriores» y mezclar las dos lecturas.
+===
+P id=m25p1 n=6 b=AN t=25 sb=AN1 m=oficial ref=2025-P1 src=Murcia-2025 | Murcia 2025 · Problema 1
+Calcular el siguiente límite, donde $n\in\mathbb{N}$:
+$$\lim_{n\to\infty}\left(\frac{1}{\sqrt{n^2+1}} + \frac{1}{\sqrt{n^2+2}} + \cdots + \frac{1}{\sqrt{n^2+n}}\right).$$
+> Hay $n$ sumandos. Acota cada uno por el mayor y por el menor.
+> Aplica el criterio del sándwich (sucesiones encajadas).
+---
+**Planteamiento.** Sea $S_n = \sum_{k=1}^n \frac{1}{\sqrt{n^2+k}}$. Acotaremos $S_n$ entre dos sucesiones con el mismo límite.
+
+**Desarrollo.** Para $k = 1,\dots,n$: $n^2+1 \le n^2+k\le n^2+n$, y como $t\mapsto \frac{1}{\sqrt t}$ es decreciente en $(0,\infty)$,
+$$\frac{1}{\sqrt{n^2+n}} \le \frac{1}{\sqrt{n^2+k}} \le \frac{1}{\sqrt{n^2+1}}.$$
+Sumando los $n$ términos:
+$$\frac{n}{\sqrt{n^2+n}} \le S_n \le \frac{n}{\sqrt{n^2+1}}.$$
+Dividiendo numerador y denominador por $n$:
+$$\lim_{n\to\infty}\frac{n}{\sqrt{n^2+n}} = \lim \frac{1}{\sqrt{1+\frac1n}} = 1,\qquad \lim_{n\to\infty}\frac{n}{\sqrt{n^2+1}} = \lim\frac{1}{\sqrt{1+\frac{1}{n^2}}} = 1.$$
+**Resultado teórico.** Criterio del sándwich: si $a_n\le S_n\le b_n$ y $a_n, b_n \to L$, entonces $S_n\to L$.
+
+**Conclusión.** $\displaystyle\lim_{n\to\infty} S_n = 1$.
+!! Intentar verlo como suma de Riemann: el término general no se escribe como $\frac1n f(k/n)$ con $f$ fija.
+===
+P id=m25p2 n=7 b=AL t=13 sb=AL1 m=oficial ref=2025-P2 src=Murcia-2025 | Murcia 2025 · Problema 2
+Sea $a\ne0$ un número real dado. Sabiendo que $x_1, x_2, x_3$ son las raíces de un polinomio de tercer grado, determinar todas las soluciones del sistema de ecuaciones
+$$\begin{cases} x_1 + x_2 + x_3 = a\\[2pt] \dfrac{1}{x_1} + \dfrac{1}{x_2} + \dfrac{1}{x_3} = \dfrac1a\end{cases}$$
+> Escribe el polinomio mónico $x^3 - \sigma_1x^2 + \sigma_2x - \sigma_3$ y traduce las dos ecuaciones a relaciones entre $\sigma_1, \sigma_2, \sigma_3$.
+> Comprueba que $x = a$ es raíz del polinomio resultante.
+---
+**Planteamiento.** Sean $\sigma_1 = x_1+x_2+x_3$, $\sigma_2 = x_1x_2+x_1x_3+x_2x_3$ y $\sigma_3 = x_1x_2x_3$. Por las relaciones de Cardano-Vieta, $x_1, x_2, x_3$ son las raíces de
+$$P(x) = x^3 - \sigma_1 x^2 + \sigma_2 x - \sigma_3.$$
+Las incógnitas deben ser no nulas para que la segunda ecuación tenga sentido, así que $\sigma_3\ne0$.
+
+**Desarrollo.** La primera ecuación da $\sigma_1 = a$. La segunda:
+$$\frac{1}{x_1}+\frac1{x_2}+\frac1{x_3} = \frac{\sigma_2}{\sigma_3} = \frac1a \iff \sigma_3 = a\,\sigma_2.$$
+Por tanto
+$$P(x) = x^3 - ax^2 + \sigma_2 x - a\sigma_2 = x^2(x-a) + \sigma_2(x-a) = (x-a)(x^2+\sigma_2).$$
+Llamando $\sigma_2 = -b^2$ (con $b\in\mathbb{C}$), las raíces son $a$, $b$ y $-b$. La condición $\sigma_3 = -ab^2 \ne 0$ exige $b\ne0$.
+
+**Comprobación.** $a + b - b = a$ y $\frac1a + \frac1b - \frac1b = \frac1a$. ✓
+
+**Conclusión.** Las soluciones son las ternas $(a, b, -b)$ con $b\ne 0$ ($b$ real si se buscan soluciones reales; imaginario puro si $\sigma_2>0$) y todas sus permutaciones. Es decir: una incógnita vale $a$ y las otras dos son opuestas y no nulas.
+!! Olvidar las permutaciones o no excluir $b = 0$, que anula denominadores.
+===
+P id=m25p3 n=6 b=AN t=30 sb=AN5 m=oficial ref=2025-P3 src=Murcia-2025 | Murcia 2025 · Problema 3
+Resuelve la integral definida
+$$\int_0^1 \frac{\ln x}{\sqrt x}\,dx.$$
+> El integrando no está acotado cerca de 0: es una integral impropia. Escríbela como un límite.
+> Por partes con $u = \ln x$ y $dv = x^{-1/2}\,dx$. El límite $\sqrt\varepsilon\ln\varepsilon$ se resuelve con L'Hôpital.
+---
+**Planteamiento.** $\frac{\ln x}{\sqrt x}\to-\infty$ cuando $x\to0^+$, así que es una integral impropia de segunda especie:
+$$I = \lim_{\varepsilon\to0^+}\int_\varepsilon^1 \frac{\ln x}{\sqrt x}\,dx.$$
+**Desarrollo.** Por partes, $u = \ln x$, $du = \frac{dx}{x}$; $dv = x^{-1/2}dx$, $v = 2\sqrt x$:
+$$\int \frac{\ln x}{\sqrt x}dx = 2\sqrt x\ln x - \int\frac{2}{\sqrt x}dx = 2\sqrt x\ln x - 4\sqrt x + C.$$
+Entonces
+$$\int_\varepsilon^1 \frac{\ln x}{\sqrt x}dx = (0 - 4) - \left(2\sqrt\varepsilon\ln\varepsilon - 4\sqrt\varepsilon\right).$$
+El límite $\lim_{\varepsilon\to0^+}\sqrt\varepsilon\ln\varepsilon$ es una indeterminación $0\cdot\infty$. Por L'Hôpital:
+$$\lim_{\varepsilon\to0^+}\frac{\ln\varepsilon}{\varepsilon^{-1/2}} = \lim\frac{1/\varepsilon}{-\frac12\varepsilon^{-3/2}} = \lim(-2\sqrt\varepsilon) = 0.$$
+**Conclusión.** La integral converge y vale $I = -4$.
+
+**Comprobación de signo.** En $(0,1)$, $\ln x<0$, así que el resultado negativo es coherente.
+!! Aplicar la regla de Barrow directamente en 0 sin plantear el límite: es una integral impropia.
+===
+P id=m25p4 n=6 b=GE t=53 sb=GE4 m=oficial ref=2025-P4 src=Murcia-2025 | Murcia 2025 · Problema 4
+Dados tres puntos distintos $A(x_1,y_1,z_1)$, $B(x_2,y_2,z_2)$ y $C(x_3,y_3,z_3)$ y no equidistantes, ¿cuál es el lugar geométrico de los puntos que equidistan de $A$, $B$ y $C$? Siendo $A(2,-1,0)$, $B(0,1,2)$, $C(-1,2,4)$, hallar el lugar geométrico de los puntos que equidistan de $A$, $B$ y $C$.
+> Equidistar de dos puntos es pertenecer a su plano mediador. Distingue el caso de puntos alineados.
+> Basta cortar dos planos mediadores. El tercero contiene a la recta obtenida.
+---
+**Caso general.** El conjunto de puntos que equidistan de $A$ y $B$ es el plano mediador de $AB$ (perpendicular a $\vec{AB}$ por su punto medio). El lugar buscado es la intersección de los planos mediadores de $AB$, $BC$ y $CA$.
+- Si $A, B, C$ están alineados, los planos mediadores son paralelos y distintos: el lugar es **vacío**.
+- Si no están alineados, los planos mediadores de $AB$ y $BC$ se cortan en una recta. Todo punto de ella equidista de $A$, $B$ y $C$, luego también está en el tercer plano. El lugar es la **recta perpendicular al plano $ABC$ que pasa por el circuncentro** del triángulo $ABC$.
+
+**Caso particular.** $\vec{AB} = (-2,2,2)$ y $\vec{BC} = (-1,1,2)$ no son proporcionales: no están alineados.
+
+Plano mediador de $AB$: punto medio $(1,0,1)$, normal $(-1,1,1)$:
+$$-(x-1) + y + (z-1) = 0 \iff x - y - z = 0.$$
+Plano mediador de $BC$: punto medio $\left(-\frac12, \frac32, 3\right)$, normal $(-1,1,2)$:
+$$-\left(x+\tfrac12\right) + \left(y - \tfrac32\right) + 2(z-3) = 0 \iff -x + y + 2z = 8.$$
+Sumando ambas ecuaciones: $z = 8$, y entonces $x = y + 8$.
+
+**Conclusión.** El lugar es la recta
+$$r:\ (x,y,z) = (8, 0, 8) + t(1,1,0),\quad t\in\mathbb{R}.$$
+**Comprobación.** $P(8,0,8)$: $|PA|^2 = 36+1+64 = 101$, $|PB|^2 = 64+1+36 = 101$, $|PC|^2 = 81+4+16 = 101$. ✓ Además $(1,1,0)$ es perpendicular a $\vec{AB}$ y a $\vec{BC}$. ✓
+!! Olvidar el caso de puntos alineados en la parte general.
+===
+P id=m25p5 n=7 b=PR t=64 sb=PR3 m=oficial ref=2025-P5 src=Murcia-2025 | Murcia 2025 · Problema 5
+Sean $A$, $B$, $C$ tres sucesos independientes en un espacio de probabilidad $(\Omega, \mathcal S, P)$. Demostrar que sus complementarios $\overline A$, $\overline B$, $\overline C$ también son independientes.
+> Escribe las cuatro igualdades que definen la independencia de tres sucesos. No basta con la independencia dos a dos.
+> Para la intersección triple usa De Morgan y la fórmula de inclusión-exclusión.
+---
+**Definición.** $A$, $B$, $C$ son (mutuamente) independientes si
+$$P(A\cap B) = P(A)P(B),\ P(A\cap C) = P(A)P(C),\ P(B\cap C) = P(B)P(C),\ P(A\cap B\cap C) = P(A)P(B)P(C).$$
+Hay que probar las cuatro igualdades para $\overline A, \overline B, \overline C$.
+
+**Intersecciones dos a dos.** Por De Morgan, $\overline A\cap\overline B = \overline{A\cup B}$:
+$$P(\overline A\cap\overline B) = 1 - P(A) - P(B) + P(A)P(B) = (1-P(A))(1-P(B)) = P(\overline A)P(\overline B).$$
+Igual para los otros dos pares.
+
+**Intersección triple.** $\overline A\cap\overline B\cap\overline C = \overline{A\cup B\cup C}$ y, por inclusión-exclusión y la independencia,
+$$P(A\cup B\cup C) = \sum P(A) - \sum P(A)P(B) + P(A)P(B)P(C).$$
+Luego
+$$P(\overline A\cap\overline B\cap\overline C) = 1 - P(A) - P(B) - P(C) + P(A)P(B) + P(A)P(C) + P(B)P(C) - P(A)P(B)P(C)$$
+$$= (1-P(A))(1-P(B))(1-P(C)) = P(\overline A)P(\overline B)P(\overline C).$$
+**Conclusión.** $\overline A, \overline B, \overline C$ son independientes. $\blacksquare$
+!! Probar solo la igualdad triple, o solo las tres dobles: la independencia de tres sucesos exige las cuatro.
+===
+P id=g21p1a n=6 b=AL t=14 sb=AL2 m=gemelo ref=2021-P1 | Suma de cuadrados nula (I)
+Los números reales $a_1, \dots, a_n$ cumplen
+$$\sum_{i=1}^n a_i = n \quad\text{y}\quad \sum_{i=1}^n \binom{a_i+1}{2} = n.$$
+Prueba que $a_i = 1$ para todo $i$.
+> $\binom{a+1}{2} = \frac{(a+1)a}{2}$. Deduce el valor de $\sum a_i^2$.
+> Calcula $\sum(a_i-1)^2$.
+---
+**Desarrollo.** $\sum \frac{a_i^2 + a_i}{2} = n \iff \sum a_i^2 + \sum a_i = 2n \iff \sum a_i^2 = n$. Entonces
+$$\sum (a_i - 1)^2 = \sum a_i^2 - 2\sum a_i + n = n - 2n + n = 0,$$
+y cada sumando es nulo.
+
+**Conclusión.** $a_i = 1$ para todo $i$. $\blacksquare$
+!! Escribir $\binom{a+1}{2} = \frac{a(a-1)}{2}$ por inercia del problema original.
+===
+P id=g21p1b n=6 b=AL t=14 sb=AL2 m=gemelo ref=2021-P1 | Suma de cuadrados nula (II)
+Halla todos los números reales $x, y, z$ tales que
+$$x + y + z = 3,\qquad x^2 + y^2 + z^2 = 3.$$
+¿Y si la segunda condición fuera $x^2+y^2+z^2 = 2$?
+> Desarrolla $(x-1)^2 + (y-1)^2 + (z-1)^2$.
+> Para la segunda pregunta, compara con la desigualdad $x^2+y^2+z^2 \ge \frac{(x+y+z)^2}{3}$.
+---
+$$(x-1)^2+(y-1)^2+(z-1)^2 = (x^2+y^2+z^2) - 2(x+y+z) + 3 = 3 - 6 + 3 = 0.$$
+Luego $x = y = z = 1$, que efectivamente es solución.
+
+Si $x^2+y^2+z^2 = 2$, la misma cuenta da $\sum(x-1)^2 = -1 < 0$, imposible: **no hay solución real**. Es la desigualdad entre la media cuadrática y la aritmética: $x^2+y^2+z^2 \ge \frac{(x+y+z)^2}{3} = 3$.
+!! Buscar soluciones por tanteo y no demostrar que son las únicas.
+===
+P id=g21p2a n=6 b=AL t=19 sb=AL3 m=gemelo ref=2021-P2 | Determinante con factores por filas
+Calcula
+$$D = \begin{vmatrix} x-1 & x^2-1 & x^3-1\\ x-2 & x^2-4 & x^3-8\\ x-3 & x^2-9 & x^3-27\end{vmatrix}.$$
+> Saca el factor $(x-i)$ de la fila $i$.
+> Haz operaciones entre columnas hasta llegar a un determinante de Vandermonde.
+---
+Sacando $(x-1)(x-2)(x-3)$:
+$$D = (x-1)(x-2)(x-3)\begin{vmatrix} 1 & x+1 & x^2+x+1\\ 1 & x+2 & x^2+2x+4 \\ 1 & x+3 & x^2+3x+9\end{vmatrix}.$$
+Con $C_2 \to C_2 - xC_1$ y $C_3\to C_3 - x^2C_1 - xC_2$ (usando la nueva $C_2$):
+$$\begin{vmatrix} 1&1&1\\1&2&4\\1&3&9\end{vmatrix} = (2-1)(3-1)(3-2) = 2.$$
+**Conclusión.** $D = 2(x-1)(x-2)(x-3)$.
+
+**Comprobación.** Con $x = 0$: $D = \begin{vmatrix} -1&-1&-1\\-2&-4&-8\\-3&-9&-27\end{vmatrix} = -12$, y $2(-1)(-2)(-3) = -12$. ✓
+!! Olvidar que las operaciones entre columnas no cambian el determinante, pero sacar factor de una fila sí lo multiplica.
+===
+P id=g21p2b n=7 b=AL t=19 sb=AL3 m=gemelo ref=2021-P2 | Determinante que se anula
+Sean $a, b, c, d$ números reales. Calcula
+$$\begin{vmatrix} 1 & a & a^2 & a^3 + bcd\\ 1 & b & b^2 & b^3 + acd\\ 1 & c & c^2 & c^3 + abd \\ 1 & d & d^2 & d^3 + abc\end{vmatrix}.$$
+> Descompón la última columna en suma de dos y separa el determinante en dos.
+> En el segundo, si $abcd\ne0$, multiplica la fila de $a$ por $a$, etc.
+---
+Por linealidad en la última columna, $\Delta = V + W$, con $V$ el determinante de Vandermonde de columnas $1, t, t^2, t^3$ y
+$$W = \begin{vmatrix} 1 & a & a^2 & bcd\\ 1&b&b^2&acd\\1&c&c^2&abd\\1&d&d^2&abc\end{vmatrix}.$$
+Si $abcd\ne 0$, multiplicando cada fila por su variable y dividiendo por $abcd$:
+$$W = \frac{1}{abcd}\begin{vmatrix} a & a^2 & a^3 & abcd\\ \vdots &&& \vdots\end{vmatrix} = \begin{vmatrix} a&a^2&a^3&1\\ b&b^2&b^3&1\\c&c^2&c^3&1\\d&d^2&d^3&1\end{vmatrix} = (-1)^3 V = -V,$$
+porque llevar la última columna a la primera son 3 trasposiciones.
+
+Así $\Delta = 0$ si $abcd\ne0$. Como $\Delta$ es un polinomio en $a,b,c,d$ que se anula en el conjunto denso $abcd\ne 0$, es el polinomio nulo.
+
+**Conclusión.** El determinante vale $0$ para cualesquiera $a, b, c, d$.
+!! No justificar el caso en que alguna variable es 0.
+===
+P id=g21p3a n=7 b=AN t=29 sb=AN7 m=gemelo ref=2021-P3 | Ecuación integral con factor 2
+Halla las funciones continuas $f:\mathbb{R}\to\mathbb{R}$ tales que
+$$x\,f(x) = 2\int_0^x f(t)\,dt\quad\text{para todo } x\in\mathbb{R}.$$
+> Con $F(x) = \int_0^x f$, la condición es $xF'(x) = 2F(x)$. ¿Qué función de $F$ tiene derivada nula?
+> Estudia $F(x)/x^2$ en cada semirrecta y después impón la continuidad en 0.
+---
+**Desarrollo.** $F$ es derivable con $F' = f$ (teorema fundamental, $f$ continua). Para $x\ne0$:
+$$\left(\frac{F(x)}{x^2}\right)' = \frac{xF'(x) - 2F(x)}{x^3} = 0.$$
+Por tanto $F(x) = \alpha x^2$ si $x>0$ y $F(x) = \beta x^2$ si $x<0$, y $f(x) = F'(x) = 2\alpha x$ o $2\beta x$. Por continuidad, $f(0) = 0$.
+
+**Comprobación.** Si $f(x) = kx$ en una semirrecta: $2\int_0^x kt\,dt = kx^2 = x\cdot kx$. ✓
+
+**Conclusión.** $f(x) = \lambda x$ para $x\ge0$ y $f(x) = \mu x$ para $x<0$, con $\lambda, \mu\in\mathbb{R}$ arbitrarios. Todas son continuas.
+!! Concluir que $f(x) = \lambda x$ con una sola constante para toda la recta.
+===
+P id=g21p3b n=6 b=AN t=29 sb=AN7 m=gemelo ref=2021-P3 | Ecuación integral con término x²
+Halla las funciones continuas $f:\mathbb{R}\to\mathbb{R}$ tales que
+$$\int_0^x f(t)\,dt = x\,f(x) - x^2\quad\text{para todo } x\in\mathbb{R}.$$
+> Con $F$ primitiva, la condición es $xF' - F = x^2$. Divide por $x^2$.
+> $\left(\frac{F}{x}\right)' = \frac{xF' - F}{x^2}$.
+---
+Para $x\ne0$: $\left(\frac{F(x)}{x}\right)' = \frac{xF'(x) - F(x)}{x^2} = 1$, luego $F(x) = x^2 + c_1x$ si $x>0$ y $F(x) = x^2 + c_2 x$ si $x<0$. Así $f(x) = 2x + c_1$ ($x>0$) y $f(x) = 2x + c_2$ ($x<0$). La continuidad en 0 obliga a $c_1 = c_2 = f(0)$.
+
+**Comprobación.** $\int_0^x (2t + c)\,dt = x^2 + cx$ y $x(2x+c) - x^2 = x^2 + cx$. ✓
+
+**Conclusión.** $f(x) = 2x + c$, con $c\in\mathbb{R}$.
+!! No usar la continuidad en 0 y dejar dos constantes distintas.
+===
+P id=g21p4a n=7 b=GE t=51 sb=GE2 m=gemelo ref=2021-P4 | Cuadrado por cuatro puntos
+Los puntos $A(6,8)$, $B(-1,7)$, $C(-7,-1)$ y $D(4,-3)$ están sobre los lados consecutivos de un cuadrado o sobre sus prolongaciones. Halla la longitud del lado.
+> Llama $\vec u$ a la dirección de los lados por $A$ y por $C$ y $\vec n$ a la perpendicular.
+> Iguala $|\vec n\cdot\vec{AC}|$ y $|\vec u\cdot\vec{BD}|$ y estudia los dos signos.
+---
+$\vec{AC} = (-13,-9)$ y $\vec{BD} = (5,-10)$. Con $\vec u = (p,q)$ unitario y $\vec n = (-q,p)$:
+$$\vec n\cdot\vec{AC} = 13q - 9p,\qquad \vec u\cdot\vec{BD} = 5p - 10q.$$
+Caso 1: $13q - 9p = 5p - 10q \Rightarrow 14p = 23q$, $\vec u = \frac{(23,14)}{\sqrt{725}}$, y $\ell = \frac{|13\cdot14 - 9\cdot23|}{\sqrt{725}} = \frac{25}{5\sqrt{29}} = \frac{5}{\sqrt{29}} = \frac{5\sqrt{29}}{29}$.
+
+Caso 2: $13q - 9p = -5p + 10q \Rightarrow 3q = 4p$, $\vec u = \frac{(3,4)}{5}$, y $\ell = \frac{|13\cdot 4 - 9\cdot 3|}{5} = 5$.
+
+**Conclusión.** Hay dos cuadrados: de lado $5$ y de lado $\frac{5\sqrt{29}}{29}$.
+!! Calcular la distancia entre $A$ y $C$ en vez de la distancia entre las rectas paralelas.
+===
+P id=g21p4b n=6 b=GE t=51 sb=GE2 m=gemelo ref=2021-P4 | Cuadrado con un lado dado
+Un cuadrado tiene un lado sobre la recta $r: x + 2y = 4$ y el lado opuesto pasa por $P(5,5)$. Uno de los otros dos lados pasa por el origen. Halla el área del cuadrado y la ecuación del cuarto lado.
+> El lado del cuadrado es la distancia de $P$ a $r$.
+> Los otros dos lados son perpendiculares a $r$: $2x - y = c$.
+---
+Lado: $\ell = d(P, r) = \frac{|5 + 10 - 4|}{\sqrt5} = \frac{11}{\sqrt5}$. Área: $\ell^2 = \frac{121}{5}$.
+
+Los lados perpendiculares a $r$ son $2x - y = c$. Por el origen: $c = 0$. El cuarto lado está a distancia $\ell$: $\frac{|c|}{\sqrt5} = \frac{11}{\sqrt5}$, así que $c = \pm 11$.
+
+**Conclusión.** Área $\frac{121}{5}$; cuarto lado $2x - y = 11$ o $2x - y = -11$ (dos cuadrados posibles).
+!! Tomar como lado la distancia de $P$ al origen.
+===
+P id=g21p5a n=4 b=PR t=64 sb=PR2 m=gemelo ref=2021-P5 | Tres talleres
+El segundo de tres talleres produce el triple que el primero, y el tercero tanto como los dos primeros juntos. El 5 %, el 2 % y el 1 % de sus piezas, respectivamente, son defectuosas. **a)** Probabilidad de que una pieza al azar sea defectuosa. **b)** Si es defectuosa, probabilidad de que venga del primer taller.
+> Escribe las producciones como $N$, $3N$ y $4N$.
+> Probabilidad total y Bayes.
+---
+$P(T_1) = \frac18$, $P(T_2) = \frac38$, $P(T_3) = \frac48$.
+
+**a)** $P(D) = \frac{0{,}05 + 3\cdot0{,}02 + 4\cdot0{,}01}{8} = \frac{0{,}15}{8} = 0{,}01875$.
+
+**b)** $P(T_1\mid D) = \frac{0{,}05/8}{0{,}15/8} = \frac13$.
+!! Sumar los porcentajes de defectuosas sin ponderar por la producción de cada taller.
+===
+P id=g21p5b n=5 b=PR t=65 sb=PR2 m=gemelo ref=2021-P5 | Talleres y dos piezas
+Con los datos de los tres talleres anteriores (producciones $N$, $3N$, $4N$ y defectuosas al 5 %, 2 % y 1 %), se eligen al azar dos piezas de la producción total, con reemplazamiento. Halla la probabilidad de que exactamente una sea defectuosa y la de que, si exactamente una es defectuosa, esta venga del primer taller.
+> Cada pieza es defectuosa con probabilidad $P(D) = 0{,}01875$, de forma independiente.
+> Para la segunda pregunta, la pieza defectuosa es una pieza defectuosa cualquiera: aplica Bayes.
+---
+$P(D) = 0{,}01875$. Exactamente una defectuosa (binomial $n = 2$):
+$$2\cdot 0{,}01875\cdot 0{,}98125 \approx 0{,}0368.$$
+La pieza defectuosa, por ser elegida con independencia de la otra, procede del primer taller con probabilidad $P(T_1\mid D) = \frac13$.
+!! Olvidar el factor 2 de los dos órdenes posibles.
+===
+P id=g25p1a n=6 b=AN t=25 sb=AN1 m=gemelo ref=2025-P1 | Sándwich con sumas
+Calcula $\displaystyle\lim_{n\to\infty}\sum_{k=1}^n \frac{n}{n^2+k}$.
+> Acota cada sumando entre $\frac{n}{n^2+n}$ y $\frac{n}{n^2+1}$.
+> Hay $n$ sumandos.
+---
+Para $1\le k\le n$: $\frac{n}{n^2+n}\le\frac{n}{n^2+k}\le\frac{n}{n^2+1}$. Sumando,
+$$\frac{n^2}{n^2+n} \le S_n \le \frac{n^2}{n^2+1},$$
+y ambas cotas tienden a 1. Por el criterio del sándwich, $\lim S_n = 1$.
+!! Sumar las cotas sin multiplicar por el número de sumandos.
+===
+P id=g25p1b n=7 b=AN t=25 sb=AN1 m=gemelo ref=2025-P1 | Sándwich con numerador variable
+Calcula $\displaystyle\lim_{n\to\infty}\sum_{k=1}^n \frac{k}{n^2+k}$.
+> Acota los denominadores entre $n^2+1$ y $n^2+n$, pero conserva el numerador $k$.
+> $\sum_{k=1}^n k = \frac{n(n+1)}{2}$.
+---
+Para $1\le k\le n$: $\frac{k}{n^2+n}\le\frac{k}{n^2+k}\le\frac{k}{n^2+1}$. Sumando y usando $\sum k = \frac{n(n+1)}{2}$:
+$$\frac{n(n+1)}{2(n^2+n)} = \frac12 \le S_n\le \frac{n(n+1)}{2(n^2+1)}\to\frac12.$$
+**Conclusión.** $\lim S_n = \frac12$.
+!! Acotar también el numerador por $n$ y obtener cotas con límites distintos (1/2 y 1), que no sirven.
+===
+P id=g25p2a n=7 b=AL t=13 sb=AL1 m=gemelo ref=2025-P2 | Sistema con Cardano-Vieta
+Resuelve el sistema
+$$x + y + z = 2,\qquad \frac1x + \frac1y + \frac1z = \frac12,\qquad xyz = -8.$$
+> $\frac1x+\frac1y+\frac1z = \frac{\sigma_2}{\sigma_3}$.
+> Construye el polinomio $t^3 - \sigma_1t^2 + \sigma_2 t - \sigma_3$ y busca raíces enteras.
+---
+$\sigma_1 = 2$, $\sigma_3 = -8$ y $\sigma_2 = \frac{\sigma_3}{2} = -4$. Las incógnitas son las raíces de
+$$t^3 - 2t^2 - 4t + 8 = t^2(t-2) - 4(t-2) = (t-2)^2(t+2).$$
+**Conclusión.** $\{x, y, z\} = \{2, 2, -2\}$: las soluciones son $(2,2,-2)$, $(2,-2,2)$ y $(-2,2,2)$.
+
+**Comprobación.** $2+2-2 = 2$; $\frac12+\frac12-\frac12 = \frac12$; $2\cdot2\cdot(-2) = -8$. ✓
+!! Dar seis permutaciones cuando dos raíces coinciden: solo hay tres soluciones distintas.
+===
+P id=g25p2b n=7 b=AL t=13 sb=AL1 m=gemelo ref=2025-P2 | La clave del problema de 2025
+Sean $x, y, z$ reales no nulos y $a\ne0$ con $x + y + z = a$ y $\frac1x + \frac1y + \frac1z = \frac1a$. Demuestra que al menos uno de los tres números es igual a $a$.
+> Quita denominadores: $(x+y+z)(xy+yz+zx) = xyz$.
+> Factoriza $(x+y+z)(xy+yz+zx) - xyz$.
+---
+Las hipótesis dan $\frac{xy+yz+zx}{xyz} = \frac{1}{x+y+z}$, es decir,
+$$(x+y+z)(xy+yz+zx) - xyz = 0.$$
+Desarrollando se comprueba la identidad
+$$(x+y+z)(xy+yz+zx) - xyz = (x+y)(y+z)(z+x).$$
+Por tanto algún factor es nulo; si, por ejemplo, $x + y = 0$, entonces $z = a - (x+y) = a$. $\blacksquare$
+!! Afirmar la factorización sin desarrollarla ni comprobarla.
+===
+P id=g25p3a n=6 b=AN t=30 sb=AN5 m=gemelo ref=2025-P3 | Integral impropia con raíz cúbica
+Calcula $\displaystyle\int_0^1 \frac{\ln x}{\sqrt[3]{x}}\,dx$.
+> Plantea el límite cuando $\varepsilon\to0^+$.
+> Por partes con $v = \frac32 x^{2/3}$.
+---
+$$\int \ln x\cdot x^{-1/3}\,dx = \tfrac32 x^{2/3}\ln x - \tfrac32\int x^{-1/3}dx = \tfrac32x^{2/3}\ln x - \tfrac94 x^{2/3}.$$
+Como $x^{2/3}\ln x\to 0$ cuando $x\to0^+$ (L'Hôpital),
+$$\int_0^1 \frac{\ln x}{\sqrt[3]x}dx = \lim_{\varepsilon\to0^+}\left[\tfrac32x^{2/3}\ln x - \tfrac94x^{2/3}\right]_\varepsilon^1 = -\frac94.$$
+!! Equivocarse en la primitiva de $x^{-1/3}$: es $\frac32x^{2/3}$.
+===
+P id=g25p3b n=7 b=AN t=30 sb=AN5 m=gemelo ref=2025-P3 | Familia de integrales impropias
+Estudia para qué valores de $\alpha\in\mathbb{R}$ converge $\displaystyle I(\alpha) = \int_0^1 x^\alpha\ln x\,dx$ y calcula su valor.
+> Para $\alpha>-1$, integra por partes y usa que $x^{\alpha+1}\ln x\to0$.
+> Para $\alpha\le -1$, compara con $\int_0^{1/e} x^\alpha\,dx$.
+---
+**Si $\alpha > -1$.** Por partes:
+$$\int_\varepsilon^1 x^\alpha\ln x\,dx = \left[\frac{x^{\alpha+1}}{\alpha+1}\ln x\right]_\varepsilon^1 - \frac{1}{\alpha+1}\int_\varepsilon^1 x^\alpha dx \xrightarrow[\varepsilon\to0^+]{} -\frac{1}{(\alpha+1)^2},$$
+porque $\varepsilon^{\alpha+1}\ln\varepsilon\to0$.
+
+**Si $\alpha\le -1$.** En $(0, 1/e)$, $\ln x < -1$, así que $|x^\alpha\ln x| \ge x^\alpha$, y $\int_0^{1/e}x^\alpha\,dx$ diverge. Por comparación, $I(\alpha)$ diverge.
+
+**Conclusión.** $I(\alpha)$ converge si y solo si $\alpha>-1$, y entonces $I(\alpha) = -\frac{1}{(\alpha+1)^2}$. Con $\alpha = -\frac12$ se obtiene el $-4$ del examen de 2025.
+!! No estudiar la divergencia para $\alpha\le-1$, que también forma parte de lo pedido.
+===
+P id=g25p4a n=6 b=GE t=53 sb=GE4 m=gemelo ref=2025-P4 | Equidistantes de dos planos
+Halla el lugar geométrico de los puntos del espacio que equidistan de los planos $\pi_1: x + y + z = 1$ y $\pi_2: x - y + z = 3$.
+> Los dos planos tienen normales del mismo módulo, $\sqrt3$.
+> $|x+y+z-1| = |x-y+z-3|$ da dos planos.
+---
+$d(P,\pi_1) = d(P,\pi_2) \iff |x+y+z-1| = |x-y+z-3|$.
+
+Con signo $+$: $2y = -2 \Rightarrow y = -1$. Con signo $-$: $2x + 2z = 4\Rightarrow x + z = 2$.
+
+**Conclusión.** El lugar son los dos **planos bisectores** $y = -1$ y $x + z = 2$, perpendiculares entre sí y que contienen a la recta $\pi_1\cap\pi_2$.
+!! Quedarse con un solo plano bisector.
+===
+P id=g25p4b n=5 b=GE t=53 sb=GE4 m=gemelo ref=2025-P4 | Equidistantes y a distancia fija
+Halla el lugar geométrico de los puntos que equidistan de $A(1,0,0)$ y $B(0,2,0)$ y están a distancia 1 del plano $z = 0$.
+> Equidistar de $A$ y $B$: plano mediador.
+> Distancia 1 a $z = 0$: dos planos.
+---
+Plano mediador: $(x-1)^2 + y^2 = x^2 + (y-2)^2 \iff 2x - 4y + 3 = 0$. Distancia 1 a $z = 0$: $z = 1$ o $z = -1$.
+
+**Conclusión.** Dos rectas paralelas: $\{2x - 4y + 3 = 0,\ z = 1\}$ y $\{2x - 4y + 3 = 0,\ z = -1\}$.
+!! Olvidar el plano $z = -1$.
+===
+P id=g25p5a n=7 b=PR t=64 sb=PR3 m=gemelo ref=2025-P5 | Independencia con una unión
+Sean $A$, $B$, $C$ sucesos independientes. Demuestra que $A$ y $B\cup C$ son independientes.
+> Distribuye: $A\cap(B\cup C) = (A\cap B)\cup(A\cap C)$.
+> Inclusión-exclusión y las cuatro igualdades de la independencia.
+---
+$$P(A\cap(B\cup C)) = P(A\cap B) + P(A\cap C) - P(A\cap B\cap C) = P(A)\big[P(B) + P(C) - P(B)P(C)\big].$$
+Y $P(B\cup C) = P(B) + P(C) - P(B)P(C)$ porque $B$ y $C$ son independientes. Luego $P(A\cap(B\cup C)) = P(A)P(B\cup C)$. $\blacksquare$
+!! Usar solo la independencia dos a dos: hace falta la igualdad triple.
+===
+P id=g25p5b n=6 b=PR t=64 sb=PR3 m=gemelo ref=2025-P5 | Tres tiradores
+Tres tiradores disparan de forma independiente y aciertan con probabilidades $\frac12$, $\frac13$ y $\frac14$. Halla la probabilidad de que al menos uno acierte y la de que acierte exactamente uno.
+> Los fallos también son independientes (problema de Murcia 2025).
+> «Al menos uno» es el contrario de «ninguno».
+---
+Por la independencia de los complementarios, $P(\text{ninguno}) = \frac12\cdot\frac23\cdot\frac34 = \frac14$, así que $P(\text{al menos uno}) = \frac34$.
+
+Exactamente uno:
+$$\tfrac12\cdot\tfrac23\cdot\tfrac34 + \tfrac12\cdot\tfrac13\cdot\tfrac34 + \tfrac12\cdot\tfrac23\cdot\tfrac14 = \frac{6+3+2}{24} = \frac{11}{24}.$$
+!! Sumar las tres probabilidades de acierto ($\frac{13}{12} > 1$).
+===
+P id=n01 n=4 b=NU t=1 sb=NU1 | Suma de cubos por inducción
+Demuestra por inducción que $1^3 + 2^3 + \cdots + n^3 = \left(\dfrac{n(n+1)}{2}\right)^2$ para todo $n\ge1$.
+> Escribe los cuatro pasos: caso base, hipótesis de inducción, paso inductivo y conclusión.
+> En el paso inductivo saca $\frac{(n+1)^2}{4}$ factor común.
+---
+**Caso base.** $n = 1$: $1 = 1^2$. ✓
+
+**Hipótesis de inducción.** Supongamos que $\sum_{k=1}^n k^3 = \frac{n^2(n+1)^2}{4}$ para cierto $n\ge1$.
+
+**Paso inductivo.**
+$$\sum_{k=1}^{n+1}k^3 = \frac{n^2(n+1)^2}{4} + (n+1)^3 = \frac{(n+1)^2}{4}\left(n^2 + 4n + 4\right) = \left(\frac{(n+1)(n+2)}{2}\right)^2.$$
+**Conclusión.** Por el principio de inducción, la igualdad es cierta para todo $n\ge1$. $\blacksquare$
+!! Omitir la frase final de conclusión por el principio de inducción.
+===
+P id=n02 n=5 b=NU t=1 sb=NU1 | Potencias de 2 frente a cuadrados
+Demuestra que $2^n > n^2$ para todo $n\ge5$.
+> Caso base $n = 5$.
+> En el paso inductivo necesitas $2n^2 \ge (n+1)^2$: ¿para qué $n$ se cumple?
+---
+**Caso base.** $2^5 = 32 > 25$.
+
+**Paso inductivo.** Si $2^n > n^2$ con $n\ge5$, entonces $2^{n+1} > 2n^2$. Además $2n^2 - (n+1)^2 = n^2 - 2n - 1 = (n-1)^2 - 2 > 0$ para $n\ge3$. Luego $2^{n+1} > (n+1)^2$.
+
+**Conclusión.** Por inducción, $2^n>n^2$ para todo $n\ge5$. (Para $n = 2, 3, 4$ es falso: $4 = 4$, $8<9$, $16 = 16$.) $\blacksquare$
+!! No comprobar que la desigualdad auxiliar $2n^2\ge(n+1)^2$ se cumple en el rango usado.
+===
+P id=n03 n=5 b=NU t=1 sb=NU4 | Base desconocida
+Halla la base $b$ del sistema de numeración en la que $(25)_b\cdot(13)_b = (347)_b$.
+> Pasa los tres números a base 10 como polinomios en $b$.
+> Recuerda que las cifras deben ser menores que $b$.
+---
+$(2b+5)(b+3) = 3b^2 + 4b + 7 \iff 2b^2 + 11b + 15 = 3b^2 + 4b + 7 \iff b^2 - 7b - 8 = 0$, cuyas raíces son $b = 8$ y $b = -1$.
+
+Como la cifra mayor es 7, hace falta $b\ge 8$. **Solución: $b = 8$.**
+
+**Comprobación.** $(25)_8 = 21$, $(13)_8 = 11$, $21\cdot 11 = 231 = 3\cdot64 + 4\cdot8 + 7 = (347)_8$. ✓
+!! No comprobar que todas las cifras son menores que la base.
+===
+P id=n04 n=5 b=NU t=15 sb=NU5 | Entradas de dos precios
+Un grupo gasta exactamente 1000 € en entradas de 30 € y de 70 €. ¿Cuántas entradas de cada tipo puede haber comprado? Da todas las posibilidades.
+> Simplifica $30x + 70y = 1000$ y comprueba que tiene solución con el mcd.
+> Halla una solución particular y escribe la general; después impón $x, y\ge0$.
+---
+$3x + 7y = 100$. Como $\operatorname{mcd}(3,7) = 1\mid 100$, hay solución. Particular: $y = 1$, $x = 31$. General:
+$$x = 31 - 7k,\quad y = 1 + 3k,\quad k\in\mathbb{Z}.$$
+Con $x, y\ge 0$: $k\in\{0,1,2,3,4\}$.
+
+**Conclusión.** $(x, y) \in \{(31,1), (24,4), (17,7), (10,10), (3,13)\}$.
+!! Dar solo una solución cuando se piden todas.
+===
+P id=n05 n=6 b=NU t=4 sb=NU2 | Un mcd que solo vale 1 o 2
+Demuestra que $\operatorname{mcd}(n^2+1,\ n+1)\in\{1,2\}$ para todo $n\in\mathbb{Z}$ y determina cuándo vale 2.
+> Divide $n^2+1$ entre $n+1$.
+> $\operatorname{mcd}(a,b) = \operatorname{mcd}(b, a - qb)$.
+---
+$n^2 + 1 = (n+1)(n-1) + 2$, así que
+$$\operatorname{mcd}(n^2+1, n+1) = \operatorname{mcd}(n+1, 2)\in\{1,2\}.$$
+Vale 2 si y solo si $n+1$ es par, es decir, **si $n$ es impar**. $\blacksquare$
+!! Afirmar el resultado con unos ejemplos sin usar la propiedad del algoritmo de Euclides.
+===

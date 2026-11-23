@@ -1,0 +1,199 @@
+P id=m02p1 n=6 b=AN t=22 sb=AN3 m=oficial ref=2002-P1 src=Murcia-2002 | Murcia 2002 · Problema 1
+Hallar un sistema de logaritmos en el que existe un número que es igual a su logaritmo.
+> Un sistema de logaritmos es una base $a>0$, $a\ne1$. Buscas $x>0$ con $\log_a x = x$, es decir, $a^x = x$.
+> Toma logaritmos neperianos: $\ln a = \frac{\ln x}{x}$. Estudia el recorrido de $h(x) = \frac{\ln x}{x}$ en $(0,+\infty)$.
+---
+**Planteamiento.** Un sistema de logaritmos queda fijado por su base $a>0$, $a\ne1$. Buscamos las bases para las que existe $x>0$ con $\log_a x = x$. Como $\log_a x = x \iff a^x = x \iff x\ln a = \ln x$, la condición equivale a
+$$\ln a = h(x), \qquad h(x) = \frac{\ln x}{x},\ x>0.$$
+Por tanto, existe tal número si y solo si $\ln a$ pertenece al recorrido de $h$.
+
+**Desarrollo.** $h$ es derivable en $(0,+\infty)$ con $h'(x) = \dfrac{1-\ln x}{x^2}$, positiva en $(0,e)$ y negativa en $(e,+\infty)$. Luego $h$ crece en $(0,e]$, decrece en $[e,+\infty)$ y alcanza su máximo absoluto en $x = e$: $h(e) = \frac1e$.
+Además $\lim_{x\to0^+} h(x) = -\infty$ y $\lim_{x\to+\infty}h(x) = 0$ (por L'Hôpital). Como $h$ es continua, por el teorema de los valores intermedios su recorrido es $(-\infty, \frac1e]$.
+
+**Conclusión.** Existe un número igual a su logaritmo si y solo si $\ln a\le\frac1e$ (con $a\ne1$), es decir,
+$$a\in(0,1)\cup\left(1, e^{1/e}\right].$$
+Por ejemplo, con $a = e^{1/e}\approx1{,}44$ el número $x = e$ cumple $\log_a e = \frac{\ln e}{\ln a} = e$. Y con $a = \sqrt2$, el número $x = 2$: $\log_{\sqrt2}2 = 2$.
+
+**Comprobación.** Para $a = \sqrt2$: $(\sqrt2)^2 = 2$. ✓
+!! Dar solo un ejemplo de base sin estudiar para qué bases existe la solución, o descartar las bases menores que 1.
+===
+P id=m02p2 n=5 b=GE t=38 sb=GE1 m=oficial ref=2002-P2 src=Murcia-2002 | Murcia 2002 · Problema 2
+Calcular las tangentes de los ángulos de un triángulo sabiendo que dichas tangentes son números enteros positivos.
+> En un triángulo $A+B+C=\pi$. Deduce la identidad $\tan A+\tan B+\tan C = \tan A\tan B\tan C$.
+> Ordena las tangentes $x\le y\le z$ y acota: $xyz = x+y+z\le3z$.
+---
+**Planteamiento.** Sean $A, B, C$ los ángulos, con $A+B+C = \pi$, y $x = \tan A$, $y = \tan B$, $z = \tan C$ enteros positivos. Al ser las tangentes positivas, los tres ángulos son agudos y las tangentes están definidas.
+
+**Resultado teórico.** Como $C = \pi-(A+B)$, $\tan C = -\tan(A+B) = -\dfrac{x+y}{1-xy}$ (y $xy\ne1$, pues si no $A+B=\frac\pi2$ y $C$ sería recto). Despejando:
+$$x+y+z = xyz.$$
+
+**Desarrollo.** Sin pérdida de generalidad, $1\le x\le y\le z$. Entonces $xyz = x+y+z\le 3z$, luego $xy\le3$. Los casos posibles son:
+- $x=y=1$: $2+z = z$, imposible.
+- $x=1$, $y=2$: $3+z = 2z\Rightarrow z = 3$.
+- $x=1$, $y=3$: $4+z = 3z\Rightarrow z = 2<y$, contradice el orden (es la misma terna).
+
+**Conclusión.** Las tangentes son $1$, $2$ y $3$.
+
+**Comprobación.** $1+2+3 = 6 = 1\cdot2\cdot3$. ✓ Y existe el triángulo: $A = \frac\pi4$, $B = \arctan2$, $C = \arctan3$, con $\arctan2+\arctan3 = \frac{3\pi}4$.
+!! Tantear la terna $1, 2, 3$ y no demostrar que es la única.
+===
+P id=m02p3 n=6 b=PR t=63 sb=PR1 m=oficial ref=2002-P3 src=Murcia-2002 | Murcia 2002 · Problema 3
+Elegimos al azar tres puntos de una circunferencia. Calcular la probabilidad de que los tres estén en un mismo arco de 90 grados.
+> Para cada punto $P_i$, considera el suceso «los otros dos están en el arco de 90° que empieza en $P_i$ en sentido antihorario».
+> Esos tres sucesos son incompatibles (salvo probabilidad nula) y su unión es el suceso pedido.
+---
+**Planteamiento.** Los tres puntos $P_1, P_2, P_3$ se eligen de forma independiente y uniforme en la circunferencia. Sea $E_i$ el suceso «los otros dos puntos están en el arco de 90° que empieza en $P_i$ y avanza en sentido antihorario».
+
+**Desarrollo.**
+- Si los tres puntos están en un arco de 90°, recorriendo ese arco en sentido antihorario hay un primer punto $P_i$, y entonces ocurre $E_i$. Recíprocamente, si ocurre algún $E_i$ los tres están en un arco de 90°. Luego el suceso pedido es $E_1\cup E_2\cup E_3$.
+- Los $E_i$ son incompatibles (salvo un suceso de probabilidad nula): si ocurrieran $E_i$ y $E_j$, $P_j$ estaría a menos de 90° por delante de $P_i$ y $P_i$ a menos de 90° por delante de $P_j$, lo que exige recorrer al menos media circunferencia en menos de 180°.
+- Fijado $P_i$, cada uno de los otros puntos cae en ese arco con probabilidad $\frac{90}{360} = \frac14$, de forma independiente: $P(E_i) = \frac1{16}$.
+
+**Conclusión.** $P = P(E_1)+P(E_2)+P(E_3) = \dfrac{3}{16}$.
+
+**Comprobación.** El mismo razonamiento con un arco de 180° da $\frac34$, que es el resultado conocido para tres puntos en una semicircunferencia.
+!! Calcular $(1/4)^2$ y olvidar el factor 3, o sumar sucesos sin comprobar que son incompatibles.
+===
+P id=m04p1 n=6 b=PR t=66 sb=PR5 m=oficial ref=2004-P1 src=Murcia-2004 | Murcia 2004 · Problema 1
+El tiempo $T$ de funcionamiento ininterrumpido hasta avería de un tipo de motor es una variable aleatoria con densidad $f(t) = \alpha e^{\beta t}$, $t\ge0$.
+
+**a)** Hallar los posibles valores de $\alpha$ y $\beta$, el tiempo medio de funcionamiento y la varianza de $T$.
+**b)** Se instalan en paralelo tres motores independientes (el sistema funciona si funciona alguno), cada uno con tiempo medio de 3 meses. Hallar el tiempo medio hasta avería del sistema. Si el sistema se pone en marcha 100 veces, ¿en cuántas se espera que funcione más de tres meses sin avería?
+**c)** Si los tres motores se instalan en serie (el sistema se para cuando se para alguno), hallar el tiempo medio hasta parada.
+**d)** Si se instalan en paralelo diez motores y hacen falta al menos tres funcionando a la vez, hallar la probabilidad de que el montaje funcione con eficacia más de tres meses.
+
+Sin calculadora: deja indicadas las expresiones numéricas.
+> Para que $f$ sea densidad debe integrar 1 en $[0,+\infty)$: eso obliga a $\beta<0$ y $\alpha = -\beta$.
+> En paralelo el sistema dura $\max(T_1,T_2,T_3)$; en serie, $\min(T_1,T_2,T_3)$. Calcula su función de distribución.
+---
+**Planteamiento.** Escribimos $\lambda = -\beta$. Llamamos $T_1, T_2, T_3$ a las duraciones de los motores, independientes y con la misma distribución.
+
+**a)** Debe ser $f\ge0$, luego $\alpha>0$, y $\int_0^\infty\alpha e^{\beta t}dt = 1$. La integral solo converge si $\beta<0$, y entonces vale $-\frac{\alpha}{\beta}$. Por tanto $\beta = -\lambda<0$ y $\alpha = \lambda$: $T$ es exponencial de parámetro $\lambda$, $f(t) = \lambda e^{-\lambda t}$.
+Integrando por partes, $E[T] = \int_0^\infty t\lambda e^{-\lambda t}dt = \frac1\lambda$ y $E[T^2] = \frac2{\lambda^2}$, así que $\operatorname{Var}(T) = \frac1{\lambda^2}$.
+
+**b)** $E[T_i] = 3$ meses, luego $\lambda = \frac13$ y $P(T_i>t) = e^{-t/3}$. El sistema dura $M = \max(T_1,T_2,T_3)$, con $P(M\le t) = (1-e^{-t/3})^3$. Desarrollando y usando $E[M] = \int_0^\infty P(M>t)\,dt$:
+$$E[M] = \int_0^\infty\left(3e^{-t/3}-3e^{-2t/3}+e^{-t}\right)dt = 9 - \frac92 + 1 = \frac{11}2 = 5{,}5 \text{ meses}.$$
+$P(M>3) = 1-(1-e^{-1})^3$. El número de arranques con éxito entre 100 es binomial $B(100, p)$ con $p = 1-(1-e^{-1})^3$, y su media es $100\left[1-(1-e^{-1})^3\right]\approx 74{,}7$: unas 75 veces.
+
+**c)** En serie dura $m = \min(T_1,T_2,T_3)$, con $P(m>t) = e^{-t/3}\cdot e^{-t/3}\cdot e^{-t/3} = e^{-t}$: es exponencial de parámetro 1 y $E[m] = 1$ mes.
+
+**d)** Cada motor sigue funcionando a los tres meses con probabilidad $p = e^{-1}$, de forma independiente. El número $X$ de motores que funcionan sigue una $B(10, e^{-1})$, y
+$$P(X\ge3) = 1-\sum_{k=0}^{2}\binom{10}{k}e^{-k}(1-e^{-1})^{10-k}\approx 0{,}775.$$
+
+**Conclusión.** a) $\alpha = \lambda>0$, $\beta = -\lambda$; $E[T] = \frac1\lambda$, $\operatorname{Var}(T) = \frac1{\lambda^2}$. b) 5,5 meses; unas $100[1-(1-e^{-1})^3]\approx75$ veces. c) 1 mes. d) $1-\sum_{k=0}^2\binom{10}{k}e^{-k}(1-e^{-1})^{10-k}$.
+!! Calcular la media del sistema en paralelo como $3\cdot3$ o como 3: hay que usar la distribución del máximo.
+===
+P id=m04p2a n=6 b=GE t=45 sb=GE6 m=oficial ref=2004-P2a src=Murcia-2004 | Murcia 2004 · Problema 2a
+Calcular el volumen del sólido engendrado por un rectángulo al girar alrededor de un eje que está en su mismo plano pero no corta al rectángulo.
+> El volumen de revolución de una región plana $R$ que no corta al eje es $V = \iint_R 2\pi\,r\,dA$, donde $r$ es la distancia al eje.
+> La distancia al eje es una función afín en el semiplano que contiene al rectángulo: su media sobre el rectángulo es su valor en el centro.
+---
+**Planteamiento.** Sea el rectángulo $R$ de lados $a$ y $b$, con centro $O$, y sea $d$ la distancia de $O$ al eje $e$. Como $e$ no corta a $R$, todo $R$ está en un mismo semiplano respecto de $e$, y en ese semiplano la distancia $r(P)$ de un punto al eje es una función afín de sus coordenadas.
+
+**Resultado teórico.** Al girar, cada elemento de área $dA$ a distancia $r$ del eje describe un anillo de volumen $2\pi r\,dA$. Por tanto
+$$V = \iint_R 2\pi\, r\,dA.$$
+
+**Desarrollo.** Como $r$ es afín y $R$ es simétrico respecto de su centro $O$, los valores en puntos simétricos respecto de $O$ promedian $r(O) = d$. Luego
+$$\iint_R r\,dA = d\cdot\text{Área}(R) = d\,ab.$$
+Es el teorema de Pappus-Guldin: el volumen es el área por la longitud de la circunferencia que describe el centroide.
+
+**Conclusión.** $$V = 2\pi\, d\, a\, b,$$ donde $d$ es la distancia del centro del rectángulo al eje. En particular, si un lado de longitud $b$ es paralelo al eje y el lado más cercano está a distancia $c$, entonces $d = c+\frac a2$ y $V = \pi b\left[(c+a)^2-c^2\right]$, que es el volumen de un cilindro hueco.
+
+**Comprobación.** Con el lado paralelo al eje, el sólido es un tubo de radios $c$ y $c+a$ y altura $b$: $\pi b[(c+a)^2-c^2] = \pi b\,a(2c+a) = 2\pi\left(c+\frac a2\right)ab$. ✓
+!! Suponer que un lado es paralelo al eje: el enunciado no lo dice, hay que tratar la posición general.
+===
+P id=m04p2b n=6 b=AN t=26 sb=AN3 m=oficial ref=2004-P2b src=Murcia-2004 | Murcia 2004 · Problema 2b
+Sea $f:\mathbb{R}\to\mathbb{R}$ derivable con $f(0) = 0$ y $f'(x)>0$ para todo $x$, y sea
+$$F(x) = \int_0^{x^2-3x+2} f(t)\,dt.$$
+Estudiar el crecimiento y los extremos locales de $F$.
+> $F = G\circ u$ con $G(y) = \int_0^y f$ y $u(x) = x^2-3x+2$. Usa el teorema fundamental del cálculo y la regla de la cadena.
+> Como $f$ es estrictamente creciente y $f(0) = 0$, el signo de $f(y)$ es el signo de $y$.
+---
+**Planteamiento.** $f$ es derivable, luego continua. Por el teorema fundamental del cálculo, $G(y) = \int_0^y f(t)\,dt$ es derivable con $G'(y) = f(y)$. Como $F = G\circ u$ con $u(x) = x^2-3x+2 = (x-1)(x-2)$, por la regla de la cadena
+$$F'(x) = f\big(u(x)\big)\,(2x-3).$$
+
+**Desarrollo.** Como $f'>0$, $f$ es estrictamente creciente y, al ser $f(0)=0$, el signo de $f(y)$ coincide con el de $y$. Así, el signo de $F'(x)$ es el de $(x-1)(x-2)(2x-3)$:
+
+- $x<1$: $+$, $-$ ⇒ $F'<0$, $F$ decrece.
+- $1<x<\frac32$: $-$, $-$ ⇒ $F'>0$, $F$ crece.
+- $\frac32<x<2$: $-$, $+$ ⇒ $F'<0$, $F$ decrece.
+- $x>2$: $+$, $+$ ⇒ $F'>0$, $F$ crece.
+
+**Conclusión.** $F$ es decreciente en $(-\infty,1]$ y en $[\frac32,2]$, y creciente en $[1,\frac32]$ y en $[2,+\infty)$. Tiene mínimos locales en $x=1$ y $x=2$, con $F(1)=F(2)=0$, y un máximo local en $x=\frac32$, con $F(\frac32) = \int_0^{-1/4}f(t)\,dt = \int_{-1/4}^0(-f(t))\,dt>0$.
+!! Derivar $F$ como $f(x^2-3x+2)$ olvidando el factor $2x-3$ de la regla de la cadena.
+===
+P id=m04p2c n=7 b=NU t=4 sb=NU3 m=oficial ref=2004-P2c src=Murcia-2004 | Murcia 2004 · Problema 2c
+Sea $p$ un primo impar. Encontrar todos los valores de $p$ para los que $\dfrac{2^{p-1}-1}{p}$ es un cuadrado perfecto.
+> Por el pequeño teorema de Fermat el cociente es entero. Escribe $p-1 = 2k$ y factoriza $2^{2k}-1 = (2^k-1)(2^k+1)$.
+> Los dos factores son impares consecutivos, luego primos entre sí. Uno de ellos es un cuadrado.
+---
+**Planteamiento.** Por el pequeño teorema de Fermat, $p\mid 2^{p-1}-1$, así que $q = \frac{2^{p-1}-1}{p}$ es entero. Buscamos los $p$ con $q = m^2$. Como $p$ es impar, $p-1 = 2k$ con $k\ge1$ y
+$$(2^k-1)(2^k+1) = p\,m^2.$$
+
+**Desarrollo.** $2^k-1$ y $2^k+1$ son impares y difieren en 2, luego $\operatorname{mcd}(2^k-1, 2^k+1) = 1$. El primo $p$ divide exactamente a uno de ellos y el otro, coprimo con $p$ y con el primero, debe ser un cuadrado perfecto. Hay dos casos:
+- **$2^k+1 = b^2$.** Entonces $2^k = (b-1)(b+1)$: ambos factores son potencias de 2 que difieren en 2, luego $b-1 = 2$, $b = 3$, $k = 3$ y $p = 7$. Comprobación: $2^3-1 = 7 = 7\cdot1^2$. ✓
+- **$2^k-1 = a^2$.** Si $k\ge2$, $2^k-1\equiv3\pmod 4$, que no es un cuadrado (los cuadrados son $\equiv0,1\pmod4$). Luego $k=1$, $p = 3$, y $2^1+1 = 3 = 3\cdot1^2$. ✓
+
+**Conclusión.** $p = 3$ (cociente $1 = 1^2$) y $p = 7$ (cociente $9 = 3^2$).
+!! Probar con primos pequeños y no demostrar que no hay más: hace falta el argumento de coprimalidad.
+===
+P id=m06c1 n=6 b=AN t=26 sb=AN3 m=oficial ref=2006-C1 src=Murcia-2006 | Murcia 2006 · Cuestión 1
+Sea $f:[0,1]\to\mathbb{R}$ continua en $[0,1]$ y derivable en $(0,1)$ con $f(0)=0$ y $f(1)=1$. Demostrar que para todo natural $n\ge1$ existen $n$ números reales $q_1<q_2<\dots<q_n$ en $(0,1)$ tales que
+$$\sum_{i=1}^n f'(q_i) = n.$$
+> Divide $[0,1]$ en $n$ subintervalos iguales y aplica el teorema del valor medio en cada uno.
+> Al sumar, los incrementos de $f$ se cancelan (suma telescópica).
+---
+**Planteamiento.** Dividimos $[0,1]$ en los $n$ intervalos $I_i = \left[\frac{i-1}n, \frac in\right]$, $i = 1,\dots,n$.
+
+**Resultado teórico.** Teorema del valor medio de Lagrange: si $g$ es continua en $[a,b]$ y derivable en $(a,b)$, existe $c\in(a,b)$ con $g(b)-g(a) = g'(c)(b-a)$.
+
+**Desarrollo.** $f$ cumple las hipótesis en cada $I_i$ (continua en el cerrado y derivable en el abierto, que está contenido en $(0,1)$). Existe $q_i\in\left(\frac{i-1}n,\frac in\right)$ con
+$$f\!\left(\tfrac in\right)-f\!\left(\tfrac{i-1}n\right) = \frac1n f'(q_i).$$
+Sumando para $i = 1,\dots,n$, el primer miembro es telescópico:
+$$f(1)-f(0) = \frac1n\sum_{i=1}^n f'(q_i)\ \Longrightarrow\ \sum_{i=1}^n f'(q_i) = n\big(f(1)-f(0)\big) = n.$$
+Como los $q_i$ están en intervalos abiertos disjuntos y ordenados, $0<q_1<q_2<\dots<q_n<1$.
+
+**Conclusión.** Los $q_i$ obtenidos cumplen lo pedido. $\blacksquare$
+!! Aplicar el teorema del valor medio una sola vez en $[0,1]$ y tomar $q_1=\dots=q_n$: el enunciado exige que sean distintos.
+===
+P id=m06c3 n=6 b=AL t=13 sb=AL1 m=oficial ref=2006-C3 src=Murcia-2006 | Murcia 2006 · Cuestión 3
+**a)** Sea $m$ una raíz entera del polinomio $P(x)$ de coeficientes enteros. Caracterizar las raíces enteras del polinomio $P(x)\pm p$, siendo $p$ primo.
+**b)** Sea $P(x)=0$ una ecuación polinómica de séptimo grado con coeficientes enteros tal que $P(4) = 11$ y $P(8) = 7$. Determinar la solución entera en caso de que exista. ¿Es irrelevante el grado del polinomio? Justificar la respuesta.
+> Si $P$ tiene coeficientes enteros, $a-b$ divide a $P(a)-P(b)$ para enteros $a, b$.
+> En b), una raíz entera $r$ cumple $(r-4)\mid 11$ y $(r-8)\mid 7$.
+---
+**Resultado teórico.** Si $P\in\mathbb{Z}[x]$ y $a,b\in\mathbb{Z}$, entonces $(a-b)\mid P(a)-P(b)$, porque $a^k-b^k = (a-b)(a^{k-1}+\dots+b^{k-1})$ para cada monomio.
+
+**a)** Sea $r$ una raíz entera de $P(x)\pm p$, es decir, $P(r) = \mp p$. Como $P(m) = 0$, $(r-m)\mid P(r)-P(m) = \mp p$. Como $p$ es primo, $r-m\in\{\pm1,\pm p\}$. Por tanto:
+$$r\in\{m-1,\ m+1,\ m-p,\ m+p\},$$
+y de esos cuatro candidatos son raíces de $P(x)\pm p$ exactamente los que cumplen $P(r) = \mp p$. En particular, $P(x)\pm p$ tiene a lo sumo cuatro raíces enteras.
+
+**b)** Sea $r$ una raíz entera. Entonces $(r-4)\mid P(r)-P(4) = -11$ y $(r-8)\mid -7$:
+- $r-4\in\{\pm1,\pm11\}\Rightarrow r\in\{3, 5, -7, 15\}$.
+- $r-8\in\{\pm1,\pm7\}\Rightarrow r\in\{1, 7, 9, 15\}$.
+
+El único candidato común es $r = 15$. Existe tal polinomio: $P(x) = (x-15)\left[-1+(x-4)(x-8)x^4\right]$ tiene grado 7, coeficientes enteros, $P(4) = (-11)(-1) = 11$ y $P(8) = (-7)(-1) = 7$.
+
+**Conclusión.** La única solución entera posible es $x = 15$. El grado es irrelevante: el argumento solo usa que los coeficientes son enteros. Lo que sí importa es que sean enteros.
+!! Buscar el polinomio de grado 7 en lugar de usar la divisibilidad $(a-b)\mid P(a)-P(b)$.
+===
+P id=m06c4 n=5 b=PR t=63 sb=PR1 m=oficial ref=2006-C4 src=Murcia-2006 | Murcia 2006 · Cuestión 4
+**a)** Tenemos 3 urnas con $n$ bolas numeradas $1, 2, \dots, n$. Extraemos al azar una bola de cada urna y llamamos $x_i$ al número de la urna $i$. ¿Cuál es la probabilidad de que $x_1+x_2 = x_3$?
+**b)** Con una cuarta urna igual, ¿cuál es la probabilidad de que $x_1+x_2 = x_3+x_4$?
+> Los casos posibles son $n^3$ y $n^4$, equiprobables. Cuenta los pares $(x_1,x_2)$ con suma $s$.
+> Si $N(s)$ es el número de pares con suma $s$, en b) los casos favorables son $\sum_s N(s)^2$.
+---
+**Planteamiento.** Las extracciones son independientes y uniformes, así que aplicamos la regla de Laplace con $n^3$ (o $n^4$) casos equiprobables. Sea $N(s)$ el número de pares $(x_1,x_2)\in\{1,\dots,n\}^2$ con $x_1+x_2 = s$:
+$$N(s) = s-1 \text{ si } 2\le s\le n+1,\qquad N(s) = 2n+1-s \text{ si } n+1\le s\le 2n.$$
+
+**a)** Para cada valor $x_3 = s\in\{2,\dots,n\}$ hay $N(s) = s-1$ pares (el valor $s=1$ no tiene ninguno). Casos favorables: $\sum_{s=2}^n(s-1) = \frac{n(n-1)}2$. Luego
+$$P = \frac{n(n-1)/2}{n^3} = \frac{n-1}{2n^2}.$$
+
+**b)** Para cada suma $s$, hay $N(s)$ pares $(x_1,x_2)$ y $N(s)$ pares $(x_3,x_4)$. Casos favorables:
+$$\sum_{s=2}^{2n}N(s)^2 = 2\sum_{k=1}^{n-1}k^2+n^2 = \frac{(n-1)n(2n-1)}{3}+n^2 = \frac{n(2n^2+1)}3.$$
+Luego
+$$P = \frac{2n^2+1}{3n^3}.$$
+
+**Comprobación.** Con $n = 2$: en a), solo $(1,1,2)$, $P = \frac18 = \frac{1}{2\cdot4}$ ✓; en b), $1+4+1 = 6$ casos de 16, $P = \frac{6}{16} = \frac38 = \frac{9}{24}$ ✓.
+!! Contar sumas en lugar de pares: hay $N(s)$ formas de obtener cada suma, no una.
+===
