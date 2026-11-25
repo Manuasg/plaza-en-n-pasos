@@ -329,7 +329,11 @@ function progressModel(S){
   const weeksLeft=exam?Math.max(0,(exam-now)/WEEK):null;
   const weeksNeeded = gapW<=0?0:(rate>0?gapW/rate:Infinity);
   const hoursNeeded = gapW<=0?0:(weeksLeft>0?(gapW/weeksLeft)/perHour:Infinity);
-  return {rate, src, gapW, weeksLeft, weeksNeeded, eta:isFinite(weeksNeeded)?now+weeksNeeded*WEEK:null, hoursNeeded, perHour, exam, onTime: exam? (isFinite(weeksNeeded) && now+weeksNeeded*WEEK<=exam) : null};
+  const spanDays = snaps.length ? (snaps[snaps.length-1].d-snaps[0].d)/DAY : 0;
+  const etaOk = src==='datos' && spanDays>=21 && snaps.length>=10;
+  const etaLo = (etaOk && gapW>0 && rate>0) ? now+(gapW/(rate*1.4))*WEEK : null;
+  const etaHi = (etaOk && gapW>0 && rate>0) ? now+(gapW/(rate*0.7))*WEEK : null;
+  return {spanDays, etaOk, etaLo, etaHi, rate, src, gapW, weeksLeft, weeksNeeded, eta:isFinite(weeksNeeded)?now+weeksNeeded*WEEK:null, hoursNeeded, perHour, exam, onTime: exam? (isFinite(weeksNeeded) && now+weeksNeeded*WEEK<=exam) : null};
 }
 let ME=null, S=null;
 function save(){ if(ME) Backend.saveState(ME.id, S); }

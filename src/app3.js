@@ -15,13 +15,13 @@ function tick(){
 }
 setInterval(tick, 1000);
 const closeMenu = () => document.body.classList.remove('menu-open');
-const rkKey = key => key.startsWith('sim:') ? {p:byId(key.slice(4)), rk:(UI.sim.rk[key.slice(4)]=UI.sim.rk[key.slice(4)]||newRk())} : {p:byId(UI.pr.id), rk:UI.pr.rk};
+const rkKey = key => key.startsWith('sim:') ? {p:byId(key.slice(4)), rk:(UI.sim.rk[key.slice(4)]=UI.sim.rk[key.slice(4)]||newRk(UI.sim.mode==='rescate'))} : {p:byId(UI.pr.id), rk:UI.pr.rk};
 function updRub(key){
   const {p, rk}=rkKey(key); const items=rkItems(p, rk); const d=itemsDims(items);
   RUBRIC.forEach(dm=>{ const el=document.querySelector(`[data-dsum="${key}|${dm.k}"]`); if(el) el.textContent=fmt2(d[dm.k])+' / '+dm.max; });
   const o=document.querySelector(`[data-dsum="${key}|orto"]`); if(o) o.textContent=rk.falt?'−'+fmt2(ortoPen(rk.falt)):'0';
-  const t=document.querySelector(`[data-total="${key}"]`); if(t) t.textContent=rkDone(p,rk)?fmt2(itemsScore(items,rk.falt)):'—';
-  if(key.startsWith('sim:')){ const sm=UI.sim; const tot=sm.ids.reduce((a,i)=>{ const q=byId(i); return a+(rkDone(q,sm.rk[i])?itemsScore(rkItems(q,sm.rk[i]),sm.rk[i].falt):0); },0)/sm.ids.length;
+  const t=document.querySelector(`[data-total="${key}"]`); if(t) t.textContent=rkDone(p,rk)?fmt2(rkScore(items,rk)):'—';
+  if(key.startsWith('sim:')){ const sm=UI.sim; const tot=sm.ids.reduce((a,i)=>{ const q=byId(i); return a+(rkDone(q,sm.rk[i])?rkScore(rkItems(q,sm.rk[i]),sm.rk[i]):0); },0)/sm.ids.length;
     const tt=document.querySelector('[data-total="sim"]'); if(tt) tt.textContent=fmt1(tot)+' / 10';
     const b=document.querySelector('[data-act="simSave"]'); if(b) b.disabled=!sm.ids.every(i=>rkDone(byId(i),sm.rk[i])); }
   else { const b=document.querySelector('[data-act="saveGrade"]'); if(b) b.disabled=!rkDone(p,rk); const pg=document.querySelector('[data-prog="pr"]'); if(pg) pg.textContent=rkProg(p,rk); }
@@ -115,18 +115,20 @@ const A = {
   simStart(el){
     const e=MURCIA.find(x=>String(x.y)===el.dataset.y); const twin=!!el.dataset.twin;
     const ids=e.ids.map((id,i)=>{ if(!twin) return id; const g=bank().filter(p=>p.m==='gemelo'&&p.ref===`${e.y}-P${i+1}`); return g.length?g[Math.floor(Math.random()*g.length)].id:id; });
-    UI.sim={y:e.y, ref:(twin?'Gemelos de Murcia ':'Murcia ')+e.y, ids, end:Date.now()+e.dur*60000, stage:'exam', rk:{}};
+    if(el.dataset.mode==='rescate'){ UI.sim={y:e.y, ref:'Rescate · Murcia '+e.y, ids:e.ids.slice(), mode:'rescate', per:8, end:Date.now()+40*60000, stage:'exam', rk:{}}; }
+    else { const m=Math.max(5,Math.round(e.dur/5/5)*5); UI.sim={y:e.y, ref:(twin?'Gemelos de Murcia ':'Murcia ')+e.y, ids, dur:e.dur, stage:'triage', rk:{}, plan:{ord:Object.fromEntries(ids.map((id,i)=>[id,i+1])), min:Object.fromEntries(ids.map(id=>[id,m]))}}; }
     go('#/simulacro'); window.scrollTo(0,0);
   },
+  simGo(){ const sm=UI.sim; sm.end=Date.now()+sm.dur*60000; sm.stage='exam'; render(); window.scrollTo(0,0); },
   simEnd(){ UI.sim.stage='grade'; render(); window.scrollTo(0,0); },
   simSave(){
-    const sm=UI.sim; let tot=0; sm.res=[];
-    sm.ids.forEach(id=>{ const p=byId(id); const rk=sm.rk[id]; const items=rkItems(p, rk); const sc=itemsScore(items, rk.falt); tot+=sc;
-      applyResult(id, sc/10, {mode:'simulacro', dims:itemsDims(items), falt:rk.falt, items, ia:!!sm.ai});
+    const sm=UI.sim; let tot=0; sm.res=[]; const resc=sm.mode==='rescate';
+    sm.ids.forEach(id=>{ const p=byId(id); const rk=sm.rk[id]; const items=rkItems(p, rk); const sc=rkScore(items, rk); tot+=sc;
+      if(!resc) applyResult(id, sc/10, {mode:'simulacro', dims:itemsDims(items), falt:rk.falt, items, ia:!!sm.ai});
       const fails=items.filter(it=>it.v<1); if(fails.length) addErrors(fails.map(it=>({txt:it.t, dim:it.k, note:it.n, b:p.b, sb:p.sb})), id);
       sm.res.push({id, items, falt:rk.falt, score:sc}); });
-    sm.nota=tot/sm.ids.length; S.sims.push({d:Date.now(), nota:sm.nota, ref:sm.ref}); save(); sm.stage='done';
-    toast('Simulacro guardado: '+fmt1(sm.nota)+' / 10'); render(); window.scrollTo(0,0);
+    sm.nota=tot/sm.ids.length; S.sims.push({d:Date.now(), nota:sm.nota, ref:sm.ref, mode:resc?'rescate':'completo', real:sm.real||null, plan:sm.plan||null}); save(); sm.stage='done';
+    toast((resc?'Rescate guardado: ':'Simulacro guardado: ')+fmt1(sm.nota)+' / 10'); render(); window.scrollTo(0,0);
   },
   simClose(){ UI.sim=null; go('#/murcia'); },
   goal(el){ const g={...goalOf(S)}; g[el.dataset.f]=el.dataset.v; if(el.dataset.f==='situ') g.hours=SITU[el.dataset.v][1]; g.set=true; S.goal=g; save(); render(); },
@@ -163,11 +165,14 @@ const A = {
 const CHG = {
   goalDate(el){ S.goal={...goalOf(S), date:el.value, set:true}; save(); render(); },
   goalHoursSave(el){ S.goal={...goalOf(S), hours:+el.value, set:true}; save(); render(); },
+  triOrd(el){ const sm=UI.sim, id=el.dataset.id, v=+el.value; const other=sm.ids.find(x=>x!==id&&sm.plan.ord[x]===v); if(other) sm.plan.ord[other]=sm.plan.ord[id]; sm.plan.ord[id]=v; render(); },
   bfSel(el){ UI.bank[el.dataset.f]=el.value; if(el.dataset.f==='b') UI.bank.sb=''; render(); }
 };
 const INP = {
   goalHours(el){ const v=$('#g-hv'); if(v) v.textContent=el.value; },
   aiPaste(el){ (UI.aiTxt=UI.aiTxt||{})[el.dataset.key]=el.value; },
+  triMin(el){ const sm=UI.sim; sm.plan.min[el.dataset.id]=Math.max(0,+el.value||0); const t=document.querySelector('[data-tritot]'); if(t) t.textContent='Suma de minutos: '+sm.ids.reduce((a,i)=>a+(sm.plan.min[i]||0),0)+' de '+sm.dur+'.'; },
+  realMin(el){ const sm=UI.sim; (sm.real=sm.real||{})[el.dataset.id]=Math.max(0,+el.value||0); },
   rnote(el){ const {rk}=rkKey(el.dataset.key); rk.n[+el.dataset.i]=el.value; },
   imp(el){ UI.imp=el.value; const n=parseProblems(UI.imp).length; const b=document.querySelector('[data-act="impSave"]'); if(b){ b.disabled=!n; b.textContent='Añadir '+n+' '+(n===1?'problema':'problemas'); } }
 };

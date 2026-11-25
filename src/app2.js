@@ -44,7 +44,14 @@ function bulletHTML(r, tR, b){
   const max=7.6, v=clamp(lvVal(r),0,max), t=clamp(lvVal(tR),0,max);
   return `<div class="bullet" role="img" aria-label="Nivel ${lvTxt(r)} de 7; objetivo ${lvTxt(tR)}"><i style="width:${v/max*100}%;background:${bcol(b)}"></i><b style="left:calc(${t/max*100}% - 1px)"></b></div>`;
 }
-const etaTxt = pm => pm.gapW<=0 ? 'Ya estás en tu objetivo' : (pm.eta ? fdate(pm.eta) : 'Sin estimación');
+/* Comentarios y erratas: abren una incidencia del repositorio con el ID del problema ya escrito (sin servidor). */
+const FB_REPO='https://github.com/Manuasg/escalera-murcia/issues/new';
+const fbUrl=(title,body)=>FB_REPO+'?title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body);
+const errataUrl=p=>fbUrl('Errata en '+p.id+' · '+p.ti, `**Problema:** ${p.id} (${p.ti})\n**Dónde está el error:** enunciado / pista / solución / rúbrica (borra lo que no aplique)\n\n**Qué dice ahora:**\n\n**Qué debería decir:**\n`);
+const comentUrl=()=>fbUrl('Comentario sobre la web', `**Qué estabas haciendo:**\n\n**Qué ha pasado o qué echas en falta:**\n\n**Dispositivo (móvil, tablet, ordenador):**\n`);
+const etaTxt = pm => pm.gapW<=0 ? 'Ya estás en tu objetivo' : (pm.etaOk&&pm.etaLo ? 'Entre '+fshort(pm.etaLo)+' y '+fshort(pm.etaHi) : 'Aún sin datos');
+/* La nota se muestra como rango: el margen se estrecha con los problemas corregidos (las notas son autoevaluadas y los parámetros aún se están calibrando). */
+function notaRango(S){ const sm=summary(S); const n=S.hist.length+(S.diag?4:0); const w=Math.max(0.75, 2/Math.sqrt(1+n/4)); const lo=Math.max(0,Math.floor(sm.nota-w)), hi=Math.min(10,Math.ceil(sm.nota+w)); return {nota:sm.nota, lo, hi, txt:(lo===hi?String(lo):lo+'–'+hi).replace('.',','), w}; }
 
 /* ================= Gráficos (SVG con tooltip) ================= */
 const CH = {};
@@ -169,9 +176,9 @@ V.inicio = () => {
   ${!S.diag?`<div class="note hi row between"><span><b>Empieza por la prueba de nivel.</b> Son 15 preguntas (unos 15 minutos) y sirven para colocarte en la escalera de cada bloque.</span><button class="btn primary sm" data-go="#/diagnostico">Hacer la prueba</button></div>`:''}
   <div class="kpis">
     <div class="kpi"><span class="l">Tu nivel global</span><span class="v">${lvTxt(Rw(sm.R))}<small> / 7</small></span><span class="d">${esc(lvName(Rw(sm.R)))}</span></div>
-    <div class="kpi"><span class="l">Nota estimada hoy · parte A</span><span class="v">${fmt1(sm.nota)}<small> / 10</small></span><span class="d">Si el examen fuera hoy</span></div>
+    <div class="kpi"><span class="l">Nota estimada hoy · parte A</span><span class="v">${notaRango(S).txt}<small> / 10</small></span><span class="d">Si el examen fuera hoy · ${S.hist.length<10?'estimación aún muy amplia':'se afina con cada corrección'}</span></div>
     <div class="kpi accent"><span class="l">Tu objetivo</span><span class="v">${fmt1(G)}<small> / 10</small></span><span class="d">${esc(OBJ[g.type].name)}</span></div>
-    <div class="kpi"><span class="l">Llegada estimada</span><span class="v" style="font-size:1.3rem">${esc(etaTxt(pm))}</span><span class="d">${pm.onTime===false?'Después del examen: revisa tu plan':pm.onTime?'Antes del examen':''}</span></div>
+    <div class="kpi"><span class="l">Llegada estimada</span><span class="v" style="font-size:1.3rem">${esc(etaTxt(pm))}</span><span class="d">${!pm.etaOk&&pm.gapW>0?'Hacen falta unas 3 semanas de práctica':pm.onTime===false?'Después del examen: revisa tu plan':pm.onTime?'Antes del examen':''}</span></div>
     <div class="kpi"><span class="l">Racha</span><span class="v">${sm.streak}<small> días</small></span><span class="d">${sm.solved} problemas superados</span></div>
   </div>
   <div class="grid g2">
@@ -294,7 +301,7 @@ V.p = (id) => {
     ${p.h.length?`<details><summary class="small"><b>Pistas (${p.h.length})</b></summary><ol class="small">${p.h.map(h=>`<li>${mdi(h)}</li>`).join('')}</ol></details>`:''}
     <div class="row"><button class="btn sm" data-act="aiCopy" data-kind="exp" data-id="${p.id}">Pedir explicación a mi IA</button><span class="tiny muted">Copia el ejercicio y su solución; pégalo en ${AIS.map(a=>a[0]).slice(0,3).join(', ')}…</span></div>
     <details><summary class="small"><b>Ver la solución</b></summary><div class="sol" style="margin-top:10px">${md(p.so)}</div>${p.er?`<div class="typical" style="margin-top:10px"><b>Error típico:</b> ${mdi(p.er)}</div>`:''}</details>
-    ${p.src?`<p class="tiny muted">Fuente: ${esc(p.src)}</p>`:''}</section>
+    <div class="row between"><span class="tiny muted">${p.src?'Fuente: '+esc(p.src):''}</span><a class="btn sm" href="${errataUrl(p)}" target="_blank" rel="noopener">Avisar de una errata</a></div></section>
   ${(()=>{ const hs=S.hist.filter(h=>h.pid===p.id&&h.items).slice().reverse(); return `<section class="card stack"><div class="card-h"><h2>Tus correcciones de este problema</h2><span class="sub">${hs.length?hs.length+(hs.length>1?' intentos':' intento'):'Aún no lo has corregido'}</span></div>
     ${hs.length?hs.map((h,i)=>`<details ${i===0?'open':''}><summary><b>${esc(fdate(h.d))} · ${fmt1(h.s*10)} / 10</b> <span class="small muted">· ${h.mode==='simulacro'?'simulacro':'práctica'}${h.ia?' · corregido con IA':''} · ${h.items.filter(x=>x.v<1).length} fallos</span></summary><div class="stack" style="margin-top:10px">${reportHTML(h.items, h.falt)}</div></details>`).join(''):`<p class="muted small" style="margin:0">Cuando lo resuelvas y te corrijas, aquí verás la rúbrica anotada de cada intento.</p>`}
     <details><summary class="small"><b>Ver la rúbrica de este problema</b></summary><div class="stack small" style="margin-top:8px">${RUBRIC.map(dm=>`<div><b>${esc(dm.name)} (${dm.max})</b>${rubricFor(p).filter(it=>it.k===dm.k).map(it=>`<span style="display:block">• ${mdi(it.t)} <span class="muted num">(${fmt2(it.p)})</span></span>`).join('')}</div>`).join('')}</div></details></section>`; })()}
@@ -332,7 +339,7 @@ V.practicar = (arg, q) => {
   return top+`<section class="card stack"><div class="row between"><h2>Informe de corrección</h2><span class="total">${fmt1(pr.score)} <small class="muted">/ 10</small></span></div>
     <div class="kpis"><div class="kpi"><span class="l">${esc(BLOQ[p.b].name)}</span><span class="v">${lvTxt(res.r)}</span><span class="d">${res.dr>=0?'+':''}${fmt2(res.dr/200)} escalones${res.up?' · ¡subes de nivel!':res.down?' · bajas de nivel':''}</span></div>
     <div class="kpi"><span class="l">${p.sb} · ${esc(s?s.name:'')}</span><span class="v">${lvTxt(res.sbr)}</span><span class="d">Objetivo ${lvTxt(targetR(S,p.b))}</span></div>
-    <div class="kpi"><span class="l">Nota estimada parte A</span><span class="v">${fmt1(summary(S).nota)}</span><span class="d">Objetivo ${fmt1(targetNota(S))}</span></div></div>
+    <div class="kpi"><span class="l">Nota estimada parte A</span><span class="v">${notaRango(S).txt}</span><span class="d">Objetivo ${fmt1(targetNota(S))}</span></div></div>
     ${reportHTML(pr.items, pr.rk.falt)}
     <details><summary class="small"><b>Volver a ver la solución</b></summary><div class="sol" style="margin-top:8px">${md(p.so)}</div></details>
     <div class="row"><button class="btn primary" data-act="next">Siguiente problema</button><button class="btn" data-go="#/bloque/${p.b}">Ver qué me falta en ${esc(BLOQ[p.b].name.toLowerCase())}</button><button class="btn ghost" data-go="#/p/${p.id}">Historial de este problema</button></div></section>`;
@@ -436,32 +443,37 @@ function aiCardHTML(key, ai){
 }
 
 /* ---------- Rúbrica detallada ---------- */
-const newRk = () => ({m:{}, n:{}, orto:{}, falt:0});
-const rkDone = (p, rk) => rubricFor(p).every((_,i)=>typeof rk.m[i]==='number');
-const rkProg = (p, rk) => { const n=rubricFor(p).length, k=Object.keys(rk.m).length; return k<n?`Has valorado ${k} de ${n} subindicadores.`:'Todos los subindicadores valorados.'; };
+const newRk = resc => ({m:{}, n:{}, orto:{}, falt:0, resc:!!resc});
+const RESC=['rig','con','tec','pla'];
+const inResc=(rk,it)=>!rk.resc||RESC.includes(it.k);
+const rkDone = (p, rk) => rubricFor(p).every((it,i)=>!inResc(rk,it)||typeof rk.m[i]==='number');
+const rkProg = (p, rk) => { const n=rubricFor(p).filter(it=>inResc(rk,it)).length, k=Object.keys(rk.m).length; return k<n?`Has valorado ${k} de ${n} subindicadores.`:'Todos los subindicadores valorados.'; };
 function rkItems(p, rk){ return rubricFor(p).map((it,i)=>({k:it.k, p:it.p, t:it.t, v:rk.m[i], n:String(rk.n[i]||'').trim()})); }
 function itemsDims(items){ const d={}; RUBRIC.forEach(x=>d[x.k]=0); items.forEach(it=>{ d[it.k]+=it.p*(it.v||0); }); RUBRIC.forEach(x=>d[x.k]=Math.round(d[x.k]*100)/100); return d; }
 const ortoPen = falt => Math.min(3, .5*(falt||0));
 const itemsScore = (items, falt) => Math.max(0, Object.values(itemsDims(items)).reduce((a,c)=>a+c,0) - ortoPen(falt));
+const rescScore = items => { const d=itemsDims(items); return RESC.reduce((a,k)=>a+d[k],0)/4*10; };
+const rkScore = (items, rk) => rk.resc ? rescScore(items) : itemsScore(items, rk.falt);
 const scaleLab = v => (SCALE.find(x=>Math.abs(x[0]-v)<1e-6)||SCALE[0])[1];
 function rubricHTML(key, p, rk){
   const items=rubricFor(p); const d=itemsDims(rkItems(p,rk));
-  return `<div class="row between"><button class="btn sm" data-act="markAll" data-key="${key}">Marcar todo como completo</button><span class="small">Nota: <b class="total" style="font-size:1.25rem" data-total="${key}">${rkDone(p,rk)?fmt2(itemsScore(rkItems(p,rk),rk.falt)):'—'}</b> / 10</span></div>
+  return `<div class="row between"><button class="btn sm" data-act="markAll" data-key="${key}">Marcar todo como completo</button><span class="small">Nota: <b class="total" style="font-size:1.25rem" data-total="${key}">${rkDone(p,rk)?fmt2(rkScore(rkItems(p,rk),rk)):'—'}</b> / 10</span></div>
   <details class="tiny"><summary>Escala de valoración</summary><div class="stack" style="gap:2px;margin-top:6px">${SCALE.map(([v,l,t])=>`<span><b>${l}</b> (${fmt2(v*100)} % de los puntos): ${esc(t)}.</span>`).join('')}</div></details>
-  ${RUBRIC.map(dm=>`<div class="rdim"><div class="rdim-h"><b>${esc(dm.dim)}</b><span class="num small" data-dsum="${key}|${dm.k}">${fmt2(d[dm.k])} / ${dm.max}</span><span class="tiny muted">Indicador oficial: «${esc(dm.of)}»</span></div>
+  ${rk.resc?'<div class="note small"><b>Modo rescate:</b> solo se corrigen rigor, conocimiento, técnicas y planteamiento (4 puntos, que equivalen a la nota de 10). Si no llegaste a un resultado, aquí es donde puntúas.</div>':''}
+  ${RUBRIC.filter(dm=>!rk.resc||RESC.includes(dm.k)).map(dm=>`<div class="rdim"><div class="rdim-h"><b>${esc(dm.dim)}</b><span class="num small" data-dsum="${key}|${dm.k}">${fmt2(d[dm.k])} / ${dm.max}</span><span class="tiny muted">Indicador oficial: «${esc(dm.of)}»</span></div>
     ${items.map((it,i)=>it.k!==dm.k?'':`<div class="ri"><div class="ri-t"><span class="ri-p">${fmt2(it.p)}</span><span>${mdi(it.t)}${it.own?'':''}</span></div>
       <div class="tri tri5" role="group" aria-label="Valoración">${SCALE.map(([v,l,t])=>`<button aria-pressed="${rk.m[i]===v}" data-v="${v}" data-act="mark" data-key="${key}" data-i="${i}" title="${esc(t)}">${l}</button>`).join('')}</div>
       <input type="text" class="ri-n${typeof rk.m[i]==='number'&&rk.m[i]<1?'':' hidden'}" data-input="rnote" data-key="${key}" data-i="${i}" value="${esc(rk.n[i]||'')}" placeholder="¿Dónde te has equivocado? Ej.: «olvidé el caso x = 0»" aria-label="Anota dónde te has equivocado"></div>`).join('')}</div>`).join('')}
-  <div class="rdim"><div class="rdim-h"><b>Ortografía y expresión</b><span class="num small" data-dsum="${key}|orto">${rk.falt?'−'+fmt2(ortoPen(rk.falt)):'0'}</span><span class="tiny muted">Cada falta resta 0,5 puntos, con un máximo de 3. Las faltas en palabras repetidas cuentan una sola vez.</span></div>
+  ${rk.resc?'':`<div class="rdim"><div class="rdim-h"><b>Ortografía y expresión</b><span class="num small" data-dsum="${key}|orto">${rk.falt?'−'+fmt2(ortoPen(rk.falt)):'0'}</span><span class="tiny muted">Cada falta resta 0,5 puntos, con un máximo de 3. Las faltas en palabras repetidas cuentan una sola vez.</span></div>
     <div class="orto">${ORTO.map(([k,l,dv])=>`<div class="orow"><span class="small">${esc(l)}${dv>1?` <span class="tiny muted">(${dv} = 1 falta)</span>`:''}</span><span class="ostep"><button class="icon-btn" data-act="orto" data-key="${key}" data-c="${k}" data-d="-1" aria-label="Quitar">−</button><b class="num" data-oval="${key}|${k}">${+(rk.orto&&rk.orto[k])||0}</b><button class="icon-btn" data-act="orto" data-key="${key}" data-c="${k}" data-d="1" aria-label="Añadir">+</button></span></div>`).join('')}</div>
-    <span class="tiny muted" data-ofal="${key}">${rk.falt} ${rk.falt===1?'falta':'faltas'}</span></div>`;
+    <span class="tiny muted" data-ofal="${key}">${rk.falt} ${rk.falt===1?'falta':'faltas'}</span></div>`}`;
 }
-function reportHTML(items, falt){
+function reportHTML(items, falt, resc){
   if(!items||!items.length) return '';
   const d=itemsDims(items); const fails=items.filter(it=>it.v<1);
-  return `<div class="scroll-x"><table class="tbl"><thead><tr><th>Dimensión</th><th style="width:40%">Puntos</th><th>Obtenidos</th></tr></thead><tbody>${RUBRIC.map(dm=>`<tr><td><b>${esc(dm.name)}</b></td><td><div class="bar"><i style="width:${d[dm.k]/dm.max*100}%;background:${d[dm.k]/dm.max>=.75?'var(--ok)':d[dm.k]/dm.max>=.5?'#b07a1a':'var(--bad)'}"></i></div></td><td class="num">${fmt2(d[dm.k])} / ${dm.max}</td></tr>`).join('')}
-    ${falt?`<tr><td><b>Ortografía</b></td><td class="small muted">${falt} ${falt>1?'faltas':'falta'}</td><td class="num">−${fmt2(ortoPen(falt))}</td></tr>`:''}
-    <tr><td><b>Total</b></td><td></td><td class="num"><b>${fmt2(itemsScore(items,falt))} / 10</b></td></tr></tbody></table></div>
+  return `<div class="scroll-x"><table class="tbl"><thead><tr><th>Dimensión</th><th style="width:40%">Puntos</th><th>Obtenidos</th></tr></thead><tbody>${RUBRIC.filter(dm=>!resc||RESC.includes(dm.k)).map(dm=>`<tr><td><b>${esc(dm.name)}</b></td><td><div class="bar"><i style="width:${d[dm.k]/dm.max*100}%;background:${d[dm.k]/dm.max>=.75?'var(--ok)':d[dm.k]/dm.max>=.5?'#b07a1a':'var(--bad)'}"></i></div></td><td class="num">${fmt2(d[dm.k])} / ${dm.max}</td></tr>`).join('')}
+    ${falt&&!resc?`<tr><td><b>Ortografía</b></td><td class="small muted">${falt} ${falt>1?'faltas':'falta'}</td><td class="num">−${fmt2(ortoPen(falt))}</td></tr>`:''}
+    <tr><td><b>Total</b></td><td></td><td class="num"><b>${fmt2(resc?rescScore(items):itemsScore(items,falt))} / 10</b></td></tr></tbody></table></div>
   <h3 style="margin:6px 0 0">Dónde te has equivocado</h3>
   ${fails.length?`<div>${fails.map(it=>{ const dm=RUBRIC.find(x=>x.k===it.k); return `<div class="fail"><span class="pill-status ${it.v<=.25?'st-bad':'st-warn'}">${scaleLab(it.v)}</span><div><span class="tiny muted">${esc(dm.dim||dm.name)}</span><div>${mdi(it.t)}</div>${it.n?`<div class="small" style="margin-top:2px"><i>Tu nota: «${esc(it.n)}»</i></div>`:''}</div><span class="num small">−${fmt2(it.p*(1-it.v))}</span></div>`; }).join('')}</div>
   ${(()=>{ const ks=[...new Set(fails.map(f=>f.k))]; return `<div class="note small" style="margin-top:10px"><b>Cómo evitarlo en el examen:</b> ${ks.map(k=>{ const dm=RUBRIC.find(x=>x.k===k); return `<span style="display:block">• <b>${esc(dm.name)}.</b> ${esc(dm.tip)}</span>`; }).join('')}</div>`; })()}`
@@ -476,7 +488,7 @@ V.murcia = () => {
   return `${head('Región de Murcia · Especialidad 006','Exámenes de Murcia','Los problemas oficiales de la parte A de Murcia, resueltos y con su rúbrica. Todo lo demás del banco está calibrado con ellos.', `<button class="btn" data-go="#/oficial">Documentos oficiales</button>`)}
   <div class="grid g2">${MURCIA.map(e=>`<section class="card stack"><div class="row between"><h2>Parte A · ${e.y}</h2><span class="chip of">Oficial</span></div><span class="small muted">${esc(e.info)}</span>
     <div class="list">${e.ids.map((id,i)=>{ const p=byId(id); return p?`<div class="li" data-go="#/p/${id}"><div><span class="t">Ejercicio ${i+1} · ${esc(p.ti)}</span><div class="ex">${p.sb} · ${esc(subById(p.sb).name)}</div></div>${ico('chev','chev')}</div>`:''; }).join('')}</div>
-    <div class="row"><button class="btn primary" data-act="simStart" data-y="${e.y}">Simulacro con tiempo real (${e.dur/60>=3?'3 h':'2 h 30 min'})</button><button class="btn" data-act="simStart" data-y="${e.y}" data-twin="1">Simulacro con gemelos</button></div></section>`).join('')}</div>
+    <div class="row"><button class="btn primary" data-act="simStart" data-y="${e.y}">Simulacro con tiempo real (${e.dur/60>=3?'3 h':'2 h 30 min'})</button><button class="btn" data-act="simStart" data-y="${e.y}" data-twin="1">Simulacro con gemelos</button><button class="btn" data-act="simStart" data-y="${e.y}" data-mode="rescate" title="40 minutos: solo planteamiento y estrategia de los cinco ejercicios">Modo rescate (40 min)</button></div></section>`).join('')}</div>
   <section class="card stack"><div class="card-h"><h2>Años anteriores</h2><span class="sub">${old.length} problemas oficiales resueltos</span></div>
     <div class="grid g3">${years.map(y=>{ const e=APPEAR.find(a=>String(a.y)===y); return `<div class="stack" style="gap:6px"><b>Murcia ${y}</b><span class="tiny muted">${esc(e?e.info:'')}</span><div class="list">${old.filter(p=>p.ref.startsWith(y)).map(p=>`<div class="li" data-go="#/p/${p.id}"><div><span class="t small">${esc(refLabel(p.ref).replace('Murcia '+y+' · ',''))}</span><div class="ex">${p.sb} · ${esc(subById(p.sb).name)}</div></div>${ico('chev','chev')}</div>`).join('')}</div></div>`; }).join('')}</div>
     <p class="tiny muted">De 2002 falta el problema 4 (la fórmula no se conserva legible) y de 2006 la cuestión 2 (conos), que se incorporará resuelta. Los enunciados de 2018 están pendientes de contrastar con el original, así que todavía no están en el banco. No hay enunciados públicos de Murcia entre 2008 y 2016.</p></section>
@@ -489,19 +501,29 @@ V.murcia = () => {
 };
 V.simulacro = () => {
   const sm=UI.sim; if(!sm) return V.murcia();
+  if(sm.stage==='triage'){
+    const tot=sm.ids.reduce((a,id)=>a+(+sm.plan.min[id]||0),0);
+    return `${head('Simulacro · '+sm.ref,'Triaje: lee y planifica','Antes de escribir nada, lee los cinco ejercicios, decide en qué orden los harás y cuántos minutos le das a cada uno. Cuando empieces, el reloj corre. Al final compararemos tu plan con lo que de verdad hiciste.', `<span class="chip">Tiempo total: ${sm.dur} min</span>`)}
+    <div class="note small"><b>Consejo:</b> empieza por el que más seguro tengas y deja para el final el que más te cueste. Todos valen lo mismo (2 puntos de 10), y un planteamiento bien escrito puntúa aunque no llegues al resultado.</div>
+    ${sm.ids.map((id,i)=>{ const p=byId(id); return `<section class="card prob"><div class="row between"><h2>Ejercicio ${i+1}</h2><span class="chip">${esc(BLOQ[p.b].name)}</span></div><div class="st">${md(p.st)}</div>
+      <div class="row" style="margin-top:8px"><label class="small">Lo haré el nº <select data-change="triOrd" data-id="${id}">${sm.ids.map((_,k)=>`<option value="${k+1}" ${sm.plan.ord[id]===k+1?'selected':''}>${k+1}</option>`).join('')}</select></label><label class="small">Minutos: <input type="number" min="5" max="90" step="5" value="${sm.plan.min[id]}" data-input="triMin" data-id="${id}" style="width:80px"></label></div></section>`; }).join('')}
+    <div class="row"><button class="btn primary" data-act="simGo">Empezar el examen</button><span class="small muted" data-tritot>Suma de minutos: ${tot} de ${sm.dur}.</span></div>`;
+  }
   if(sm.stage==='exam') return `${head('Simulacro · '+sm.ref, 'Parte A', 'Resuelve en papel. Cuando acabes o se agote el tiempo, entrega y corrígete con la rúbrica.', `<span class="chip ink timer" data-end="${sm.end}" style="font-size:1rem;padding:6px 14px">--:--</span><button class="btn primary" data-act="simEnd">Entregar</button>`)}
+    ${sm.mode==='rescate'?`<div class="note"><b>Modo rescate:</b> unos ${sm.per} minutos por ejercicio. No resuelvas: escribe solo qué te piden, qué teoremas o técnicas usarías (con sus hipótesis) y los pasos de la estrategia. Eso es lo que se corrige.</div>`:`<div class="note small"><b>Tu plan:</b> ${sm.ids.slice().sort((a,b)=>sm.plan.ord[a]-sm.plan.ord[b]).map(id=>`ejercicio ${sm.ids.indexOf(id)+1} (${sm.plan.min[id]} min)`).join(' → ')}.</div>`}
     ${sm.ids.map((id,i)=>{ const p=byId(id); return `<section class="card prob"><div class="row between"><h2>Ejercicio ${i+1}</h2><span class="chip">${esc(BLOQ[p.b].name)}</span></div><div class="st">${md(p.st)}</div></section>`; }).join('')}`;
-  if(sm.stage==='done') return `${head('Simulacro · '+sm.ref,'Informe del simulacro','Nota de la parte A: media de los cinco ejercicios corregidos con la rúbrica.', `<span class="total">${fmt1(sm.nota)} / 10</span>`)}
+  if(sm.stage==='done') return `${head('Simulacro · '+sm.ref,'Informe del simulacro',sm.mode==='rescate'?'Nota de rescate: solo planteamiento, conocimiento, técnicas y rigor. No cambia tu nivel.':'Nota de la parte A: media de los cinco ejercicios corregidos con la rúbrica.', `<span class="total">${fmt1(sm.nota)} / 10</span>`)}
     <section class="card"><div class="scroll-x"><table class="tbl"><thead><tr><th>Ejercicio</th><th>Subbloque</th><th>Nota</th><th>Fallos</th></tr></thead><tbody>${sm.res.map((r,i)=>{ const p=byId(r.id); return `<tr><td>${i+1} · ${esc(p.ti)}</td><td>${dotb(p.b)} ${p.sb}</td><td class="num"><b>${fmt1(r.score)}</b></td><td class="small">${r.items.filter(x=>x.v<1).length}</td></tr>`; }).join('')}</tbody></table></div>
+    ${sm.plan&&sm.mode!=='rescate'?`<div class="stack" style="margin-top:12px"><h3 style="margin:0">Tu plan frente a lo que hiciste</h3><div class="scroll-x"><table class="tbl"><thead><tr><th>Ejercicio</th><th>Orden previsto</th><th>Minutos previstos</th><th>Minutos reales</th><th>Nota</th></tr></thead><tbody>${sm.res.map((r,i)=>{ const real=sm.real&&sm.real[r.id]; const dif=real&&sm.plan.min[r.id]?real-sm.plan.min[r.id]:null; return `<tr><td>${i+1}</td><td class="num">${sm.plan.ord[r.id]}</td><td class="num">${sm.plan.min[r.id]}</td><td class="num">${real||'—'}${dif!=null&&Math.abs(dif)>=10?` <span class="pill-status ${dif>0?'st-bad':'st-warn'}">${dif>0?'+':''}${dif}</span>`:''}</td><td class="num"><b>${fmt1(r.score)}</b></td></tr>`; }).join('')}</tbody></table></div><p class="tiny muted" style="margin:0">Si un ejercicio te llevó mucho más de lo previsto y puntuó poco, la lección es de gestión del tiempo, no de contenido: la próxima vez, deja un planteamiento escrito y pasa al siguiente.</p></div>`:''}
     ${sm.nota<1.25?`<div class="note bad small" style="margin-top:10px">Por debajo de 1,25 la parte A no supera el mínimo de la primera prueba.</div>`:''}</section>
-    ${sm.res.map((r,i)=>{ const p=byId(r.id); return `<section class="card stack"><details><summary><b>Ejercicio ${i+1} · ${esc(p.ti)} · ${fmt1(r.score)} / 10</b></summary><div style="margin-top:10px" class="stack">${reportHTML(r.items, r.falt)}</div></details></section>`; }).join('')}
+    ${sm.res.map((r,i)=>{ const p=byId(r.id); return `<section class="card stack"><details><summary><b>Ejercicio ${i+1} · ${esc(p.ti)} · ${fmt1(r.score)} / 10</b></summary><div style="margin-top:10px" class="stack">${reportHTML(r.items, r.falt, sm.mode==='rescate')}</div></details></section>`; }).join('')}
     <div class="row"><button class="btn primary" data-act="simClose">Volver a Exámenes de Murcia</button></div>`;
-  sm.rk=sm.rk||{}; sm.ids.forEach(id=>{ sm.rk[id]=sm.rk[id]||newRk(); });
+  sm.rk=sm.rk||{}; sm.ids.forEach(id=>{ sm.rk[id]=sm.rk[id]||newRk(sm.mode==='rescate'); });
   const done=sm.ids.every(id=>rkDone(byId(id),sm.rk[id]));
-  const total=sm.ids.reduce((a,id)=>{ const p=byId(id); return a+(rkDone(p,sm.rk[id])?itemsScore(rkItems(p,sm.rk[id]),sm.rk[id].falt):0); },0)/sm.ids.length;
-  return `${head('Simulacro · '+sm.ref,'Corrección','Corrige cada ejercicio con la rúbrica detallada. La nota de la parte A es la media de los cinco.', `<span class="total" data-total="sim">${fmt1(total)} / 10</span>`)}
-  ${aiCardHTML('sim', sm.ai)}
-  ${sm.ids.map((id,i)=>{ const p=byId(id); return `<section class="card stack"><div class="row between"><h2>Ejercicio ${i+1} · ${esc(p.ti)}</h2>${chipSub(p.sb)}</div>
+  const total=sm.ids.reduce((a,id)=>{ const p=byId(id); return a+(rkDone(p,sm.rk[id])?rkScore(rkItems(p,sm.rk[id]),sm.rk[id]):0); },0)/sm.ids.length;
+  return `${head('Simulacro · '+sm.ref,sm.mode==='rescate'?'Corrección del rescate':'Corrección','Corrige cada ejercicio con la rúbrica detallada. La nota de la parte A es la media de los cinco.', `<span class="total" data-total="sim">${fmt1(total)} / 10</span>`)}
+  ${sm.mode==='rescate'?'':aiCardHTML('sim', sm.ai)}
+  ${sm.ids.map((id,i)=>{ const p=byId(id); return `<section class="card stack"><div class="row between"><h2>Ejercicio ${i+1} · ${esc(p.ti)}</h2>${chipSub(p.sb)}</div>${sm.mode!=='rescate'&&sm.plan?`<label class="small">¿Cuántos minutos le dedicaste de verdad? (previsto: ${sm.plan.min[id]}) <input type="number" min="0" max="180" step="5" value="${(sm.real&&sm.real[id])||''}" data-input="realMin" data-id="${id}" style="width:80px"></label>`:''}
     <details><summary class="small"><b>Enunciado y solución</b></summary><div class="st" style="margin-top:8px">${md(p.st)}</div><div class="sol">${md(p.so)}</div></details>
     ${rubricHTML('sim:'+id, p, sm.rk[id])}</section>`; }).join('')}
   <div class="row"><button class="btn primary" data-act="simSave" ${done?'':'disabled'}>Guardar simulacro</button><span class="small muted">Revisa todos los indicadores de los cinco ejercicios para guardar.</span></div>`;
@@ -516,9 +538,11 @@ V.objetivos = () => {
   let verdict;
   if(pm.gapW<=0) verdict=`<div class="note ok"><b>Ya estás en el nivel de tu objetivo.</b> Mantén el ritmo con simulacros completos y sube el listón si quieres ir a por más.</div>`;
   else if(pm.src==='estancado') verdict=`<div class="note bad"><b>En las últimas semanas tu nivel no ha subido.</b> Con tus datos no podemos estimar una fecha. Prueba a bajar un nivel, centrarte en los subbloques en rojo y corregirte siempre con la rúbrica.</div>`;
-  else if(!pm.exam) verdict=`<div class="note"><b>Al ritmo actual llegarías hacia el ${esc(fdate(pm.eta))}</b> (${weeksTxt(pm.weeksNeeded)}).</div>`;
-  else if(pm.onTime) verdict=`<div class="note ok"><b>Vas a tiempo.</b> Al ritmo actual llegarías hacia el ${esc(fdate(pm.eta))}, ${weeksTxt((pm.exam-pm.eta)/WEEK)} antes del examen.</div>`;
-  else verdict=`<div class="note bad"><b>Al ritmo actual no llegas a tiempo:</b> llegarías hacia el ${esc(pm.eta?fdate(pm.eta):'—')} y el examen es el ${esc(fdate(pm.exam))}. Necesitarías unas <b>${isFinite(pm.hoursNeeded)?Math.ceil(pm.hoursNeeded):'—'} horas a la semana</b> (ahora dedicas ${g.hours}).</div>`;
+  else if(!pm.etaOk) verdict=`<div class="note"><b>Todavía no damos una fecha de llegada.</b> Hacen falta unas tres semanas de práctica corregida con rúbrica para medir tu ritmo real; una fecha calculada antes sería inventada.${pm.exam&&isFinite(pm.hoursNeeded)?` Como referencia, para llegar al examen del ${esc(fdate(pm.exam))} necesitarías unas <b>${Math.ceil(pm.hoursNeeded)} horas a la semana</b> (ahora planeas ${g.hours}).`:''}</div>`;
+  else if(!pm.exam) verdict=`<div class="note"><b>Al ritmo actual llegarías entre el ${esc(fdate(pm.etaLo))} y el ${esc(fdate(pm.etaHi))}</b> (${weeksTxt(pm.weeksNeeded)} en el caso central).</div>`;
+  else if(pm.etaHi<=pm.exam) verdict=`<div class="note ok"><b>Vas a tiempo.</b> Incluso en el caso lento (hacia el ${esc(fdate(pm.etaHi))}) llegarías antes del examen.</div>`;
+  else if(pm.etaLo>pm.exam) verdict=`<div class="note bad"><b>Al ritmo actual no llegas a tiempo:</b> llegarías entre el ${esc(fdate(pm.etaLo))} y el ${esc(fdate(pm.etaHi))} y el examen es el ${esc(fdate(pm.exam))}. Necesitarías unas <b>${isFinite(pm.hoursNeeded)?Math.ceil(pm.hoursNeeded):'—'} horas a la semana</b> (ahora dedicas ${g.hours}).</div>`;
+  else verdict=`<div class="note"><b>Va justo.</b> Tu rango de llegada (del ${esc(fdate(pm.etaLo))} al ${esc(fdate(pm.etaHi))}) contiene la fecha del examen (${esc(fdate(pm.exam))}). Cada hora extra a la semana te da margen.</div>`;
   return `${head('Tu situación y tu meta','Objetivos','Cuéntanos qué quieres conseguir y de cuánto tiempo dispones. Calculamos el nivel que necesitas en cada bloque y cuándo llegarás a tu ritmo.')}
   <section class="card stack"><h2>¿Qué quieres conseguir?</h2>
     <div class="choice">${Object.entries(OBJ).map(([k,o])=>`<button aria-pressed="${g.type===k}" data-act="goal" data-f="type" data-v="${k}"><b>${esc(o.name)}</b><span>${o.G?'Nota objetivo en la parte A: '+fmt1(o.G):'Sin nota fija'}</span><span>${esc(o.d)}</span></button>`).join('')}</div>
@@ -531,7 +555,7 @@ V.objetivos = () => {
     </div></section>
   <section class="card stack"><div class="card-h"><h2>Tu previsión</h2><span class="sub">Objetivo: ${fmt1(G)} en la parte A</span></div>
     ${verdict}
-    <div class="kpis"><div class="kpi"><span class="l">Nota estimada hoy</span><span class="v">${fmt1(summary(S).nota)}</span></div><div class="kpi accent"><span class="l">Nota objetivo</span><span class="v">${fmt1(G)}</span></div><div class="kpi"><span class="l">Te faltan</span><span class="v">${fmt1(pm.gapW/200)}<small> escalones</small></span><span class="d">Media ponderada por bloques</span></div><div class="kpi"><span class="l">Semanas hasta el examen</span><span class="v">${pm.weeksLeft==null?'—':Math.floor(pm.weeksLeft)}</span></div></div>
+    <div class="kpis"><div class="kpi"><span class="l">Nota estimada hoy</span><span class="v">${notaRango(S).txt}</span></div><div class="kpi accent"><span class="l">Nota objetivo</span><span class="v">${fmt1(G)}</span></div><div class="kpi"><span class="l">Te faltan</span><span class="v">${fmt1(pm.gapW/200)}<small> escalones</small></span><span class="d">Media ponderada por bloques</span></div><div class="kpi"><span class="l">Semanas hasta el examen</span><span class="v">${pm.weeksLeft==null?'—':Math.floor(pm.weeksLeft)}</span></div></div>
     <p class="tiny muted">Estimación orientativa: se basa en cómo has subido hasta ahora y en tus horas. Cuantos más problemas corrijas con la rúbrica, más fiable es. <a href="#/metodo">Ver cómo se calcula</a></p></section>
   <section class="card"><div class="card-h"><h2>Tu plan semanal</h2><span class="sub">${g.hours} h repartidas según lo que te falta y lo que pesa en Murcia</span></div>
     <div class="scroll-x"><table class="tbl" style="min-width:560px"><thead><tr><th>Bloque</th><th>Nivel hoy → necesario</th><th>Horas por semana</th><th>Empieza por</th></tr></thead><tbody>${BK.map(b=>{ const gp=gapsFor(S,b); const h=hrs(b); return `<tr class="click" data-go="#/bloque/${b}"><td>${dotb(b)} <b>${esc(BLOQ[b].name)}</b></td><td class="num">${lvTxt(gp.r)} → ${lvTxt(gp.tR)}</td><td class="num">${gp.done?'Repaso':fmt1(h)+' h'}</td><td class="small">${gp.done?'Simulacros':gp.subs.filter(x=>x.status!=='ok').slice(0,2).map(x=>x.s.id+' · '+esc(x.s.name)).join('<br>')}</td></tr>`; }).join('')}</tbody></table></div></section>`;
@@ -586,7 +610,7 @@ function diagResultHTML(d){
       <div class="bullet" style="margin-top:6px" role="img" aria-label="Nivel ${lvTxt(x.r)}"><i style="left:${clamp(lo,0,max)/max*100}%;width:${(clamp(hi,0,max)-clamp(lo,0,max))/max*100}%;background:${bcol(b)};opacity:.35;position:absolute;top:0;bottom:0"></i><i style="width:${clamp(lvVal(x.r),0,max)/max*100}%;background:${bcol(b)}"></i><b style="left:calc(${clamp(lvVal(targetR(S,b)),0,max)/max*100}% - 1px)"></b></div>
       <span class="tiny muted">${esc(lvName(x.r))}</span></div>`; }).join('');
   const review=d.log.map((x,k)=>{ const it=DIAG.find(q=>q.id===x.id); return `<div class="li" style="cursor:default"><div><span class="tiny muted">${k+1} · ${esc(BLOQ[x.b].name)} · nivel ${x.n}${x.sb?' · '+x.sb:''}</span><div class="small">${mdi(it.q)}</div><div class="tiny">${x.resp==='ok'?'<span class="pill-status st-ok">Acierto</span>':x.resp==='ns'?'<span class="pill-status st-new">No lo sé</span>':'<span class="pill-status st-bad">Fallo</span>'} ${mdi(it.e)}</div></div></div>`; }).join('');
-  return `${head('Resultado','Tu punto de partida','Tu nivel en cada bloque, con su margen de error. Cada problema que corrijas a partir de ahora lo afina.', `<span class="chip">Nota estimada hoy: ${fmt1(notaFrom(R))} / 10</span>`)}
+  return `${head('Resultado','Tu punto de partida','Tu nivel en cada bloque, con su margen de error. Cada problema que corrijas a partir de ahora lo afina.', `<span class="chip">Nota estimada hoy: ${notaRango(S).txt} / 10</span>`)}
     <section class="card stack">${rows}<p class="tiny muted" style="margin:0">La barra clara es el margen de error: tu nivel real está ahí con una probabilidad de dos tercios. La marca negra es el nivel que necesitas para tu objetivo.</p>
     <div class="row"><button class="btn primary" data-go="#/objetivos">Fijar mi objetivo</button><button class="btn" data-go="#/practicar">Empezar a practicar</button><button class="btn ghost" data-act="diagReset">Repetir la prueba</button></div></section>
     <section class="card"><details><summary><b>Revisar las ${d.log.length} preguntas</b></summary><div class="list" style="margin-top:10px">${review}</div></details></section>`;
@@ -626,7 +650,8 @@ V.metodo = () => {
   <section class="card stack"><h2>6. Tu ritmo y la fecha estimada</h2>
     <p class="small">Si tienes al menos 6 registros en las últimas 8 semanas, repartidos en 10 días o más, calculamos tu ritmo con una <b>regresión lineal</b> de tu nivel ponderado frente al tiempo. Si no, lo estimamos con tus horas: unos 5,5 puntos por hora de estudio, que habrá que ajustar con datos reales.</p>
     <p>$$\\text{semanas necesarias} = \\frac{\\text{distancia}}{\\text{ritmo}},\\qquad \\text{horas/semana necesarias} = \\frac{\\text{distancia}}{\\text{semanas hasta el examen}\\times\\text{ritmo por hora}}$$</p>
-    <div class="note small"><b>Con tus datos:</b> ritmo ${pm.src==='datos'?`medido de ${fmt2(pm.rate/200)} escalones por semana`:pm.src==='estancado'?'estancado (tu nivel no ha subido en las últimas semanas)':`estimado de ${fmt2(pm.rate/200)} escalones por semana con ${g.hours} h`}; distancia de ${fmt1(pm.gapW/200)} escalones; ${pm.eta?`llegada hacia el ${esc(fdate(pm.eta))}`:'sin fecha estimable'}${pm.weeksLeft!=null?`; ${Math.floor(pm.weeksLeft)} semanas hasta el examen previsto`:''}.</div></section>
+    <div class="note small"><b>Por qué damos rangos.</b> Las notas de la rúbrica las pones tú (y es habitual ser generoso) y los parámetros del modelo están fijados a mano, todavía sin calibrar con datos reales. Por eso la nota estimada se muestra como un rango que se estrecha con cada problema corregido, y la fecha de llegada solo aparece cuando hay al menos tres semanas de práctica; entonces se da un intervalo que supone un ritmo entre un 70 % y un 140 % del medido.</div>
+    <div class="note small"><b>Con tus datos:</b> ritmo ${pm.src==='datos'?`medido de ${fmt2(pm.rate/200)} escalones por semana`:pm.src==='estancado'?'estancado (tu nivel no ha subido en las últimas semanas)':`estimado de ${fmt2(pm.rate/200)} escalones por semana con ${g.hours} h`}; distancia de ${fmt1(pm.gapW/200)} escalones; ${pm.etaOk&&pm.etaLo?`llegada entre el ${esc(fdate(pm.etaLo))} y el ${esc(fdate(pm.etaHi))} (ritmo ±40 %)`:'sin fecha de llegada hasta tener unas tres semanas de datos'}${pm.weeksLeft!=null?`; ${Math.floor(pm.weeksLeft)} semanas hasta el examen previsto`:''}.</div></section>
   <section class="card stack"><h2>7. La prueba de nivel</h2>
     <p class="small">Es adaptativa y bayesiana. Para cada bloque partimos de una distribución de posibles niveles centrada en 1.300 (entre 2.º de Bachillerato y 1.º de grado) y muy ancha. Cada respuesta la actualiza con el modelo de respuesta al ítem de tres parámetros:</p>
     <p>$$P(\text{acierto}\mid\theta) = c + (1-c)\,\frac{1}{1+10^{(D-\theta)/250}},\qquad c = 0{,}25$$</p>
@@ -730,6 +755,8 @@ V.cuenta = () => {
   return `${head('Mi cuenta', ME.name, esc(ME.email)+' · '+(ME.role==='profesor'?'Profesor · clase '+esc(ME.classCode):'Opositor'+(ME.classCode?' · clase '+esc(ME.classCode):'')))}
   <section class="card stack"><h2>Aspecto del menú lateral</h2>
     <div class="seg">${[['editorial','Arena'],['starlight','Marfil'],['resume','Tinta']].map(([k,l])=>`<button aria-pressed="${style===k}" data-act="style" data-v="${k}">${l}</button>`).join('')}</div></section>
+  <section class="card stack"><h2>Comentarios y erratas</h2><p class="small muted">Esta es una versión de prueba y tu opinión la mejora. Se abre una página de GitHub con el formulario ya preparado (hace falta una cuenta gratuita de GitHub). En cada problema hay además un botón «Avisar de una errata» con su identificador ya puesto.</p>
+    <div class="row"><a class="btn primary" href="${comentUrl()}" target="_blank" rel="noopener">Enviar un comentario</a></div></section>
   <section class="card stack"><h2>Datos</h2><p class="small muted">En esta versión de demostración tus datos se guardan en este navegador. En la versión publicada irán a un servidor con copia de seguridad.</p>
     <div class="row"><button class="btn" data-act="export">Descargar mis datos</button><button class="btn bad" data-act="reset">Borrar mi progreso</button><button class="btn" data-act="logout">Cerrar sesión</button></div></section>`;
 };
