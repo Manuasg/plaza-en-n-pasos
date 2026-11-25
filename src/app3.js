@@ -28,8 +28,12 @@ function updRub(key){
 }
 function pressIn(el){ el.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===el)); }
 function diagItem(d){
-  const b=BK[d.i%5]; const it=DIAG.find(x=>x.b===b&&x.n===d.lv[b])||DIAG.find(x=>x.b===b);
-  d.cur=it; d.order=shuffle(it.opts); d.picked=null;
+  const b=BK[d.i%5]; const st=dgStats(d.post[b]);
+  const usedSb=new Set(d.log.filter(x=>x.b===b).map(x=>x.sb));
+  const pool=DIAG.filter(x=>x.b===b && !d.used.has(x.id));
+  const sc=x=>Math.abs(dgDiff(x.n)-st.m) + (usedSb.has(x.sb)?60:0) + Math.random()*30;
+  const it=pool.sort((p,q)=>sc(p)-sc(q))[0];
+  d.used.add(it.id); d.cur=it; d.order=shuffle(it.opts); d.picked=null;
 }
 async function copyText(txt, fallbackEl){
   try{ await navigator.clipboard.writeText(txt); return true; }catch(e){}
@@ -45,12 +49,14 @@ function parseAI(txt){
   for(const c of cands){ try{ const o=JSON.parse(c.trim().replace(/[“”]/g,'"')); if(o&&(o.indicadores||o.ejercicios)) return o; }catch(e){} }
   throw new Error('No encuentro el bloque JSON. Copia también el bloque final de código de la respuesta.');
 }
-const aiV = v => { v=+v; return v>=.75?1:v>=.25?.5:0; };
+const aiV = v => clamp(Math.round((+v||0)*4)/4, 0, 1);
 function applyAIto(p, rk, o){
   const n=rubricFor(p).length; let used=0;
-  (o.indicadores||[]).forEach((x,k)=>{ const i=Number.isInteger(+x.i)?+x.i:k; if(i<0||i>=n||x.v==null) return; rk.m[i]=aiV(x.v); rk.n[i]=String(x.nota||'').slice(0,200); used++; });
-  if(o.faltas!=null) rk.falt=clamp(Math.round(+o.faltas)||0,0,6);
-  return {used, n};
+  (o.indicadores||[]).forEach((x,k)=>{ const i=Number.isInteger(+x.i)?+x.i:k; if(i<0||i>=n||x.v==null) return; rk.m[i]=aiV(x.v);
+    const ev=String(x.evidencia||'').trim(), no=String(x.nota||'').trim(); rk.n[i]=[no,ev&&ev!==no?'('+ev+')':''].filter(Boolean).join(' ').slice(0,240); used++; });
+  if(o.ortografia && typeof o.ortografia==='object'){ rk.orto={}; ORTO.forEach(([k])=>{ rk.orto[k]=clamp(Math.round(+o.ortografia[k]||0),0,30); }); rk.falt=ortoFaltas(rk.orto); }
+  else if(o.faltas!=null) rk.falt=clamp(Math.round(+o.faltas)||0,0,6);
+  return {used, n, legible:o.legible!==false, conf:String(o.confianza||'').toLowerCase()};
 }
 const A = {
   menuOpen(){ document.body.classList.add('menu-open'); },
@@ -83,21 +89,22 @@ const A = {
       const o=parseAI(UI.aiTxt&&UI.aiTxt[key]);
       if(key==='sim'){
         const sm=UI.sim; const ex=o.ejercicios||[]; let done=0;
-        sm.ids.forEach((id,k)=>{ const e=ex.find(x=>x.problema===id)||ex[k]; if(!e) return; sm.rk[id]=sm.rk[id]||newRk(); applyAIto(byId(id), sm.rk[id], e); done++; });
+        let low=false; sm.ids.forEach((id,k)=>{ const e=ex.find(x=>x.problema===id)||ex[k]; if(!e) return; sm.rk[id]=sm.rk[id]||newRk(); const r=applyAIto(byId(id), sm.rk[id], e); if(!r.legible||r.conf==='baja') low=true; done++; });
         if(!done) throw new Error('La respuesta no trae ningún ejercicio de este simulacro.');
-        sm.ai={com:ex.map(e=>e.comentario).filter(Boolean).join(' · ').slice(0,400)};
+        sm.ai={com:ex.map(e=>e.comentario).filter(Boolean).join(' · ').slice(0,400), conf:low?'baja':'alta', legible:!low};
       } else {
         const p=byId(UI.pr.id); if(o.problema && o.problema!==p.id) throw new Error('La respuesta es del problema '+o.problema+', no de este ('+p.id+').');
-        const r=applyAIto(p, UI.pr.rk, o); if(!r.used) throw new Error('No hay indicadores válidos en la respuesta.');
-        UI.pr.ai={com:String(o.comentario||'').slice(0,300), used:r.used, n:r.n};
+        const r=applyAIto(p, UI.pr.rk, o); if(!r.used) throw new Error('No hay subindicadores válidos en la respuesta.');
+        UI.pr.ai={com:String(o.comentario||'').slice(0,300), used:r.used, n:r.n, legible:r.legible, conf:r.conf};
       }
       render(); toast('Rúbrica rellenada. Revísala antes de guardar.');
     }catch(e){ if(msg) msg.textContent=e.message; else toast(e.message); }
   },
   markAll(el){ const key=el.dataset.key; const {p, rk}=rkKey(key); rubricFor(p).forEach((_,i)=>{ rk.m[i]=1; });
-    const box=el.closest('.card'); box.querySelectorAll(`[data-act="mark"][data-key="${CSS.escape(key)}"]`).forEach(b=>b.setAttribute('aria-pressed', b.dataset.v==='1'));
+    const box=el.closest('.card'); box.querySelectorAll(`[data-act="mark"][data-key="${CSS.escape(key)}"]`).forEach(b=>b.setAttribute('aria-pressed', +b.dataset.v===1));
     box.querySelectorAll(`.ri-n[data-key="${CSS.escape(key)}"]`).forEach(n=>n.classList.add('hidden')); updRub(key); },
-  falt(el){ const key=el.dataset.key; const {rk}=rkKey(key); rk.falt=+el.dataset.v; pressIn(el); updRub(key); },
+  orto(el){ const key=el.dataset.key; const {rk}=rkKey(key); rk.orto=rk.orto||{}; const c=el.dataset.c; rk.orto[c]=clamp((+rk.orto[c]||0)+(+el.dataset.d),0,30); rk.falt=ortoFaltas(rk.orto);
+    const v=document.querySelector(`[data-oval="${key}|${c}"]`); if(v) v.textContent=rk.orto[c]; const f=document.querySelector(`[data-ofal="${key}"]`); if(f) f.textContent=rk.falt+(rk.falt===1?' falta':' faltas'); updRub(key); },
   saveGrade(){
     const pr=UI.pr; const p=byId(pr.id); const items=rkItems(p, pr.rk); const sc=itemsScore(items, pr.rk.falt);
     const res=applyResult(p.id, sc/10, {mode:'practica', dims:itemsDims(items), falt:pr.rk.falt, items, secs:pr.secs||0, ia:!!pr.ai});
@@ -123,14 +130,23 @@ const A = {
   },
   simClose(){ UI.sim=null; go('#/murcia'); },
   goal(el){ const g={...goalOf(S)}; g[el.dataset.f]=el.dataset.v; if(el.dataset.f==='situ') g.hours=SITU[el.dataset.v][1]; g.set=true; S.goal=g; save(); render(); },
-  diagStart(){ UI.diag={i:0, lv:Object.fromEntries(BK.map(b=>[b,4])), est:{}, ans:[]}; diagItem(UI.diag); render(); },
-  diagPick(el){ const d=UI.diag; if(d.picked!=null) return; d.picked=+el.dataset.i; const ok=d.order[d.picked].ok; d.ans.push(ok);
-    const b=BK[d.i%5], k=Math.floor(d.i/5);
-    if(k===0) d.lv[b]=clamp(d.lv[b]+(ok?2:-2),1,7); else if(k===1) d.lv[b]=clamp(d.lv[b]+(ok?1:-1),1,7); else d.est[b]=clamp(d.lv[b]+(ok?.5:-.5),1,7);
+  diagStart(el){ const per=+(el.dataset.per||6); UI.diag={i:0, per, N:per*5, post:Object.fromEntries(BK.map(b=>[b,dgPrior()])), used:new Set(), log:[], ans:[]}; diagItem(UI.diag); render(); window.scrollTo(0,0); },
+  diagReset(){ UI.diag=null; render(); window.scrollTo(0,0); },
+  diagPick(el){ const d=UI.diag; if(d.picked!=null) return; const ns=el.dataset.i==='ns'; d.picked=ns?'ns':+el.dataset.i;
+    const resp=ns?'ns':(d.order[d.picked].ok?'ok':'ko'); const it=d.cur;
+    d.post[it.b]=dgUpdate(d.post[it.b], dgDiff(it.n), resp); d.ans.push(resp==='ok'); d.log.push({id:it.id, b:it.b, sb:it.sb, n:it.n, resp});
     render(); },
   diagNext(){ const d=UI.diag; d.i++;
-    if(d.i>=15){ BK.forEach(b=>{ S.ratings[b]={r:Math.round(800+200*(d.est[b]-1)), n:0}; }); S.diag={d:Date.now(), levels:{...d.est}}; S.snaps.push({d:Date.now(), R:curR(S)}); save(); }
-    else diagItem(d);
+    if(d.i>=d.N){
+      const levels={};
+      BK.forEach(b=>{ const st=dgStats(d.post[b]); levels[b]={r:Math.round(st.m), sd:Math.round(st.sd)}; S.ratings[b]={r:Math.round(st.m), n:d.per>=6?4:2}; });
+      const bySb={}; d.log.forEach(x=>{ if(!x.sb) return; (bySb[x.sb]=bySb[x.sb]||[]).push(x); });
+      Object.entries(bySb).forEach(([sb,xs])=>{ const b=subById(sb)&&subById(sb).b; if(!b) return;
+        const adj=xs.reduce((a,x)=>a+(x.resp==='ok'?Math.max(0,dgDiff(x.n)-levels[b].r)+60:-(Math.max(0,levels[b].r-dgDiff(x.n))+60)),0)/xs.length;
+        S.subR[sb]={r:Math.round(levels[b].r+clamp(adj,-250,250)*.5), n:1}; });
+      S.diag={d:Date.now(), per:d.per, levels, log:d.log.map(x=>({id:x.id,b:x.b,sb:x.sb,n:x.n,resp:x.resp}))};
+      S.snaps.push({d:Date.now(), R:curR(S)}); save();
+    } else diagItem(d);
     render(); window.scrollTo(0,0); },
   delProb(el){ Backend.deleteProblem(el.dataset.id); toast('Problema retirado del banco.'); go('#/banco'); },
   impSave(){ const list=parseProblems(UI.imp); const ids=new Set(bank().map(p=>p.id)); list.forEach(p=>{ if(ids.has(p.id)) p.id=p.id+'-'+uid().slice(0,4); });

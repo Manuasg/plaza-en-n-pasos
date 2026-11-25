@@ -325,7 +325,7 @@ V.practicar = (arg, q) => {
   if(pr.stage==='grade') return top+prob+`<section class="card"><div class="card-h"><h2>Solución</h2>${p.ref&&p.m!=='oficial'?`<span class="sub">Gemelo de ${esc(refLabel(p.ref))}</span>`:''}</div><div class="sol">${md(p.so)}</div>${p.er?`<div class="typical" style="margin-top:10px"><b>Error típico en este problema:</b> ${mdi(p.er)}</div>`:''}</section>
     ${aiCardHTML('pr', pr.ai)}
     <section class="card stack"><div class="card-h"><h2>Corrígete con la rúbrica detallada</h2><span class="sub">Dimensiones oficiales de Murcia (criterios de 2025)</span></div>
-    <p class="small muted" style="margin:0">Compara tu hoja con la solución indicador a indicador. Marca cada uno como <b>bien</b>, <b>a medias</b> o <b>mal</b> y, si fallaste, anota dónde: queda guardado en tu historial de errores.${rubricFor(p).some(x=>x.own)?' Los indicadores de este problema están escritos para él.':''}</p>
+    <p class="small muted" style="margin:0">Compara tu hoja con la solución indicador a indicador. Valora cada subindicador en cinco niveles, de <b>nada</b> a <b>completo</b>, y, si no está completo, anota dónde fallaste: queda en tu historial de errores. Cada dimensión parte del indicador oficial del tribunal.${rubricFor(p).some(x=>x.own)?' Los indicadores de este problema están escritos para él.':''}</p>
     ${rubricHTML('pr', p, pr.rk)}
     <div class="row"><button class="btn primary" data-act="saveGrade" ${rkDone(p,pr.rk)?'':'disabled'}>Guardar corrección</button><span class="small muted" data-prog="pr">${rkProg(p,pr.rk)}</span></div></section>`;
   const res=pr.res;
@@ -341,18 +341,35 @@ V.practicar = (arg, q) => {
    La web no se conecta a ninguna cuenta: genera unas instrucciones con el enunciado, la solución y la rúbrica,
    el opositor las pega en su IA junto con las fotos de su hoja, y pega aquí la respuesta (un bloque JSON). */
 const AIS = [['ChatGPT','https://chatgpt.com/'],['Claude','https://claude.ai/new'],['Gemini','https://gemini.google.com/app'],['Copilot','https://copilot.microsoft.com/']];
+const pt = x => fmt2(x);
 function aiRubricText(p){
-  return rubricFor(p).map((it,i)=>`Indicador ${i} · ${RUBRIC.find(d=>d.k===it.k).name} · ${String(it.p).replace('.',',')} pt: ${it.t}`).join('\n');
+  const items=rubricFor(p);
+  return RUBRIC.map(d=>`### ${d.dim} (${d.max} ${d.max>1?'puntos':'punto'})
+Indicador oficial: «${d.of}»
+${items.map((it,i)=>it.k!==d.k?'':`- [${i}] (${pt(it.p)} pt) ${it.t}`).filter(Boolean).join('\n')}`).join('\n\n');
 }
-const AI_RULES = `## Cómo corregir
-- Lee la resolución manuscrita del opositor en las fotos adjuntas (o en el texto que te pegue).
-- Para cada indicador decide: 1 si está bien, 0.5 si está a medias, 0 si está mal o no aparece. Si algo no se lee, pon 0 y dilo en la nota.
-- Si el opositor sigue un camino distinto al de la solución de referencia pero correcto y riguroso, valóralo como equivalente.
-- No inventes lo que no está escrito: en cada nota, cita o describe lo que ves en su hoja (por ejemplo «en la línea 4 olvida el caso x = 0»).
-- Cuenta las faltas de ortografía y expresión (−0,5 cada una; tres tildes, tres abreviaturas indebidas o tres errores de puntuación cuentan como una falta).
-- Después escribe una explicación breve y clara de los errores principales y de cómo resolverlos bien, como lo haría un buen profesor.`;
+const AI_SCALE = SCALE.map(([v,l,d])=>`- ${String(v)} = ${l}: ${d}.`).join('\n');
+const AI_ORTO = ORTO.map(([k,l,d])=>`- "${k}": ${l}${d>1?` (cada ${d} cuentan como una falta)`:' (cada uno es una falta)'}`).join('\n');
+const AI_RULES = `## Cómo debes corregir (sigue estos pasos en orden)
+1. **Comprueba que tienes la resolución.** Si no te he adjuntado fotos o texto con mi resolución, o si no se lee, no corrijas: pídemela. No inventes nada que no esté escrito.
+2. **Transcribe brevemente** lo que he escrito, apartado por apartado, para que yo pueda comprobar que lo has leído bien.
+3. **Valora cada subindicador** con esta escala (usa solo estos valores):
+${AI_SCALE}
+4. **Criterios de valoración** (son los del tribunal de Murcia):
+   - Sé tan exigente como un tribunal real: pon 1 solo si un corrector no le quitaría nada. Ante la duda entre dos valores, elige el menor.
+   - Si sigo un camino distinto al de la solución de referencia pero correcto y riguroso, valóralo como equivalente, indicador por indicador.
+   - El desarrollo se valora en consonancia con el planteamiento: si arrastro un error anterior y el resto es coherente, no me penalices dos veces en desarrollo. Los resultados sí serán incorrectos.
+   - Un resultado correcto sin justificación no puntúa en rigor ni en desarrollo.
+   - Lo que no está escrito no existe: no supongas pasos «evidentes» que no aparecen.
+   - Para cada subindicador por debajo de 1, da la evidencia: cita literal o ubicación («apartado b, tercera línea: …») y qué faltaría para el 1.
+5. **Cuenta los errores de expresión** según las categorías oficiales. Las faltas en palabras repetidas se cuentan una sola vez:
+${AI_ORTO}
+6. **Explica** después, como un buen profesor, los errores principales y cómo redactarlos correctamente para el tribunal.`;
+const AI_JSON_ITEM = n => `{"i":0,"v":0.75,"evidencia":"cita o ubicación en la hoja","nota":"qué falta para el 1"}  ← uno por subindicador, del 0 al ${n-1}`;
+const AI_JSON_ORTO = `{"ort":0,"til":0,"abr":0,"pun":0,"ver":0,"cnc":0,"prp":0,"mar":0,"rep":0}`;
 function aiPromptProblem(p){
-  return `Actúa como corrector del tribunal de la oposición de Matemáticas (Secundaria) de la Región de Murcia. Te paso un ejercicio de la parte A, su solución de referencia y la rúbrica con la que se corrige (criterios de valoración de 2025). Corrige la resolución del opositor que te adjunto.
+  const n=rubricFor(p).length;
+  return `Actúa como corrector del tribunal de la oposición de Matemáticas (Cuerpo de Profesores de Enseñanza Secundaria, especialidad 006) de la Región de Murcia. Corrige mi resolución de un ejercicio de la parte A (prueba práctica) con los criterios de valoración oficiales de 2025, desglosados en subindicadores. Te adjunto fotos de mi hoja.
 
 ## Ejercicio${p.ref?` (${refLabel(p.ref)}${p.m==='gemelo'?', gemelo':''})`:''}
 ${p.st}
@@ -360,19 +377,23 @@ ${p.st}
 ## Solución de referencia
 ${p.so}
 ${p.er?`\nError típico en este ejercicio: ${p.er}\n`:''}
-## Rúbrica (los puntos de cada indicador ya están fijados)
+## Rúbrica (10 puntos; los puntos de cada subindicador ya están fijados)
 ${aiRubricText(p)}
+
+### Penalización por expresión
+Cada falta resta 0,5 puntos, hasta un máximo de 3.
 
 ${AI_RULES}
 
 ## Formato obligatorio al final
-Termina SIEMPRE tu respuesta con este bloque de código JSON, con un elemento por indicador (del 0 al ${rubricFor(p).length-1}), para que la web Escalera Murcia pueda leerlo:
+Termina SIEMPRE tu respuesta con este bloque de código JSON, con los ${n} subindicadores (del 0 al ${n-1}), sin comentarios dentro, para que la web Escalera Murcia pueda leerlo:
 \`\`\`json
-{"escalera":1,"problema":"${p.id}","indicadores":[{"i":0,"v":1,"nota":""},{"i":1,"v":0.5,"nota":"qué falta, en pocas palabras"}],"faltas":0,"comentario":"resumen en una frase"}
-\`\`\``;
+{"escalera":2,"problema":"${p.id}","legible":true,"confianza":"alta","indicadores":[${AI_JSON_ITEM(n)}],"ortografia":${AI_JSON_ORTO},"comentario":"resumen en una frase"}
+\`\`\`
+«confianza» es "alta", "media" o "baja" según lo seguro que estés de haber leído bien mi resolución.`;
 }
 function aiPromptSim(ids){
-  return `Actúa como corrector del tribunal de la oposición de Matemáticas (Secundaria) de la Región de Murcia. Te paso los ${ids.length} ejercicios de un simulacro de la parte A, con su solución de referencia y su rúbrica (criterios de valoración de 2025). Corrige la resolución del opositor que te adjunto, ejercicio por ejercicio.
+  return `Actúa como corrector del tribunal de la oposición de Matemáticas (Cuerpo de Profesores de Enseñanza Secundaria, especialidad 006) de la Región de Murcia. Te paso los ${ids.length} ejercicios de un simulacro de la parte A, con su solución de referencia y su rúbrica oficial (criterios de 2025) desglosada en subindicadores. Corrige mi resolución, que te adjunto en fotos, ejercicio por ejercicio. Cada ejercicio se puntúa sobre 10, y la nota del simulacro es la media.
 
 ${ids.map((id,k)=>{ const p=byId(id); return `# EJERCICIO ${k+1} (código ${p.id})
 
@@ -388,9 +409,9 @@ ${aiRubricText(p)}`; }).join('\n\n')}
 ${AI_RULES}
 
 ## Formato obligatorio al final
-Termina SIEMPRE tu respuesta con este bloque de código JSON, con un elemento por ejercicio y uno por indicador de cada ejercicio:
+Termina SIEMPRE tu respuesta con este bloque de código JSON, con un elemento por ejercicio y todos los subindicadores de cada uno (la numeración de los subindicadores empieza en 0 en cada ejercicio):
 \`\`\`json
-{"escalera":1,"simulacro":true,"ejercicios":[{"problema":"${ids[0]}","indicadores":[{"i":0,"v":1,"nota":""}],"faltas":0,"comentario":""}]}
+{"escalera":2,"simulacro":true,"ejercicios":[{"problema":"${ids[0]}","legible":true,"confianza":"alta","indicadores":[{"i":0,"v":1,"evidencia":"","nota":""}],"ortografia":${AI_JSON_ORTO},"comentario":""}]}
 \`\`\``;
 }
 function aiPromptExplain(p){
@@ -409,29 +430,31 @@ function aiCardHTML(key, ai){
     <div class="stack small" style="gap:10px">
       <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><b class="step">1</b><div class="stack" style="gap:6px"><span>Copia las instrucciones: incluyen el enunciado, la solución y la rúbrica.</span><div class="row"><button class="btn sm primary" data-act="aiCopy" data-key="${key}" data-kind="corr">Copiar instrucciones</button><details><summary class="tiny">Ver el texto</summary><textarea readonly rows="6" class="ai-raw" data-raw="${key}" style="margin-top:6px;font-size:.75rem"></textarea></details></div></div></div>
       <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><b class="step">2</b><div class="stack" style="gap:6px"><span>Abre tu IA, pega las instrucciones y <b>adjunta las fotos de tu hoja</b>.</span><div class="row">${aiLinks()}</div></div></div>
-      <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><b class="step">3</b><div class="stack" style="gap:6px;flex:1"><span>Copia su respuesta completa (o solo el bloque final de código) y pégala aquí.</span><textarea rows="4" data-input="aiPaste" data-key="${key}" placeholder='{"escalera":1, …}'></textarea><div class="row"><button class="btn sm" data-act="aiApply" data-key="${key}">Rellenar la rúbrica</button><span class="tiny muted" data-aimsg="${key}"></span></div></div></div>
+      <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><b class="step">3</b><div class="stack" style="gap:6px;flex:1"><span>Copia su respuesta completa (o solo el bloque final de código) y pégala aquí.</span><textarea rows="4" data-input="aiPaste" data-key="${key}" placeholder='{"escalera":2, …}'></textarea><div class="row"><button class="btn sm" data-act="aiApply" data-key="${key}">Rellenar la rúbrica</button><span class="tiny muted" data-aimsg="${key}"></span></div></div></div>
     </div>
-    ${ai?`<div class="note ok small"><b>Rúbrica rellenada con tu IA.</b> Revísala abajo: puedes cambiar cualquier indicador antes de guardar.${ai.com?`<br><i>«${esc(ai.com)}»</i>`:''}</div>`:''}</section>`;
+    ${ai?`<div class="note ${ai.conf==='baja'||ai.legible===false?'bad':'ok'} small"><b>Rúbrica rellenada con tu IA.</b> Revísala abajo: puedes cambiar cualquier subindicador antes de guardar.${ai.conf==='baja'||ai.legible===false?' <b>Tu IA no ha podido leer bien tu hoja:</b> repite la foto con buena luz o revisa con cuidado cada valoración.':''}${ai.com?`<br><i>«${esc(ai.com)}»</i>`:''}</div>`:''}</section>`;
 }
 
 /* ---------- Rúbrica detallada ---------- */
-const newRk = () => ({m:{}, n:{}, falt:0});
+const newRk = () => ({m:{}, n:{}, orto:{}, falt:0});
 const rkDone = (p, rk) => rubricFor(p).every((_,i)=>typeof rk.m[i]==='number');
-const rkProg = (p, rk) => { const n=rubricFor(p).length, k=Object.keys(rk.m).length; return k<n?`Has revisado ${k} de ${n} indicadores.`:'Todos los indicadores revisados.'; };
+const rkProg = (p, rk) => { const n=rubricFor(p).length, k=Object.keys(rk.m).length; return k<n?`Has valorado ${k} de ${n} subindicadores.`:'Todos los subindicadores valorados.'; };
 function rkItems(p, rk){ return rubricFor(p).map((it,i)=>({k:it.k, p:it.p, t:it.t, v:rk.m[i], n:String(rk.n[i]||'').trim()})); }
 function itemsDims(items){ const d={}; RUBRIC.forEach(x=>d[x.k]=0); items.forEach(it=>{ d[it.k]+=it.p*(it.v||0); }); RUBRIC.forEach(x=>d[x.k]=Math.round(d[x.k]*100)/100); return d; }
 const ortoPen = falt => Math.min(3, .5*(falt||0));
 const itemsScore = (items, falt) => Math.max(0, Object.values(itemsDims(items)).reduce((a,c)=>a+c,0) - ortoPen(falt));
+const scaleLab = v => (SCALE.find(x=>Math.abs(x[0]-v)<1e-6)||SCALE[0])[1];
 function rubricHTML(key, p, rk){
   const items=rubricFor(p); const d=itemsDims(rkItems(p,rk));
-  const lab=[[1,'Bien'],[.5,'A medias'],[0,'Mal o no está']];
-  return `<div class="row between"><button class="btn sm" data-act="markAll" data-key="${key}">Marcar todo como bien</button><span class="small">Nota: <b class="total" style="font-size:1.25rem" data-total="${key}">${rkDone(p,rk)?fmt2(itemsScore(rkItems(p,rk),rk.falt)):'—'}</b> / 10</span></div>
-  ${RUBRIC.map(dm=>`<div class="rdim"><div class="rdim-h"><b>${esc(dm.name)}</b><span class="num small" data-dsum="${key}|${dm.k}">${fmt2(d[dm.k])} / ${dm.max}</span><span class="tiny muted">${esc(dm.d)}</span></div>
-    ${items.map((it,i)=>it.k!==dm.k?'':`<div class="ri"><div class="ri-t"><span class="ri-p">${fmt2(it.p)}</span><span>${mdi(it.t)}</span></div>
-      <div class="tri" role="group" aria-label="Valoración">${lab.map(([v,l])=>`<button aria-pressed="${rk.m[i]===v}" data-v="${v}" data-act="mark" data-key="${key}" data-i="${i}">${l}</button>`).join('')}</div>
+  return `<div class="row between"><button class="btn sm" data-act="markAll" data-key="${key}">Marcar todo como completo</button><span class="small">Nota: <b class="total" style="font-size:1.25rem" data-total="${key}">${rkDone(p,rk)?fmt2(itemsScore(rkItems(p,rk),rk.falt)):'—'}</b> / 10</span></div>
+  <details class="tiny"><summary>Escala de valoración</summary><div class="stack" style="gap:2px;margin-top:6px">${SCALE.map(([v,l,t])=>`<span><b>${l}</b> (${fmt2(v*100)} % de los puntos): ${esc(t)}.</span>`).join('')}</div></details>
+  ${RUBRIC.map(dm=>`<div class="rdim"><div class="rdim-h"><b>${esc(dm.dim)}</b><span class="num small" data-dsum="${key}|${dm.k}">${fmt2(d[dm.k])} / ${dm.max}</span><span class="tiny muted">Indicador oficial: «${esc(dm.of)}»</span></div>
+    ${items.map((it,i)=>it.k!==dm.k?'':`<div class="ri"><div class="ri-t"><span class="ri-p">${fmt2(it.p)}</span><span>${mdi(it.t)}${it.own?'':''}</span></div>
+      <div class="tri tri5" role="group" aria-label="Valoración">${SCALE.map(([v,l,t])=>`<button aria-pressed="${rk.m[i]===v}" data-v="${v}" data-act="mark" data-key="${key}" data-i="${i}" title="${esc(t)}">${l}</button>`).join('')}</div>
       <input type="text" class="ri-n${typeof rk.m[i]==='number'&&rk.m[i]<1?'':' hidden'}" data-input="rnote" data-key="${key}" data-i="${i}" value="${esc(rk.n[i]||'')}" placeholder="¿Dónde te has equivocado? Ej.: «olvidé el caso x = 0»" aria-label="Anota dónde te has equivocado"></div>`).join('')}</div>`).join('')}
-  <div class="rdim"><div class="rdim-h"><b>Faltas de ortografía y expresión</b><span class="num small" data-dsum="${key}|orto">${rk.falt?'−'+fmt2(ortoPen(rk.falt)):'0'}</span><span class="tiny muted">Cada falta resta 0,5, hasta 3 puntos. Tres tildes, tres abreviaturas indebidas o tres errores de puntuación cuentan como una falta.</span></div>
-    <div class="seg" role="group" aria-label="Faltas">${[0,1,2,3,4,5,6].map(v=>`<button aria-pressed="${rk.falt===v}" data-act="falt" data-key="${key}" data-v="${v}">${v}</button>`).join('')}</div></div>`;
+  <div class="rdim"><div class="rdim-h"><b>Ortografía y expresión</b><span class="num small" data-dsum="${key}|orto">${rk.falt?'−'+fmt2(ortoPen(rk.falt)):'0'}</span><span class="tiny muted">Cada falta resta 0,5 puntos, con un máximo de 3. Las faltas en palabras repetidas cuentan una sola vez.</span></div>
+    <div class="orto">${ORTO.map(([k,l,dv])=>`<div class="orow"><span class="small">${esc(l)}${dv>1?` <span class="tiny muted">(${dv} = 1 falta)</span>`:''}</span><span class="ostep"><button class="icon-btn" data-act="orto" data-key="${key}" data-c="${k}" data-d="-1" aria-label="Quitar">−</button><b class="num" data-oval="${key}|${k}">${+(rk.orto&&rk.orto[k])||0}</b><button class="icon-btn" data-act="orto" data-key="${key}" data-c="${k}" data-d="1" aria-label="Añadir">+</button></span></div>`).join('')}</div>
+    <span class="tiny muted" data-ofal="${key}">${rk.falt} ${rk.falt===1?'falta':'faltas'}</span></div>`;
 }
 function reportHTML(items, falt){
   if(!items||!items.length) return '';
@@ -440,7 +463,7 @@ function reportHTML(items, falt){
     ${falt?`<tr><td><b>Ortografía</b></td><td class="small muted">${falt} ${falt>1?'faltas':'falta'}</td><td class="num">−${fmt2(ortoPen(falt))}</td></tr>`:''}
     <tr><td><b>Total</b></td><td></td><td class="num"><b>${fmt2(itemsScore(items,falt))} / 10</b></td></tr></tbody></table></div>
   <h3 style="margin:6px 0 0">Dónde te has equivocado</h3>
-  ${fails.length?`<div>${fails.map(it=>{ const dm=RUBRIC.find(x=>x.k===it.k); return `<div class="fail"><span class="pill-status ${it.v===0?'st-bad':'st-warn'}">${it.v===0?'Mal':'A medias'}</span><div><span class="tiny muted">${esc(dm.name)}</span><div>${mdi(it.t)}</div>${it.n?`<div class="small" style="margin-top:2px"><i>Tu nota: «${esc(it.n)}»</i></div>`:''}</div><span class="num small">−${fmt2(it.p*(1-it.v))}</span></div>`; }).join('')}</div>
+  ${fails.length?`<div>${fails.map(it=>{ const dm=RUBRIC.find(x=>x.k===it.k); return `<div class="fail"><span class="pill-status ${it.v<=.25?'st-bad':'st-warn'}">${scaleLab(it.v)}</span><div><span class="tiny muted">${esc(dm.dim||dm.name)}</span><div>${mdi(it.t)}</div>${it.n?`<div class="small" style="margin-top:2px"><i>Tu nota: «${esc(it.n)}»</i></div>`:''}</div><span class="num small">−${fmt2(it.p*(1-it.v))}</span></div>`; }).join('')}</div>
   ${(()=>{ const ks=[...new Set(fails.map(f=>f.k))]; return `<div class="note small" style="margin-top:10px"><b>Cómo evitarlo en el examen:</b> ${ks.map(k=>{ const dm=RUBRIC.find(x=>x.k===k); return `<span style="display:block">• <b>${esc(dm.name)}.</b> ${esc(dm.tip)}</span>`; }).join('')}</div>`; })()}`
   :`<div class="note ok small">Sin fallos en ningún indicador. Si es de Murcia, prueba ahora su gemelo o un simulacro con tiempo.</div>`}`;
 }
@@ -539,22 +562,35 @@ V.evolucion = () => {
 /* ---------- Diagnóstico adaptativo ---------- */
 V.diagnostico = () => {
   const d=UI.diag;
-  if(!d) return `${head('15 preguntas · unos 15 minutos','Prueba de nivel','Tres preguntas por bloque que se adaptan a tus respuestas: si aciertas, la siguiente es más difícil. Sirve para colocarte en la escalera de cada bloque.')}
-    ${S.diag?`<div class="note small">Ya hiciste la prueba el ${esc(fdate(S.diag.d))}. Si la repites, se recalcula tu punto de partida.</div>`:''}
+  if(!d) return `${head('Prueba de nivel adaptativa','Prueba de nivel','Cada pregunta se elige según cómo vas respondiendo, para medir con precisión tu nivel en cada bloque. No uses calculadora ni busques nada: si no sabes una, pulsa «No lo sé», que no penaliza más que fallar y evita que el azar te sobrevalore.')}
+    ${S.diag?`<div class="note small">Ya hiciste la prueba el ${esc(fdate(S.diag.d))}. Si la repites, se recalcula tu punto de partida en todos los bloques.</div>`:''}
     <section class="card stack"><div class="grid g3">${BK.map(b=>`<div class="row">${dotb(b)}<b>${esc(BLOQ[b].name)}</b><span class="small muted">${esc(BLOQ[b].temas)}</span></div>`).join('')}</div>
-    <div class="row"><button class="btn primary" data-act="diagStart">Empezar la prueba</button></div></section>`;
-  if(d.i>=15){
-    return `${head('Resultado','Tu punto de partida','Hemos colocado cada bloque en su escalón. A partir de aquí, cada problema que corrijas ajusta tu nivel.')}
-    <section class="card stack">${BK.map(b=>`<div><div class="row between small"><span>${dotb(b)} <b>${esc(BLOQ[b].name)}</b></span><span class="num">nivel ${lvTxt(S.ratings[b].r)} · ${esc(lvName(S.ratings[b].r))}</span></div><div style="margin-top:6px">${bulletHTML(S.ratings[b].r, targetR(S,b), b)}</div></div>`).join('')}
-    <div class="row"><button class="btn primary" data-go="#/objetivos">Fijar mi objetivo</button><button class="btn" data-go="#/practicar">Empezar a practicar</button></div></section>`;
-  }
-  const b=BK[d.i%5], it=d.cur;
-  return `${head('Pregunta '+(d.i+1)+' de 15', BLOQ[b].name, '')}
-  <div class="dots">${Array.from({length:15},(_,i)=>`<i class="${i<d.i?(d.ans[i]?'ok':'ko'):i===d.i?'now':''}"></i>`).join('')}</div>
-  <section class="card prob stack"><div class="row">${chipB(b)}<span class="chip">Nivel ${it.n}</span></div><div class="st">${md(it.q)}</div>
-    <div>${d.order.map((o,i)=>`<button class="opt ${d.picked!=null?(o.ok?'right':i===d.picked?'wrong':''):''}" data-act="diagPick" data-i="${i}" ${d.picked!=null?'disabled':''}>${mdi(o.t)}</button>`).join('')}</div>
-    ${d.picked!=null?`<div class="note small">${mdi(it.e)}</div><div class="row"><button class="btn primary" data-act="diagNext">${d.i===14?'Ver resultado':'Siguiente'}</button></div>`:''}</section>`;
+    <div class="grid g2">
+      <div class="note stack" style="gap:8px"><b>Prueba completa · 30 preguntas</b><span class="small">Seis por bloque, unos 35 minutos. Es la recomendada: mide tu nivel con un margen de error de menos de un escalón y te sitúa también en los subbloques.</span><button class="btn primary" data-act="diagStart" data-per="6">Empezar la prueba completa</button></div>
+      <div class="note stack" style="gap:8px"><b>Prueba rápida · 15 preguntas</b><span class="small">Tres por bloque, unos 15 minutos. Menos precisa: el margen de error es mayor, de en torno a un escalón y medio.</span><button class="btn" data-act="diagStart" data-per="3">Empezar la prueba rápida</button></div>
+    </div>
+    <p class="tiny muted" style="margin:0">Hay ${DIAG.length} preguntas de nivel 1 (4.º ESO) a 7 (oposición de Murcia). <a href="#/metodo">Cómo calculamos tu nivel</a></p></section>`;
+  if(d.i>=d.N) return diagResultHTML(d);
+  const b=BK[d.i%5], it=d.cur; const picked=d.picked;
+  return `${head('Pregunta '+(d.i+1)+' de '+d.N, BLOQ[b].name, '')}
+  <div class="dots">${Array.from({length:d.N},(_,i)=>`<i class="${i<d.i?(d.ans[i]?'ok':'ko'):i===d.i?'now':''}"></i>`).join('')}</div>
+  <section class="card prob stack"><div class="row">${chipB(b)}${it.sb?`<span class="chip">${it.sb} · ${esc(subById(it.sb).name)}</span>`:''}</div><div class="st">${md(it.q)}</div>
+    <div>${d.order.map((o,i)=>`<button class="opt ${picked!=null?(o.ok?'right':i===picked?'wrong':''):''}" data-act="diagPick" data-i="${i}" ${picked!=null?'disabled':''}>${mdi(o.t)}</button>`).join('')}
+    <button class="opt" data-act="diagPick" data-i="ns" ${picked!=null?'disabled':''} style="${picked==='ns'?'border-color:var(--ink)':''}"><i>No lo sé</i></button></div>
+    ${picked!=null?`<div class="note small">${mdi(it.e)}</div><div class="row"><button class="btn primary" data-act="diagNext">${d.i===d.N-1?'Ver resultado':'Siguiente'}</button></div>`:''}</section>`;
 };
+function diagResultHTML(d){
+  const L=S.diag.levels; const R={}; BK.forEach(b=>R[b]=L[b].r);
+  const rows=BK.map(b=>{ const x=L[b]; const lo=lvVal(x.r-x.sd), hi=lvVal(x.r+x.sd), max=7.6; const xs=d.log.filter(y=>y.b===b);
+    return `<div><div class="row between small"><span>${dotb(b)} <b>${esc(BLOQ[b].name)}</b> <span class="muted">· ${xs.filter(y=>y.resp==='ok').length} de ${xs.length} aciertos</span></span><span class="num">nivel <b>${lvTxt(x.r)}</b> <span class="muted">(entre ${fmt1(clamp(lo,0.5,8))} y ${fmt1(clamp(hi,0.5,8))})</span></span></div>
+      <div class="bullet" style="margin-top:6px" role="img" aria-label="Nivel ${lvTxt(x.r)}"><i style="left:${clamp(lo,0,max)/max*100}%;width:${(clamp(hi,0,max)-clamp(lo,0,max))/max*100}%;background:${bcol(b)};opacity:.35;position:absolute;top:0;bottom:0"></i><i style="width:${clamp(lvVal(x.r),0,max)/max*100}%;background:${bcol(b)}"></i><b style="left:calc(${clamp(lvVal(targetR(S,b)),0,max)/max*100}% - 1px)"></b></div>
+      <span class="tiny muted">${esc(lvName(x.r))}</span></div>`; }).join('');
+  const review=d.log.map((x,k)=>{ const it=DIAG.find(q=>q.id===x.id); return `<div class="li" style="cursor:default"><div><span class="tiny muted">${k+1} · ${esc(BLOQ[x.b].name)} · nivel ${x.n}${x.sb?' · '+x.sb:''}</span><div class="small">${mdi(it.q)}</div><div class="tiny">${x.resp==='ok'?'<span class="pill-status st-ok">Acierto</span>':x.resp==='ns'?'<span class="pill-status st-new">No lo sé</span>':'<span class="pill-status st-bad">Fallo</span>'} ${mdi(it.e)}</div></div></div>`; }).join('');
+  return `${head('Resultado','Tu punto de partida','Tu nivel en cada bloque, con su margen de error. Cada problema que corrijas a partir de ahora lo afina.', `<span class="chip">Nota estimada hoy: ${fmt1(notaFrom(R))} / 10</span>`)}
+    <section class="card stack">${rows}<p class="tiny muted" style="margin:0">La barra clara es el margen de error: tu nivel real está ahí con una probabilidad de dos tercios. La marca negra es el nivel que necesitas para tu objetivo.</p>
+    <div class="row"><button class="btn primary" data-go="#/objetivos">Fijar mi objetivo</button><button class="btn" data-go="#/practicar">Empezar a practicar</button><button class="btn ghost" data-act="diagReset">Repetir la prueba</button></div></section>
+    <section class="card"><details><summary><b>Revisar las ${d.log.length} preguntas</b></summary><div class="list" style="margin-top:10px">${review}</div></details></section>`;
+}
 
 /* ---------- Cómo te medimos ---------- */
 const texN = x => fmt2(x).replace(',', '{,}');
@@ -572,7 +608,7 @@ V.metodo = () => {
   <section class="card stack"><h2>2. Dificultad de cada problema</h2>
     <p class="small">Cada problema del banco tiene un nivel del 1 al 7, asignado comparándolo con los exámenes oficiales: los de Murcia están en el 6 y el 7, uno tipo PAU en el 3. Su dificultad es $D = 800 + 200\\,(n-1)$, y los oficiales suman 40 puntos más.</p></section>
   <section class="card stack"><h2>3. Qué pasa cuando te corriges</h2>
-    <p class="small">Tu nota en el problema ($s$, de 0 a 1) sale de la rúbrica detallada: la suma de los indicadores, menos la penalización por ortografía, dividida entre 10. La comparamos con lo que se esperaba de tu nivel $R$:</p>
+    <p class="small">Tu nota en el problema ($s$, de 0 a 1) sale de la rúbrica detallada. Cada indicador oficial del tribunal se desglosa en subindicadores observables (unos 20 por ejercicio, algunos comunes y otros escritos para ese problema), y cada uno se valora en cinco niveles: 0, ¼, ½, ¾ o completo. Se suman, se resta la penalización por ortografía según las categorías oficiales y se divide entre 10. La comparamos con lo que se esperaba de tu nivel $R$:</p>
     <p>$$E = \\frac{1}{1+10^{(D-R)/400}},\\qquad R_{\\text{nuevo}} = R + K\\,(s - E).$$</p>
     <p class="small">$K$ vale 60 en los 8 primeros problemas de un bloque, 40 hasta el 25 y 28 después: al principio tu nivel se ajusta rápido y luego se estabiliza. Cada subbloque tiene su propio nivel, que se actualiza igual (con $K$ = 70, 45 y 30). Así sabemos qué parte concreta del bloque te falla.</p>
     <div class="note small"><b>Ejemplo.</b> Estás en ${ex.R} (nivel ${lvTxt(ex.R)}) y resuelves un problema de nivel ${ex.n} ($D = ${D}$). Se esperaba $E = ${texN(E)}$. Si te pones un ${fmt1(sEx*10)}, subes $40\\cdot(${texN(sEx)} - ${texN(E)}) \\approx ${Math.round(K*(sEx-E))}$ puntos. Si te pones un 2, bajas unos ${Math.round(K*(E-.2))}.</div></section>
@@ -592,7 +628,9 @@ V.metodo = () => {
     <p>$$\\text{semanas necesarias} = \\frac{\\text{distancia}}{\\text{ritmo}},\\qquad \\text{horas/semana necesarias} = \\frac{\\text{distancia}}{\\text{semanas hasta el examen}\\times\\text{ritmo por hora}}$$</p>
     <div class="note small"><b>Con tus datos:</b> ritmo ${pm.src==='datos'?`medido de ${fmt2(pm.rate/200)} escalones por semana`:pm.src==='estancado'?'estancado (tu nivel no ha subido en las últimas semanas)':`estimado de ${fmt2(pm.rate/200)} escalones por semana con ${g.hours} h`}; distancia de ${fmt1(pm.gapW/200)} escalones; ${pm.eta?`llegada hacia el ${esc(fdate(pm.eta))}`:'sin fecha estimable'}${pm.weeksLeft!=null?`; ${Math.floor(pm.weeksLeft)} semanas hasta el examen previsto`:''}.</div></section>
   <section class="card stack"><h2>7. La prueba de nivel</h2>
-    <p class="small">Son 15 preguntas, tres por bloque, en escalera: la primera es de nivel 4; si aciertas, la siguiente sube dos niveles y, si fallas, baja dos; la tercera ajusta uno más. Tu punto de partida es el último nivel, medio escalón arriba o abajo según la última respuesta.</p></section>
+    <p class="small">Es adaptativa y bayesiana. Para cada bloque partimos de una distribución de posibles niveles centrada en 1.300 (entre 2.º de Bachillerato y 1.º de grado) y muy ancha. Cada respuesta la actualiza con el modelo de respuesta al ítem de tres parámetros:</p>
+    <p>$$P(\text{acierto}\mid\theta) = c + (1-c)\,\frac{1}{1+10^{(D-\theta)/250}},\qquad c = 0{,}25$$</p>
+    <p class="small">$c$ es la probabilidad de acertar al azar con cuatro opciones, y «No lo sé» no la incluye. La siguiente pregunta de cada bloque es la de dificultad más cercana a tu nivel estimado en ese momento, que es la que más información da, y procuramos que toque subbloques distintos. Tu punto de partida es la media de la distribución final y el margen de error es su desviación típica. En la prueba completa (6 preguntas por bloque) ese margen suele quedar por debajo de un escalón. Los subbloques que han salido parten de tu nivel en el bloque, corregido según acertaste o fallaste sus preguntas.</p></section>
   <section class="card stack"><h2>Límites del método</h2>
     <div class="stack small">
       <span>• <b>Te corriges tú.</b> La estimación es tan buena como tu corrección. Por eso la rúbrica baja a indicadores concretos: es más difícil engañarse marcando «bien» un paso concreto que poniéndose un 7 a ojo.</span>

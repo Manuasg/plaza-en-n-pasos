@@ -26,31 +26,30 @@ const SUB = [
   {id:'NU5', b:'NU', name:'Ecuaciones diofánticas', temas:[15], skills:['Condición de existencia: $\\operatorname{mcd}(a,b)\\mid c$','Solución particular y general','Imponer las restricciones del enunciado']},
   {id:'NU6', b:'NU', name:'Combinatoria y grafos', temas:[2,3], skills:['Variaciones, permutaciones y combinaciones con y sin repetición','Principio de inclusión-exclusión','Grafos: grados, árboles y caminos eulerianos']},
   {id:'NU7', b:'NU', name:'Sucesiones y recurrencias', temas:[8], skills:['Recurrencias lineales con la ecuación característica','Sumas telescópicas','Progresiones aritméticas y geométricas']},
-  {id:'NU8', b:'NU', name:'Reales, aproximación y complejos', temas:[5,6,7,9,10], skills:['Forma polar y raíces de números complejos','Irracionalidad y propiedades de $\\mathbb{R}$','Errores y aproximación']},
+  {id:'NU8', b:'NU', name:'Números complejos y números reales', temas:[5,6,7,9,10], skills:['Forma polar, fórmula de De Moivre y raíces $n$-ésimas','Raíces de la unidad e interpretación geométrica','Irracionalidad y propiedades de $\\mathbb{R}$']},
   {id:'AL1', b:'AL', name:'Polinomios y Cardano-Vieta', temas:[13], skills:['Relaciones entre raíces y coeficientes','Construir el polinomio a partir de funciones simétricas','Teorema del resto y raíces racionales'], murcia:['2025-P2']},
   {id:'AL2', b:'AL', name:'Ecuaciones, desigualdades y medias', temas:[14], skills:['Convertir condiciones en una suma de cuadrados nula','Desigualdades entre medias (aritmética, cuadrática)','Discutir cuándo se da la igualdad'], murcia:['2021-P1']},
   {id:'AL3', b:'AL', name:'Matrices y determinantes', temas:[18,19], skills:['Sacar factores comunes de filas y columnas','Reconocer dependencia lineal de columnas','Determinante de Vandermonde'], murcia:['2021-P2']},
-  {id:'AL4', b:'AL', name:'Sistemas de ecuaciones lineales', temas:[16], skills:['Teorema de Rouché-Frobenius','Discusión según un parámetro','Regla de Cramer y Gauss']},
+  {id:'AL4', b:'AL', name:'Sistemas de ecuaciones lineales', temas:[16,17], skills:['Teorema de Rouché-Frobenius','Discusión según un parámetro','Regla de Cramer y Gauss','Programación lineal: vértices de la región factible']},
   {id:'AL5', b:'AL', name:'Espacios vectoriales y aplicaciones lineales', temas:[11,12], skills:['Núcleo, imagen y teorema de la dimensión','Bases y ecuaciones implícitas','Diagonalización']},
-  {id:'AL6', b:'AL', name:'Programación lineal', temas:[17], skills:['Plantear función objetivo y restricciones','Vértices de la región factible']},
   {id:'AN1', b:'AN', name:'Límites de sucesiones y funciones', temas:[25], skills:['Criterio del sándwich con sumas de $n$ términos','Indeterminaciones y conjugado','Infinitésimos equivalentes'], murcia:['2025-P1']},
   {id:'AN2', b:'AN', name:'Continuidad y Bolzano', temas:[25], skills:['Teorema de Bolzano con una función auxiliar','Valores intermedios y Weierstrass']},
-  {id:'AN3', b:'AN', name:'Derivadas, extremos y optimización', temas:[26,28,32], skills:['Derivabilidad por definición','Monotonía y extremos absolutos','Optimización con justificación del máximo']},
+  {id:'AN3', b:'AN', name:'Derivadas: valor medio, extremos y optimización', temas:[26,28,32], skills:['Rolle y valor medio de Lagrange, comprobando sus hipótesis','Monotonía y extremos absolutos','Desigualdades y número de raíces mediante la derivada','Optimización con justificación del máximo']},
   {id:'AN4', b:'AN', name:'Taylor y estudio local', temas:[27], skills:['Desarrollos de Maclaurin habituales','Límites con desarrollos de Taylor']},
-  {id:'AN5', b:'AN', name:'Integrales definidas e impropias', temas:[29,30,31], skills:['Integral impropia como límite','Integración por partes con logaritmos','Límites $0\\cdot\\infty$ con L\'Hôpital'], murcia:['2025-P3']},
+  {id:'AN5', b:'AN', name:'Integrales: cálculo, impropias y aplicaciones', temas:[29,30,31], skills:['Integral impropia como límite','Integración por partes y cambio de variable','Límites $0\\cdot\\infty$ con L\'Hôpital','Áreas y volúmenes de revolución'], murcia:['2025-P3']},
   {id:'AN6', b:'AN', name:'Sumas de Riemann y series', temas:[29,8], skills:['Reconocer una suma de Riemann','Criterio de la integral para series','Pasar a logaritmos en productos']},
   {id:'AN7', b:'AN', name:'Ecuaciones funcionales e integrales', temas:[21,29], skills:['Teorema fundamental del cálculo','Justificar la continuidad antes de derivar','Resolver en cada semirrecta y discutir el 0'], murcia:['2021-P3']},
-  {id:'GE1', b:'GE', name:'Triángulo y circunferencia', temas:[37,38,39,40], skills:['Puntos notables y relación de Euler','Teorema del coseno y fórmula de Herón','Potencia de un punto y tangentes']},
-  {id:'GE2', b:'GE', name:'Geometría analítica plana', temas:[46,51,53], skills:['Distancia entre rectas paralelas','Parametrizar direcciones con un vector unitario','Estudiar todos los casos de un valor absoluto'], murcia:['2021-P4']},
-  {id:'GE3', b:'GE', name:'Rectas y planos en el espacio', temas:[51,52,53], skills:['Distancias entre rectas que se cruzan','Producto mixto y volúmenes','Proyecciones y simétricos']},
+  {id:'GE1', b:'GE', name:'Triángulo, circunferencia y trigonometría', temas:[36,37,38,39,40], skills:['Puntos notables y relación de Euler','Teorema del coseno, fórmula de Herón e identidades trigonométricas','Potencia de un punto y tangentes']},
+  {id:'GE2', b:'GE', name:'Geometría analítica plana y transformaciones', temas:[41,42,46,51,53], skills:['Distancia entre rectas paralelas','Parametrizar direcciones con un vector unitario','Estudiar todos los casos de un valor absoluto','Ecuaciones de movimientos y homotecias'], murcia:['2021-P4']},
+  {id:'GE3', b:'GE', name:'Rectas y planos en el espacio', temas:[43,44,51,52,53], skills:['Distancias entre rectas que se cruzan','Producto mixto y volúmenes','Proyecciones y simétricos']},
   {id:'GE4', b:'GE', name:'Lugares geométricos', temas:[46,53,54], skills:['Planos mediadores y bisectores','Discutir los casos degenerados','Comprobar que todos los puntos del lugar se alcanzan'], murcia:['2025-P4']},
   {id:'GE5', b:'GE', name:'Cónicas y cuádricas', temas:[49,54], skills:['Clasificar con la matriz de la forma cuadrática','Elementos de las cónicas']},
-  {id:'GE6', b:'GE', name:'Movimientos, semejanza y poliedros', temas:[35,41,42,43,44,45], skills:['Composición de movimientos','Teorema de Euler para poliedros','Áreas y volúmenes']},
-  {id:'PR1', b:'PR', name:'Laplace y combinatoria', temas:[63], skills:['Espacio muestral equiprobable','Suceso contrario','Probabilidad geométrica']},
+  {id:'GE6', b:'GE', name:'Cuerpos geométricos: poliedros, revolución y volúmenes', temas:[34,35,45], skills:['Teorema de Euler y poliedros regulares','Volúmenes de cuerpos de revolución (Pappus-Guldin)','Esferas inscritas y circunscritas y secciones planas']},
+  {id:'PR1', b:'PR', name:'Laplace, combinatoria y probabilidad geométrica', temas:[63], skills:['Espacio muestral equiprobable','Suceso contrario','Probabilidad geométrica']},
   {id:'PR2', b:'PR', name:'Condicionada, total y Bayes', temas:[64], skills:['Declarar el sistema completo de sucesos','Probabilidad total y teorema de Bayes','Interpretar enunciados ambiguos y declararlo'], murcia:['2021-P5']},
   {id:'PR3', b:'PR', name:'Independencia de sucesos', temas:[64], skills:['Definición completa para tres sucesos (cuatro igualdades)','De Morgan e inclusión-exclusión','Independencia dos a dos frente a mutua'], murcia:['2025-P5']},
   {id:'PR4', b:'PR', name:'Variables discretas', temas:[65], skills:['Binomial y Poisson: media y varianza','Esperanza por linealidad']},
-  {id:'PR5', b:'PR', name:'Variables continuas y normal', temas:[66], skills:['Funciones de densidad','Tipificar y aproximar la binomial por la normal']},
+  {id:'PR5', b:'PR', name:'Variables continuas y normal', temas:[66], skills:['Funciones de densidad y de distribución','Exponencial: máximo y mínimo de variables independientes','Tipificar y aproximar la binomial por la normal']},
   {id:'PR6', b:'PR', name:'Estadística descriptiva e inferencia', temas:[57,58,59,60,61,62,67], skills:['Parámetros de centralización y dispersión','Intervalos de confianza y contrastes']}
 ];
 const subById = id => SUB.find(s=>s.id===id);
@@ -80,33 +79,50 @@ const MURCIA = [
 ];
 /* Rúbrica oficial de la parte A (criterios de valoración 2025) */
 const RUBRIC = [
-  {k:'rig', name:'Rigor', max:1, d:'Razonamiento coherente y riguroso, con lenguaje lógico-matemático.', tip:'Encadena cada paso con conectores lógicos (⇒, ⇔, «luego», «por tanto») y no dejes saltos.'},
-  {k:'con', name:'Conocimiento científico', max:1, d:'Definiciones, propiedades y teoremas correctos y pertinentes.', tip:'Enuncia el teorema que usas y comprueba sus hipótesis antes de aplicarlo.'},
-  {k:'tec', name:'Habilidades técnicas', max:1, d:'Técnicas adecuadas, nombrándolas.', tip:'Nombra la técnica: «por partes», «por inducción», «criterio del sándwich».'},
-  {k:'pla', name:'Planteamiento', max:1, d:'Responde a lo pedido y permite resolver.', tip:'Empieza por un párrafo de planteamiento: qué se pide, notación y estrategia.'},
-  {k:'des', name:'Desarrollo', max:3, d:'Desarrollo en consonancia con el planteamiento.', tip:'Desarrolla todos los casos que abre el planteamiento, sin abandonar ninguno a medias.'},
-  {k:'res', name:'Resultados', max:2, d:'Los resultados obtenidos son correctos.', tip:'Cierra con una conclusión explícita y comprueba el resultado con un caso particular.'},
-  {k:'pre', name:'Presentación', max:1, d:'Orden, letra legible, márgenes y expresión.', tip:'Separa planteamiento, desarrollo y conclusión; cuida márgenes, letra y ortografía.'}
+  {k:'rig', of:'En el desarrollo del ejercicio práctico se observa que el razonamiento utilizado es coherente y riguroso, permitiendo constatar el uso correcto de un lenguaje lógico-matemático.', dim:'Rigor en el desarrollo', name:'Rigor', max:1, d:'Razonamiento coherente y riguroso, con lenguaje lógico-matemático.', tip:'Encadena cada paso con conectores lógicos (⇒, ⇔, «luego», «por tanto») y no dejes saltos.'},
+  {k:'con', of:'Utiliza correctamente definiciones, propiedades o teoremas propios de la especialidad.', dim:'Conocimiento científico de la especialidad', name:'Conocimiento científico', max:1, d:'Definiciones, propiedades y teoremas correctos y pertinentes.', tip:'Enuncia el teorema que usas y comprueba sus hipótesis antes de aplicarlo.'},
+  {k:'tec', of:'Utiliza correctamente las técnicas necesarias de la especialidad.', dim:'Dominio de habilidades técnicas', name:'Habilidades técnicas', max:1, d:'Técnicas adecuadas, nombrándolas.', tip:'Nombra la técnica: «por partes», «por inducción», «criterio del sándwich».'},
+  {k:'pla', of:'El planteamiento responde a lo solicitado y permite resolver el ejercicio.', dim:'Resolución: planteamiento', name:'Planteamiento', max:1, d:'Responde a lo pedido y permite resolver.', tip:'Empieza por un párrafo de planteamiento: qué se pide, notación y estrategia.'},
+  {k:'des', of:'El desarrollo y resolución del ejercicio práctico está en consonancia con el planteamiento.', dim:'Resolución: desarrollo', name:'Desarrollo', max:3, d:'Desarrollo en consonancia con el planteamiento.', tip:'Desarrolla todos los casos que abre el planteamiento, sin abandonar ninguno a medias.'},
+  {k:'res', of:'Los resultados obtenidos son los correctos.', dim:'Resultados obtenidos', name:'Resultados', max:2, d:'Los resultados obtenidos son correctos.', tip:'Cierra con una conclusión explícita y comprueba el resultado con un caso particular.'},
+  {k:'pre', of:'En la resolución del ejercicio práctico realiza un desarrollo ordenado, con una presentación adecuada (letra legible, márgenes), una adecuada expresión gramatical y un rigor en el uso formal del lenguaje.', dim:'Presentación y orden', name:'Presentación', max:1, d:'Orden, letra legible, márgenes y expresión.', tip:'Separa planteamiento, desarrollo y conclusión; cuida márgenes, letra y ortografía.'}
 ];
-/* Rúbrica detallada: indicadores concretos por dimensión. Los problemas de Murcia tienen indicadores propios (rub.txt);
-   el resto usa indicadores generales construidos con las destrezas del subbloque y el error típico. */
+/* Rúbrica detallada, alineada con los criterios de valoración de Murcia (2025).
+   Cada indicador oficial se desglosa en subindicadores observables, que se valoran con una escala de cinco niveles.
+   - Subindicadores comunes (GEN): concretan el texto oficial y valen para cualquier ejercicio.
+   - Subindicadores del ejercicio: escritos para cada problema de Murcia (rub.txt) o, si no los hay, construidos
+     con las destrezas del subbloque y el error típico. */
+const SCALE = [[0,'Nada','No aparece o es incorrecto'],[.25,'Poco','Lo intenta, pero con errores graves'],[.5,'A medias','Correcto en parte; falta algo importante'],[.75,'Casi','Correcto, con un fallo o una omisión menor'],[1,'Completo','Correcto, completo y justificado']];
+const GENW = {rig:1, con:.4, tec:.4, pla:.4, des:.8, res:.5, pre:1};
+const GEN = {
+  rig:['Cada afirmación se deduce de las anteriores o de un resultado citado: no hay saltos lógicos','Usa con corrección el lenguaje lógico-matemático (⇒, ⇔, cuantificadores, notación de conjuntos y funciones)','Controla dominios, divisiones por cero, signos, casos límite y casos pequeños'],
+  con:['Enuncia con precisión las definiciones y teoremas que usa (hipótesis y tesis)','Comprueba que se cumplen las hipótesis antes de aplicar cada resultado'],
+  tec:['Nombra la técnica que aplica («por inducción», «por partes», «por Rouché-Frobenius»…)','Ejecuta los cálculos sin errores'],
+  pla:['Identifica qué se pide y fija la notación antes de calcular','Anuncia una estrategia que permite resolver el ejercicio'],
+  des:['Sigue la estrategia planteada hasta el final (o justifica el cambio)','Trata todos los casos que abre el planteamiento'],
+  res:['Destaca el resultado con una conclusión explícita que responde a la pregunta','Comprueba el resultado (caso particular, sustitución, signo o sentido)'],
+  pre:['Desarrollo ordenado: planteamiento, desarrollo y conclusión separados, con los apartados identificados','Letra legible y márgenes adecuados','Expresión gramatical adecuada: frases completas que enlazan los cálculos','Rigor en el uso formal del lenguaje: sin abreviaturas indebidas ni jerga']
+};
+/* Penalización por ortografía y expresión (criterios 2025): cada falta resta 0,5, con un máximo de 3 puntos por parte. */
+const ORTO = [['ort','Errores ortográficos (b/v, g/j, ll/y…)',1],['til','Tildes omitidas o mal puestas',3],['abr','Abreviaturas indebidas',3],['pun','Puntuación arbitraria o ausente',3],['ver','Formas y tiempos verbales inadecuados',3],['cnc','Errores de concordancia',3],['prp','Preposiciones mal usadas',3],['mar','Marcadores discursivos inadecuados',3],['rep','Repeticiones, tautologías o anacolutos',3]];
+const ortoFaltas = o => ORTO.reduce((a,[k,,d])=>a+Math.floor((+(o&&o[k])||0)/d),0);
 function rubricFor(p){
   const sp=(typeof RUBS!=='undefined'&&RUBS[p.id])||[]; const s=subById(p.sb); const sk=s?s.skills:[];
-  const tecSk=sk.slice(1,3);
-  const gen={
-    rig:[[.5,'Cada paso está justificado y encadenado con conectores lógicos (⇒, ⇔, «luego», «por tanto»)'],[.5,'Notación correcta y coherente, sin saltos ni afirmaciones sin probar']],
-    con:[[.5,'Enuncia con precisión las definiciones y teoremas que usa y comprueba sus hipótesis'],[.5,'Aplica correctamente: '+(sk[0]||'los resultados teóricos del tema')]],
-    tec:tecSk.length?tecSk.map(k=>[1,'Domina la técnica: '+k]):[[1,'Usa las técnicas adecuadas y las nombra']],
-    pla:[[1,'Explica qué se pide, fija la notación y anuncia la estrategia antes de calcular']],
-    des:[[1.5,'Los cálculos y pasos intermedios son correctos'],[1,'Trata todos los casos que abre el planteamiento, sin dejar ninguno a medias'],[.5,p.er?'Evita el error típico: '+p.er:'El desarrollo sigue el planteamiento hasta el final']],
-    res:[[1.5,'El resultado final es correcto'],[.5,'Cierra con una conclusión explícita y la comprueba (caso particular, signo, sentido)']],
-    pre:[[.5,'Estructura visible: planteamiento, desarrollo y conclusión separados'],[.5,'Letra legible, márgenes y redacción sin incorrecciones']]
+  const spec={
+    con:[[1,'Aplica correctamente: '+(sk[0]||'los resultados teóricos del tema')]],
+    tec:(sk.slice(1,3).length?sk.slice(1,3):['las técnicas propias del ejercicio']).map(k=>[1,'Domina la técnica: '+k]),
+    pla:[[1,'El planteamiento conduce a la solución de referencia o a otra vía igual de válida']],
+    des:[[1.5,'Los pasos intermedios del desarrollo son correctos'],[1,p.er?'Evita el error típico: '+p.er:'Resuelve todos los apartados del enunciado']],
+    res:[[1,'El resultado final es correcto (coincide con la solución de referencia)']]
   };
   const items=[];
   RUBRIC.forEach(d=>{
-    const own=sp.filter(x=>x.k===d.k); const list=own.length?own.map(x=>[x.p,x.t]):gen[d.k];
+    const g=GEN[d.k]||[]; const gw=Math.min(GENW[d.k]||0, d.max);
+    g.forEach(t=>items.push({k:d.k, p:gw/g.length, t, gen:true}));
+    const rest=d.max-gw; if(rest<=1e-9) return;
+    const own=sp.filter(x=>x.k===d.k); const list=own.length?own.map(x=>[x.p,x.t]):(spec[d.k]||[]);
     const tot=list.reduce((a,x)=>a+x[0],0)||1;
-    list.forEach(([pt,t])=>items.push({k:d.k, p:Math.round(pt/tot*d.max*100)/100, t, own:own.length>0}));
+    list.forEach(([pt,t])=>items.push({k:d.k, p:pt/tot*rest, t, own:own.length>0}));
   });
   return items;
 }
@@ -174,13 +190,22 @@ function parseProblems(text){
 function parseDiag(text){
   const out=[];
   for(const block of text.split(/\n\s*\n(?=D )/)){
-    const lines=block.trim().split('\n'); const head=lines.shift(); const m=head && head.match(/^D\s+b=(\w+)\s+n=(\d)/); if(!m) continue;
-    const it={b:m[1], n:+m[2], q:'', opts:[], e:''}; const q=[];
+    const lines=block.trim().split('\n'); const head=lines.shift(); const m=head && head.match(/^D\s+b=(\w+)\s+n=(\d)(?:\s+sb=(\w+))?/); if(!m) continue;
+    const it={id:'d'+out.length, b:m[1], n:+m[2], sb:m[3]||null, q:'', opts:[], e:''}; const q=[];
     for(const l of lines){ if(/^\* /.test(l)) it.opts.push({t:l.slice(2),ok:true}); else if(/^- /.test(l)) it.opts.push({t:l.slice(2),ok:false}); else if(/^E /.test(l)) it.e=l.slice(2); else q.push(l); }
     it.q=q.join('\n'); out.push(it);
   }
   return out;
 }
+/* Prueba de nivel adaptativa: estimación bayesiana del nivel de cada bloque.
+   Modelo de respuesta (tipo TRI con adivinación): P(acierto | θ) = c + (1−c)·1/(1+10^((D−θ)/S)),
+   con D la dificultad de la pregunta, S = 250 y c = 0,25 (cuatro opciones). «No lo sé» no admite adivinación. */
+const DG = { S:250, C:.25, grid:Array.from({length:101},(_,i)=>400+i*20), mu0:1300, sd0:450 };
+const dgDiff = n => 800+200*(n-1);
+function dgPrior(){ const p=DG.grid.map(t=>Math.exp(-((t-DG.mu0)**2)/(2*DG.sd0**2))); const z=p.reduce((a,c)=>a+c,0); return p.map(x=>x/z); }
+function dgLik(t, D, resp){ const L=1/(1+Math.pow(10,(D-t)/DG.S)); return resp==='ok' ? DG.C+(1-DG.C)*L : resp==='ns' ? (1-L) : (1-DG.C)*(1-L)+.02; }
+function dgUpdate(post, D, resp){ const p=post.map((x,i)=>x*dgLik(DG.grid[i],D,resp)); const z=p.reduce((a,c)=>a+c,0)||1; return p.map(x=>x/z); }
+function dgStats(post){ const m=post.reduce((a,x,i)=>a+x*DG.grid[i],0); const v=post.reduce((a,x,i)=>a+x*(DG.grid[i]-m)**2,0); return {m, sd:Math.sqrt(v)}; }
 const SEED = parseProblems($('#seed-probs').textContent);
 const DIAG = parseDiag($('#seed-diag').textContent);
 function parseRubs(text){ const out={}; let cur=null;

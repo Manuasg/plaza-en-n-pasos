@@ -212,6 +212,13 @@ body.noauth .beta{display:none}
 .tri button[data-v="1"][aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
 .tri button[data-v="0.5"][aria-pressed="true"]{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
 .tri button[data-v="0"][aria-pressed="true"]{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.tri5 button{padding:0 8px;font-size:.76rem}
+.tri button[data-v="0.25"][aria-pressed="true"]{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.tri button[data-v="0.75"][aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.orto{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:4px 18px;margin:6px 0}
+.orow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:3px 0;border-bottom:1px dashed var(--line)}
+.ostep{display:flex;align-items:center;gap:6px}.ostep b{min-width:18px;text-align:center}
+.ostep .icon-btn{width:30px;height:30px;border:1px solid var(--line);border-radius:8px;font-weight:700}
 .ri-n{grid-column:1/-1;min-height:38px !important;font-size:.9rem}
 .fail{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line)}
 @media (max-width:640px){.ri{grid-template-columns:1fr}}
