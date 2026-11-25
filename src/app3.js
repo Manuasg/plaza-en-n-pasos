@@ -31,6 +31,27 @@ function diagItem(d){
   const b=BK[d.i%5]; const it=DIAG.find(x=>x.b===b&&x.n===d.lv[b])||DIAG.find(x=>x.b===b);
   d.cur=it; d.order=shuffle(it.opts); d.picked=null;
 }
+async function copyText(txt, fallbackEl){
+  try{ await navigator.clipboard.writeText(txt); return true; }catch(e){}
+  try{ const t=document.createElement('textarea'); t.value=txt; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); const ok=document.execCommand('copy'); t.remove(); if(ok) return true; }catch(e){}
+  if(fallbackEl){ fallbackEl.value=txt; const d=fallbackEl.closest('details'); if(d) d.open=true; fallbackEl.focus(); fallbackEl.select(); }
+  return false;
+}
+function parseAI(txt){
+  txt=String(txt||'');
+  const fences=[...txt.matchAll(/```(?:json)?\s*([\s\S]*?)```/g)].map(m=>m[1]);
+  const cands=fences.reverse();
+  const a=txt.indexOf('{'), b=txt.lastIndexOf('}'); if(a>=0&&b>a) cands.push(txt.slice(a,b+1));
+  for(const c of cands){ try{ const o=JSON.parse(c.trim().replace(/[“”]/g,'"')); if(o&&(o.indicadores||o.ejercicios)) return o; }catch(e){} }
+  throw new Error('No encuentro el bloque JSON. Copia también el bloque final de código de la respuesta.');
+}
+const aiV = v => { v=+v; return v>=.75?1:v>=.25?.5:0; };
+function applyAIto(p, rk, o){
+  const n=rubricFor(p).length; let used=0;
+  (o.indicadores||[]).forEach((x,k)=>{ const i=Number.isInteger(+x.i)?+x.i:k; if(i<0||i>=n||x.v==null) return; rk.m[i]=aiV(x.v); rk.n[i]=String(x.nota||'').slice(0,200); used++; });
+  if(o.faltas!=null) rk.falt=clamp(Math.round(+o.faltas)||0,0,6);
+  return {used, n};
+}
 const A = {
   menuOpen(){ document.body.classList.add('menu-open'); },
   menuClose(){ closeMenu(); },
@@ -46,13 +67,40 @@ const A = {
   practiceOne(el){ go('#/practicar?id='+el.dataset.id); },
   mark(el){ const key=el.dataset.key, i=+el.dataset.i, v=+el.dataset.v; const {rk}=rkKey(key); rk.m[i]=v; pressIn(el);
     const n=el.closest('.ri').querySelector('.ri-n'); if(n){ n.classList.toggle('hidden', v>=1); } updRub(key); },
+  async aiCopy(el){
+    let txt, raw=null;
+    if(el.dataset.kind==='exp') txt=aiPromptExplain(byId(el.dataset.id));
+    else if(el.dataset.key==='sim') txt=aiPromptSim(UI.sim.ids);
+    else txt=aiPromptProblem(byId(UI.pr.id));
+    if(el.dataset.key) raw=document.querySelector(`[data-raw="${el.dataset.key}"]`);
+    if(raw) raw.value=txt;
+    const ok=await copyText(txt, raw);
+    toast(ok?'Copiado. Pégalo en tu IA'+(el.dataset.kind==='exp'?'.':' y adjunta las fotos de tu hoja.'):'No se pudo copiar solo: selecciona el texto y cópialo.');
+  },
+  aiApply(el){
+    const key=el.dataset.key; const msg=document.querySelector(`[data-aimsg="${key}"]`);
+    try{
+      const o=parseAI(UI.aiTxt&&UI.aiTxt[key]);
+      if(key==='sim'){
+        const sm=UI.sim; const ex=o.ejercicios||[]; let done=0;
+        sm.ids.forEach((id,k)=>{ const e=ex.find(x=>x.problema===id)||ex[k]; if(!e) return; sm.rk[id]=sm.rk[id]||newRk(); applyAIto(byId(id), sm.rk[id], e); done++; });
+        if(!done) throw new Error('La respuesta no trae ningún ejercicio de este simulacro.');
+        sm.ai={com:ex.map(e=>e.comentario).filter(Boolean).join(' · ').slice(0,400)};
+      } else {
+        const p=byId(UI.pr.id); if(o.problema && o.problema!==p.id) throw new Error('La respuesta es del problema '+o.problema+', no de este ('+p.id+').');
+        const r=applyAIto(p, UI.pr.rk, o); if(!r.used) throw new Error('No hay indicadores válidos en la respuesta.');
+        UI.pr.ai={com:String(o.comentario||'').slice(0,300), used:r.used, n:r.n};
+      }
+      render(); toast('Rúbrica rellenada. Revísala antes de guardar.');
+    }catch(e){ if(msg) msg.textContent=e.message; else toast(e.message); }
+  },
   markAll(el){ const key=el.dataset.key; const {p, rk}=rkKey(key); rubricFor(p).forEach((_,i)=>{ rk.m[i]=1; });
     const box=el.closest('.card'); box.querySelectorAll(`[data-act="mark"][data-key="${CSS.escape(key)}"]`).forEach(b=>b.setAttribute('aria-pressed', b.dataset.v==='1'));
     box.querySelectorAll(`.ri-n[data-key="${CSS.escape(key)}"]`).forEach(n=>n.classList.add('hidden')); updRub(key); },
   falt(el){ const key=el.dataset.key; const {rk}=rkKey(key); rk.falt=+el.dataset.v; pressIn(el); updRub(key); },
   saveGrade(){
     const pr=UI.pr; const p=byId(pr.id); const items=rkItems(p, pr.rk); const sc=itemsScore(items, pr.rk.falt);
-    const res=applyResult(p.id, sc/10, {mode:'practica', dims:itemsDims(items), falt:pr.rk.falt, items, secs:pr.secs||0});
+    const res=applyResult(p.id, sc/10, {mode:'practica', dims:itemsDims(items), falt:pr.rk.falt, items, secs:pr.secs||0, ia:!!pr.ai});
     const fails=items.filter(it=>it.v<1); if(fails.length) addErrors(fails.map(it=>({txt:it.t, dim:it.k, note:it.n, b:p.b, sb:p.sb})), p.id);
     pr.items=items; pr.res=res; pr.score=sc; pr.stage='done'; render(); window.scrollTo(0,0);
   },
@@ -67,7 +115,7 @@ const A = {
   simSave(){
     const sm=UI.sim; let tot=0; sm.res=[];
     sm.ids.forEach(id=>{ const p=byId(id); const rk=sm.rk[id]; const items=rkItems(p, rk); const sc=itemsScore(items, rk.falt); tot+=sc;
-      applyResult(id, sc/10, {mode:'simulacro', dims:itemsDims(items), falt:rk.falt, items});
+      applyResult(id, sc/10, {mode:'simulacro', dims:itemsDims(items), falt:rk.falt, items, ia:!!sm.ai});
       const fails=items.filter(it=>it.v<1); if(fails.length) addErrors(fails.map(it=>({txt:it.t, dim:it.k, note:it.n, b:p.b, sb:p.sb})), id);
       sm.res.push({id, items, falt:rk.falt, score:sc}); });
     sm.nota=tot/sm.ids.length; S.sims.push({d:Date.now(), nota:sm.nota, ref:sm.ref}); save(); sm.stage='done';
@@ -103,6 +151,7 @@ const CHG = {
 };
 const INP = {
   goalHours(el){ const v=$('#g-hv'); if(v) v.textContent=el.value; },
+  aiPaste(el){ (UI.aiTxt=UI.aiTxt||{})[el.dataset.key]=el.value; },
   rnote(el){ const {rk}=rkKey(el.dataset.key); rk.n[+el.dataset.i]=el.value; },
   imp(el){ UI.imp=el.value; const n=parseProblems(UI.imp).length; const b=document.querySelector('[data-act="impSave"]'); if(b){ b.disabled=!n; b.textContent='Añadir '+n+' '+(n===1?'problema':'problemas'); } }
 };

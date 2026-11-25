@@ -39,3 +39,13 @@ Solución
 `n` nivel 1–7 · `b` NU, AL, AN, GE o PR · `sb` subbloque · `m` oficial, gemelo o estilo · `ref` año y ejercicio de Murcia.
 
 Solo se incluyen enunciados oficiales de la CARM y problemas y soluciones propios.
+
+## Corrección con la IA del opositor
+
+La web no se conecta a ninguna cuenta de IA. En la corrección, el opositor copia unas instrucciones (enunciado, solución de referencia y rúbrica con indicadores numerados), las pega en su ChatGPT, Claude, Gemini o Copilot junto con las fotos de su hoja, y pega aquí la respuesta. La IA termina con un bloque JSON:
+
+```json
+{"escalera":1,"problema":"m25p3","indicadores":[{"i":0,"v":1,"nota":""}],"faltas":0,"comentario":""}
+```
+
+La web rellena la rúbrica con ese bloque; el opositor la revisa y la guarda, y cuenta para su progreso como cualquier otra corrección (marcada como «corregido con IA»). Los simulacros usan `{"simulacro":true,"ejercicios":[...]}`.

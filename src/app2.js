@@ -292,10 +292,11 @@ V.p = (id) => {
   <section class="card prob stack"><div class="row">${chipOrigin(p)}${chipSub(p.sb)}${chipLv(p.n)}${p.t?`<span class="chip">Tema ${p.t}</span>`:''}</div>
     <div class="st">${md(p.st)}</div>
     ${p.h.length?`<details><summary class="small"><b>Pistas (${p.h.length})</b></summary><ol class="small">${p.h.map(h=>`<li>${mdi(h)}</li>`).join('')}</ol></details>`:''}
+    <div class="row"><button class="btn sm" data-act="aiCopy" data-kind="exp" data-id="${p.id}">Pedir explicación a mi IA</button><span class="tiny muted">Copia el ejercicio y su solución; pégalo en ${AIS.map(a=>a[0]).slice(0,3).join(', ')}…</span></div>
     <details><summary class="small"><b>Ver la solución</b></summary><div class="sol" style="margin-top:10px">${md(p.so)}</div>${p.er?`<div class="typical" style="margin-top:10px"><b>Error típico:</b> ${mdi(p.er)}</div>`:''}</details>
     ${p.src?`<p class="tiny muted">Fuente: ${esc(p.src)}</p>`:''}</section>
   ${(()=>{ const hs=S.hist.filter(h=>h.pid===p.id&&h.items).slice().reverse(); return `<section class="card stack"><div class="card-h"><h2>Tus correcciones de este problema</h2><span class="sub">${hs.length?hs.length+(hs.length>1?' intentos':' intento'):'Aún no lo has corregido'}</span></div>
-    ${hs.length?hs.map((h,i)=>`<details ${i===0?'open':''}><summary><b>${esc(fdate(h.d))} · ${fmt1(h.s*10)} / 10</b> <span class="small muted">· ${h.mode==='simulacro'?'simulacro':'práctica'} · ${h.items.filter(x=>x.v<1).length} fallos</span></summary><div class="stack" style="margin-top:10px">${reportHTML(h.items, h.falt)}</div></details>`).join(''):`<p class="muted small" style="margin:0">Cuando lo resuelvas y te corrijas, aquí verás la rúbrica anotada de cada intento.</p>`}
+    ${hs.length?hs.map((h,i)=>`<details ${i===0?'open':''}><summary><b>${esc(fdate(h.d))} · ${fmt1(h.s*10)} / 10</b> <span class="small muted">· ${h.mode==='simulacro'?'simulacro':'práctica'}${h.ia?' · corregido con IA':''} · ${h.items.filter(x=>x.v<1).length} fallos</span></summary><div class="stack" style="margin-top:10px">${reportHTML(h.items, h.falt)}</div></details>`).join(''):`<p class="muted small" style="margin:0">Cuando lo resuelvas y te corrijas, aquí verás la rúbrica anotada de cada intento.</p>`}
     <details><summary class="small"><b>Ver la rúbrica de este problema</b></summary><div class="stack small" style="margin-top:8px">${RUBRIC.map(dm=>`<div><b>${esc(dm.name)} (${dm.max})</b>${rubricFor(p).filter(it=>it.k===dm.k).map(it=>`<span style="display:block">• ${mdi(it.t)} <span class="muted num">(${fmt2(it.p)})</span></span>`).join('')}</div>`).join('')}</div></details></section>`; })()}
   ${s?`<section class="card"><div class="card-h"><h2>Destrezas de ${s.id}</h2><a class="sub" href="#/sub/${s.id}">Ver subbloque</a></div><div class="small">${s.skills.map(k=>`• ${mdi(k)}`).join('<br>')}</div></section>`:''}`;
 };
@@ -322,6 +323,7 @@ V.practicar = (arg, q) => {
     <div class="row">${pr.hints<p.h.length?`<button class="btn" data-act="hint">Pedir una pista (${p.h.length-pr.hints})</button>`:''}<button class="btn primary" data-act="toGrade">Ver la solución y corregirme</button><button class="btn ghost" data-act="skip">Cambiar de problema</button></div>`:''}</section>`;
   if(pr.stage==='work') return top+prob;
   if(pr.stage==='grade') return top+prob+`<section class="card"><div class="card-h"><h2>Solución</h2>${p.ref&&p.m!=='oficial'?`<span class="sub">Gemelo de ${esc(refLabel(p.ref))}</span>`:''}</div><div class="sol">${md(p.so)}</div>${p.er?`<div class="typical" style="margin-top:10px"><b>Error típico en este problema:</b> ${mdi(p.er)}</div>`:''}</section>
+    ${aiCardHTML('pr', pr.ai)}
     <section class="card stack"><div class="card-h"><h2>Corrígete con la rúbrica detallada</h2><span class="sub">Dimensiones oficiales de Murcia (criterios de 2025)</span></div>
     <p class="small muted" style="margin:0">Compara tu hoja con la solución indicador a indicador. Marca cada uno como <b>bien</b>, <b>a medias</b> o <b>mal</b> y, si fallaste, anota dónde: queda guardado en tu historial de errores.${rubricFor(p).some(x=>x.own)?' Los indicadores de este problema están escritos para él.':''}</p>
     ${rubricHTML('pr', p, pr.rk)}
@@ -335,6 +337,83 @@ V.practicar = (arg, q) => {
     <details><summary class="small"><b>Volver a ver la solución</b></summary><div class="sol" style="margin-top:8px">${md(p.so)}</div></details>
     <div class="row"><button class="btn primary" data-act="next">Siguiente problema</button><button class="btn" data-go="#/bloque/${p.b}">Ver qué me falta en ${esc(BLOQ[p.b].name.toLowerCase())}</button><button class="btn ghost" data-go="#/p/${p.id}">Historial de este problema</button></div></section>`;
 };
+/* ---------- Corrección con la IA del opositor (ChatGPT, Claude, Gemini…) ----------
+   La web no se conecta a ninguna cuenta: genera unas instrucciones con el enunciado, la solución y la rúbrica,
+   el opositor las pega en su IA junto con las fotos de su hoja, y pega aquí la respuesta (un bloque JSON). */
+const AIS = [['ChatGPT','https://chatgpt.com/'],['Claude','https://claude.ai/new'],['Gemini','https://gemini.google.com/app'],['Copilot','https://copilot.microsoft.com/']];
+function aiRubricText(p){
+  return rubricFor(p).map((it,i)=>`Indicador ${i} · ${RUBRIC.find(d=>d.k===it.k).name} · ${String(it.p).replace('.',',')} pt: ${it.t}`).join('\n');
+}
+const AI_RULES = `## Cómo corregir
+- Lee la resolución manuscrita del opositor en las fotos adjuntas (o en el texto que te pegue).
+- Para cada indicador decide: 1 si está bien, 0.5 si está a medias, 0 si está mal o no aparece. Si algo no se lee, pon 0 y dilo en la nota.
+- Si el opositor sigue un camino distinto al de la solución de referencia pero correcto y riguroso, valóralo como equivalente.
+- No inventes lo que no está escrito: en cada nota, cita o describe lo que ves en su hoja (por ejemplo «en la línea 4 olvida el caso x = 0»).
+- Cuenta las faltas de ortografía y expresión (−0,5 cada una; tres tildes, tres abreviaturas indebidas o tres errores de puntuación cuentan como una falta).
+- Después escribe una explicación breve y clara de los errores principales y de cómo resolverlos bien, como lo haría un buen profesor.`;
+function aiPromptProblem(p){
+  return `Actúa como corrector del tribunal de la oposición de Matemáticas (Secundaria) de la Región de Murcia. Te paso un ejercicio de la parte A, su solución de referencia y la rúbrica con la que se corrige (criterios de valoración de 2025). Corrige la resolución del opositor que te adjunto.
+
+## Ejercicio${p.ref?` (${refLabel(p.ref)}${p.m==='gemelo'?', gemelo':''})`:''}
+${p.st}
+
+## Solución de referencia
+${p.so}
+${p.er?`\nError típico en este ejercicio: ${p.er}\n`:''}
+## Rúbrica (los puntos de cada indicador ya están fijados)
+${aiRubricText(p)}
+
+${AI_RULES}
+
+## Formato obligatorio al final
+Termina SIEMPRE tu respuesta con este bloque de código JSON, con un elemento por indicador (del 0 al ${rubricFor(p).length-1}), para que la web Escalera Murcia pueda leerlo:
+\`\`\`json
+{"escalera":1,"problema":"${p.id}","indicadores":[{"i":0,"v":1,"nota":""},{"i":1,"v":0.5,"nota":"qué falta, en pocas palabras"}],"faltas":0,"comentario":"resumen en una frase"}
+\`\`\``;
+}
+function aiPromptSim(ids){
+  return `Actúa como corrector del tribunal de la oposición de Matemáticas (Secundaria) de la Región de Murcia. Te paso los ${ids.length} ejercicios de un simulacro de la parte A, con su solución de referencia y su rúbrica (criterios de valoración de 2025). Corrige la resolución del opositor que te adjunto, ejercicio por ejercicio.
+
+${ids.map((id,k)=>{ const p=byId(id); return `# EJERCICIO ${k+1} (código ${p.id})
+
+## Enunciado
+${p.st}
+
+## Solución de referencia
+${p.so}
+
+## Rúbrica
+${aiRubricText(p)}`; }).join('\n\n')}
+
+${AI_RULES}
+
+## Formato obligatorio al final
+Termina SIEMPRE tu respuesta con este bloque de código JSON, con un elemento por ejercicio y uno por indicador de cada ejercicio:
+\`\`\`json
+{"escalera":1,"simulacro":true,"ejercicios":[{"problema":"${ids[0]}","indicadores":[{"i":0,"v":1,"nota":""}],"faltas":0,"comentario":""}]}
+\`\`\``;
+}
+function aiPromptExplain(p){
+  return `Soy opositor a profesor de Matemáticas de Secundaria en la Región de Murcia. Explícame este ejercicio de la parte A paso a paso, como un buen profesor: primero la idea clave y por qué se elige esa estrategia, luego cada paso justificado, y al final los errores típicos y cómo redactarlo para sacar la máxima nota con los criterios del tribunal (rigor, conocimiento, técnicas, planteamiento, desarrollo, resultados y presentación). Después hazme una pregunta para comprobar que lo he entendido.
+
+## Ejercicio
+${p.st}
+
+## Solución de referencia (úsala como base, no la contradigas sin justificarlo)
+${p.so}${p.er?`\n\nError típico: ${p.er}`:''}`;
+}
+const aiLinks = () => AIS.map(([n,u])=>`<a class="btn sm" href="${u}" target="_blank" rel="noopener">${n}</a>`).join('');
+function aiCardHTML(key, ai){
+  return `<section class="card stack ai-card"><div class="card-h"><h2>Corrígelo con tu IA</h2><span class="sub">ChatGPT, Claude, Gemini o la que uses</span></div>
+    <p class="small" style="margin:0">Tu IA corrige con nuestra rúbrica y nosotros guardamos el resultado en tu progreso. Tus fotos van solo a tu IA, no a esta web.</p>
+    <div class="stack small" style="gap:10px">
+      <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><b class="step">1</b><div class="stack" style="gap:6px"><span>Copia las instrucciones: incluyen el enunciado, la solución y la rúbrica.</span><div class="row"><button class="btn sm primary" data-act="aiCopy" data-key="${key}" data-kind="corr">Copiar instrucciones</button><details><summary class="tiny">Ver el texto</summary><textarea readonly rows="6" class="ai-raw" data-raw="${key}" style="margin-top:6px;font-size:.75rem"></textarea></details></div></div></div>
+      <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><b class="step">2</b><div class="stack" style="gap:6px"><span>Abre tu IA, pega las instrucciones y <b>adjunta las fotos de tu hoja</b>.</span><div class="row">${aiLinks()}</div></div></div>
+      <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><b class="step">3</b><div class="stack" style="gap:6px;flex:1"><span>Copia su respuesta completa (o solo el bloque final de código) y pégala aquí.</span><textarea rows="4" data-input="aiPaste" data-key="${key}" placeholder='{"escalera":1, …}'></textarea><div class="row"><button class="btn sm" data-act="aiApply" data-key="${key}">Rellenar la rúbrica</button><span class="tiny muted" data-aimsg="${key}"></span></div></div></div>
+    </div>
+    ${ai?`<div class="note ok small"><b>Rúbrica rellenada con tu IA.</b> Revísala abajo: puedes cambiar cualquier indicador antes de guardar.${ai.com?`<br><i>«${esc(ai.com)}»</i>`:''}</div>`:''}</section>`;
+}
+
 /* ---------- Rúbrica detallada ---------- */
 const newRk = () => ({m:{}, n:{}, falt:0});
 const rkDone = (p, rk) => rubricFor(p).every((_,i)=>typeof rk.m[i]==='number');
@@ -398,6 +477,7 @@ V.simulacro = () => {
   const done=sm.ids.every(id=>rkDone(byId(id),sm.rk[id]));
   const total=sm.ids.reduce((a,id)=>{ const p=byId(id); return a+(rkDone(p,sm.rk[id])?itemsScore(rkItems(p,sm.rk[id]),sm.rk[id].falt):0); },0)/sm.ids.length;
   return `${head('Simulacro · '+sm.ref,'Corrección','Corrige cada ejercicio con la rúbrica detallada. La nota de la parte A es la media de los cinco.', `<span class="total" data-total="sim">${fmt1(total)} / 10</span>`)}
+  ${aiCardHTML('sim', sm.ai)}
   ${sm.ids.map((id,i)=>{ const p=byId(id); return `<section class="card stack"><div class="row between"><h2>Ejercicio ${i+1} · ${esc(p.ti)}</h2>${chipSub(p.sb)}</div>
     <details><summary class="small"><b>Enunciado y solución</b></summary><div class="st" style="margin-top:8px">${md(p.st)}</div><div class="sol">${md(p.so)}</div></details>
     ${rubricHTML('sim:'+id, p, sm.rk[id])}</section>`; }).join('')}
