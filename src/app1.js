@@ -183,7 +183,7 @@ function parseProblems(text){
     const h=[]; const st=stRaw.split('\n').filter(l=>{ if(/^> /.test(l)){ h.push(l.slice(2).trim()); return false; } return true; }).join('\n').trim();
     let er=''; const so=soRaw.split('\n').filter(l=>{ if(/^!! /.test(l)){ er=l.slice(3).trim(); return false; } return true; }).join('\n').trim();
     const t=parseInt(at.t)||0; const bq=BK.includes(at.b)?at.b:bloqueDeTema(t);
-    out.push({id:at.id||('p-'+uid()), ti:m[2].trim(), st, so, h, er, n:clamp(parseInt(at.n)||3,1,7), b:bq, sb:subById(at.sb)?at.sb:subDeTema(t,bq), t, m:at.m||'', ref:at.ref||'', src:(at.src||'').replace(/-/g,' ')});
+    out.push({id:at.id||('p-'+uid()), ti:m[2].trim(), st, so, h, er, n:clamp(parseInt(at.n)||3,1,7), b:bq, sb:subById(at.sb)?at.sb:subDeTema(t,bq), t, m:at.m||'', ref:at.ref||'', src:(at.src||'').replace(/-/g,' '), up:at.up||''});
   }
   return out;
 }
@@ -213,6 +213,33 @@ function parseRubs(text){ const out={}; let cur=null;
     const m=l.match(/^(pla|con|tec|des|res|rig|pre)\s+([\d.]+)\s*\|\s*(.+)$/); if(m&&cur) cur.push({k:m[1], p:+m[2], t:m[3]}); });
   return out; }
 const RUBS = parseRubs(($('#seed-rub')||{textContent:''}).textContent);
+/* Teoría por subbloque: resultados que hay que saber enunciar con sus hipótesis (líneas «- ») y la trampa típica («! »). */
+function parseTeo(text){ const out={}; let cur=null;
+  text.split('\n').forEach(l=>{ const m=l.match(/^T\s+(\w+)/); if(m){ cur=out[m[1]]={it:[], warn:''}; return; } if(!cur) return;
+    if(/^- /.test(l)) cur.it.push(l.slice(2).trim()); else if(/^! /.test(l)) cur.warn=l.slice(2).trim(); });
+  return out; }
+const TEO = parseTeo(($('#seed-teo')||{textContent:''}).textContent);
+/* Escalera de un problema: el problema más cercano por debajo (dir=-1) o por encima (dir=+1).
+   Primero el mismo subbloque; si no hay, el mismo bloque y tema; si no, el mismo bloque. Evita los ya superados y la pila actual. */
+function ladderFor(p, dir, avoid=[]){
+  const ok=q=>q.id!==p.id && !avoid.includes(q.id) && (dir<0 ? q.n<p.n : q.n>p.n);
+  const solved=q=>{ const a=S&&S.attempts[q.id]; return a&&a.length&&a[a.length-1].s>=.75; };
+  const rank=q=>Math.abs(q.n-p.n)*10 + (solved(q)?25:0) + (q.up===p.id?-8:0) + (q.up&&q.up===p.up?-4:0) + (q.m==='oficial'&&dir<0?3:0);
+  for(const f of [q=>q.sb===p.sb, q=>q.b===p.b&&q.t&&q.t===p.t, q=>q.b===p.b]){
+    const c=bank().filter(q=>ok(q)&&f(q)); if(c.length) return c.sort((a,b)=>rank(a)-rank(b))[0];
+  }
+  return null;
+}
+/* Recomendaciones para un subbloque según tu nivel en él: consolidar (un escalón por debajo), a tu nivel y reto. */
+function recsFor(sbId){
+  const sb=subById(sbId); const r=S.subR[sbId]?S.subR[sbId].r:S.ratings[sb.b].r;
+  const ps=bank().filter(q=>q.sb===sbId); const used=new Set(); const out=[];
+  const solvedRecent=q=>{ const a=S.attempts[q.id]; return a&&a.length&&a[a.length-1].s>=.75; };
+  [['Para consolidar',-150],['A tu nivel',0],['Reto',180]].forEach(([lab,off])=>{
+    const c=ps.filter(q=>!used.has(q.id)).sort((a,b)=>(Math.abs(probR(a)-r-off)+(solvedRecent(a)?300:0))-(Math.abs(probR(b)-r-off)+(solvedRecent(b)?300:0)))[0];
+    if(c){ used.add(c.id); out.push({lab, p:c}); } });
+  return out;
+}
 const ORIGIN = {oficial:'Examen oficial de Murcia', gemelo:'Gemelo de Murcia', estilo:'Estilo Murcia', '':'Preparación'};
 const isMurcia = p => !!p.m;
 

@@ -1,0 +1,241 @@
+P id=e01 n=3 b=AL t=13 sb=AL1 up=m25p2 | Raíces de una cuadrática sin calcularlas
+Sean $x_1$ y $x_2$ las raíces de $x^2 - 5x + 3 = 0$. Calcula, sin hallar las raíces, $x_1^2 + x_2^2$ y $\dfrac{1}{x_1} + \dfrac{1}{x_2}$.
+> Escribe la suma $\sigma_1 = x_1+x_2$ y el producto $\sigma_2 = x_1x_2$ a partir de los coeficientes.
+> $x_1^2+x_2^2 = (x_1+x_2)^2 - 2x_1x_2$.
+---
+**Planteamiento.** Por las relaciones de Cardano-Vieta, para $x^2 - \sigma_1x + \sigma_2$ se tiene $\sigma_1 = x_1+x_2 = 5$ y $\sigma_2 = x_1x_2 = 3$. Basta escribir cada expresión en función de $\sigma_1$ y $\sigma_2$.
+
+**Desarrollo.**
+$$x_1^2+x_2^2 = (x_1+x_2)^2 - 2x_1x_2 = 25 - 6 = 19.$$
+Como $x_1x_2 = 3 \ne 0$, ninguna raíz es nula y
+$$\frac1{x_1}+\frac1{x_2} = \frac{x_1+x_2}{x_1x_2} = \frac53.$$
+
+**Conclusión.** $x_1^2+x_2^2 = 19$ y $\dfrac1{x_1}+\dfrac1{x_2} = \dfrac53$.
+!! Usar $\sigma_1 = -5$: en $x^2 + bx + c$ la suma de raíces es $-b$, no $b$.
+===
+P id=e02 n=4 b=AL t=13 sb=AL1 up=m25p2 | Cúbica con raíces en progresión aritmética
+Halla $k$ para que las raíces de $x^3 - 6x^2 + kx - 6 = 0$ estén en progresión aritmética y calcula esas raíces.
+> Llama a las raíces $a-d$, $a$, $a+d$ y usa la relación de la suma.
+> Una vez conocida $a$, impón que sea raíz.
+---
+**Planteamiento.** Escribimos las raíces como $a-d$, $a$, $a+d$. Por Cardano-Vieta, su suma es $\sigma_1 = 6$, su producto $\sigma_3 = 6$ y $\sigma_2 = k$.
+
+**Desarrollo.** De la suma, $3a = 6$, luego $a = 2$ es raíz:
+$$2^3 - 6\cdot 2^2 + 2k - 6 = 0 \iff 2k = 22 \iff k = 11.$$
+Entonces $x^3 - 6x^2 + 11x - 6 = (x-2)(x^2 - 4x + 3) = (x-1)(x-2)(x-3)$.
+
+**Comprobación.** $1, 2, 3$ están en progresión aritmética de diferencia $1$; su producto es $6 = \sigma_3$ y $1\cdot2+1\cdot3+2\cdot3 = 11 = k$. ✓
+
+**Conclusión.** $k = 11$ y las raíces son $1$, $2$ y $3$.
+!! Plantear tres incógnitas sin parametrizar la progresión: se complica el sistema sin necesidad.
+===
+P id=e03 n=3 b=PR t=64 sb=PR3 up=m25p5 | Independencia y suceso contrario
+Sean $A$ y $B$ dos sucesos independientes. Demuestra que $A$ y $\overline B$ también son independientes, y deduce que $\overline A$ y $\overline B$ lo son.
+> $A$ es la unión disjunta de $A\cap B$ y $A\cap\overline B$.
+---
+**Definición.** $A$ y $B$ son independientes si $P(A\cap B) = P(A)P(B)$.
+
+**Desarrollo.** Como $A = (A\cap B)\cup(A\cap\overline B)$ con unión disjunta,
+$$P(A\cap\overline B) = P(A) - P(A\cap B) = P(A) - P(A)P(B) = P(A)\big(1-P(B)\big) = P(A)P(\overline B).$$
+Luego $A$ y $\overline B$ son independientes. Aplicando el mismo resultado al par $(\overline B, A)$ se obtiene que $\overline B$ y $\overline A$ son independientes.
+
+**Conclusión.** Si $A$ y $B$ son independientes, también lo son $A$ y $\overline B$, $\overline A$ y $B$, y $\overline A$ y $\overline B$.
+!! Confundir independientes con incompatibles: dos sucesos incompatibles con probabilidad positiva nunca son independientes.
+===
+P id=e04 n=4 b=PR t=64 sb=PR3 up=m25p5 | Dos a dos no implica independencia mutua
+Se lanzan dos monedas equilibradas. Sean $A$ = «la primera sale cara», $B$ = «la segunda sale cara» y $C$ = «las dos salen iguales». Estudia si $A$, $B$, $C$ son independientes dos a dos y si son mutuamente independientes.
+> Escribe el espacio muestral equiprobable de cuatro resultados.
+> La independencia de tres sucesos exige cuatro igualdades.
+---
+**Planteamiento.** $\Omega = \{CC, CX, XC, XX\}$ equiprobable. $A = \{CC, CX\}$, $B = \{CC, XC\}$, $C = \{CC, XX\}$, así que $P(A) = P(B) = P(C) = \tfrac12$.
+
+**Dos a dos.** $A\cap B = A\cap C = B\cap C = \{CC\}$, con probabilidad $\tfrac14 = \tfrac12\cdot\tfrac12$. Las tres igualdades se cumplen: son independientes dos a dos.
+
+**Mutua.** $A\cap B\cap C = \{CC\}$ y $P(A\cap B\cap C) = \tfrac14 \ne \tfrac18 = P(A)P(B)P(C)$.
+
+**Conclusión.** Son independientes dos a dos pero no mutuamente independientes: la cuarta igualdad no se deduce de las otras tres.
+!! Dar por probada la independencia de tres sucesos comprobando solo los pares.
+===
+P id=e05 n=5 b=PR t=64 sb=PR3 up=m25p5 | Probabilidad de que ocurra alguno
+$A$, $B$ y $C$ son sucesos independientes con $P(A) = \tfrac12$, $P(B) = \tfrac13$ y $P(C) = \tfrac14$. Calcula $P(A\cup B\cup C)$ de dos formas distintas.
+> Primera forma: inclusión-exclusión con las cuatro igualdades de la independencia.
+> Segunda forma: paso al contrario y De Morgan; hace falta saber que los complementarios también son independientes.
+---
+**Inclusión-exclusión.**
+$$P(A\cup B\cup C) = \tfrac12+\tfrac13+\tfrac14 - \tfrac16 - \tfrac18 - \tfrac1{12} + \tfrac1{24} = \tfrac{12+8+6-4-3-2+1}{24} = \tfrac{18}{24} = \tfrac34.$$
+
+**Por el contrario.** Por De Morgan, $\overline{A\cup B\cup C} = \overline A\cap\overline B\cap\overline C$. Los complementarios de tres sucesos independientes son independientes (es el problema 5 de Murcia 2025), así que
+$$P(A\cup B\cup C) = 1 - \tfrac12\cdot\tfrac23\cdot\tfrac34 = 1-\tfrac14 = \tfrac34.$$
+
+**Conclusión.** $P(A\cup B\cup C) = \tfrac34$.
+!! Multiplicar las probabilidades de los complementarios sin justificar que son independientes.
+===
+P id=e06 n=3 b=NU t=4 sb=NU3 up=m04p2c | Resto de una potencia
+Calcula el resto de dividir $2^{100}$ entre $7$.
+> Busca la primera potencia de $2$ que da resto $1$ al dividir entre $7$.
+---
+**Planteamiento.** Trabajamos módulo $7$ buscando el orden de $2$.
+
+**Desarrollo.** $2^1 \equiv 2$, $2^2\equiv 4$, $2^3 = 8 \equiv 1 \pmod 7$. Como $100 = 3\cdot 33 + 1$,
+$$2^{100} = (2^3)^{33}\cdot 2 \equiv 1^{33}\cdot 2 = 2 \pmod 7.$$
+
+**Conclusión.** El resto es $2$.
+!! Aplicar Fermat ($2^6\equiv1$) está bien, pero no da el menor periodo; aquí el periodo es $3$.
+===
+P id=e07 n=4 b=NU t=4 sb=NU3 up=m04p2c | Última cifra de una potencia
+Halla la última cifra de $7^{2026}$ y demuestra que $7^{4k}-1$ es múltiplo de $10$ para todo natural $k$.
+> La última cifra es el resto módulo $10$.
+---
+**Planteamiento.** La última cifra de $N$ es el resto de $N$ módulo $10$.
+
+**Desarrollo.** $7^2 = 49 \equiv 9$, $7^4 = 2401 \equiv 1 \pmod{10}$. Por tanto $7^{4k} = (7^4)^k \equiv 1 \pmod{10}$, es decir, $10 \mid 7^{4k}-1$. Como $2026 = 4\cdot 506 + 2$,
+$$7^{2026} = (7^4)^{506}\cdot 7^2 \equiv 9 \pmod{10}.$$
+
+**Conclusión.** La última cifra de $7^{2026}$ es $9$, y $7^{4k}-1$ es múltiplo de $10$ para todo $k\in\mathbb N$.
+!! Calcular «a ojo» las primeras potencias sin justificar la periodicidad con congruencias.
+===
+P id=e08 n=4 b=AN t=29 sb=AN7 up=m21p3 | Derivar una integral con límite variable
+Sea $F(x) = \displaystyle\int_0^{x^2}\sqrt{1+t^3}\,dt$. Calcula $F'(x)$ y $\displaystyle\lim_{x\to 0}\frac{F(x)}{x^2}$.
+> El integrando es continuo: aplica el teorema fundamental del cálculo y la regla de la cadena.
+---
+**Planteamiento.** $g(t) = \sqrt{1+t^3}$ es continua en $[-1,\infty)$, que contiene a $[0, x^2]$. Si $G(u) = \int_0^u g(t)\,dt$, por el teorema fundamental del cálculo $G'(u) = g(u)$, y $F(x) = G(x^2)$.
+
+**Desarrollo.** Por la regla de la cadena,
+$$F'(x) = g(x^2)\cdot 2x = 2x\sqrt{1+x^6}.$$
+El límite es de la forma $0/0$ ($F(0) = 0$) y ambas funciones son derivables, así que por L'Hôpital
+$$\lim_{x\to0}\frac{F(x)}{x^2} = \lim_{x\to0}\frac{2x\sqrt{1+x^6}}{2x} = \lim_{x\to 0}\sqrt{1+x^6} = 1.$$
+
+**Conclusión.** $F'(x) = 2x\sqrt{1+x^6}$ y el límite vale $1$.
+!! Olvidar el factor $2x$ de la regla de la cadena o no mencionar la continuidad del integrando.
+===
+P id=e09 n=5 b=AN t=29 sb=AN7 up=m21p3 | Ecuación integral sencilla
+Halla todas las funciones continuas $f:\mathbb R\to\mathbb R$ tales que
+$$f(x) = 1 + \int_0^x f(t)\,dt\quad\text{para todo } x\in\mathbb R.$$
+> Justifica primero que $f$ es derivable.
+> Llegarás a $f' = f$; multiplica por $e^{-x}$.
+---
+**Planteamiento.** Como $f$ es continua, por el teorema fundamental del cálculo $x\mapsto\int_0^x f$ es derivable con derivada $f(x)$. Entonces el segundo miembro es derivable, luego $f$ también, y
+$$f'(x) = f(x),\qquad f(0) = 1.$$
+
+**Desarrollo.** Sea $h(x) = f(x)e^{-x}$. Entonces $h'(x) = (f'(x) - f(x))e^{-x} = 0$, así que $h$ es constante en $\mathbb R$ (teorema del valor medio) y $h(x) = h(0) = 1$. Por tanto $f(x) = e^x$.
+
+**Comprobación.** $1 + \int_0^x e^t\,dt = 1 + e^x - 1 = e^x$. ✓
+
+**Conclusión.** La única solución es $f(x) = e^x$.
+!! Derivar la ecuación sin justificar antes que $f$ es derivable, o perder la condición inicial $f(0)=1$.
+===
+P id=e10 n=4 b=AN t=25 sb=AN1 up=m25p1 | Sándwich con potencias
+Calcula $\displaystyle\lim_{n\to\infty}\sqrt[n]{2^n+3^n}$.
+> Acota $2^n + 3^n$ entre $3^n$ y $2\cdot 3^n$.
+---
+**Planteamiento.** Usaremos el criterio del sándwich.
+
+**Desarrollo.** Para todo $n\ge1$, $3^n \le 2^n+3^n \le 2\cdot3^n$. Como la raíz $n$-ésima es creciente,
+$$3 \le \sqrt[n]{2^n+3^n} \le \sqrt[n]2\cdot 3.$$
+Como $\sqrt[n]{2} = 2^{1/n}\to 2^0 = 1$, las dos cotas tienden a $3$.
+
+**Conclusión.** Por el criterio del sándwich, el límite vale $3$.
+!! Escribir $\sqrt[n]{2^n+3^n} = 2 + 3$: la raíz no es lineal.
+===
+P id=e11 n=5 b=AN t=25 sb=AN1 up=m25p1 | Sándwich con una suma de n términos
+Calcula $\displaystyle\lim_{n\to\infty}\sum_{k=1}^{n}\frac{1}{\sqrt{n^2+k}}$.
+> Cada sumando está entre el menor y el mayor de ellos.
+> La suma tiene $n$ términos.
+---
+**Planteamiento.** El número de sumandos crece con $n$, así que no se puede calcular el límite término a término. Acotamos la suma.
+
+**Desarrollo.** Para $1\le k\le n$, $\dfrac1{\sqrt{n^2+n}} \le \dfrac{1}{\sqrt{n^2+k}} \le \dfrac{1}{\sqrt{n^2+1}}$. Sumando los $n$ términos:
+$$\frac{n}{\sqrt{n^2+n}} \le \sum_{k=1}^{n}\frac{1}{\sqrt{n^2+k}} \le \frac{n}{\sqrt{n^2+1}}.$$
+Dividiendo numerador y denominador entre $n$, ambas cotas son $\dfrac{1}{\sqrt{1+1/n}}$ y $\dfrac1{\sqrt{1+1/n^2}}$, que tienden a $1$.
+
+**Conclusión.** Por el criterio del sándwich, el límite vale $1$.
+!! Pasar al límite cada sumando ($\to0$) y concluir que la suma tiende a $0$.
+===
+P id=e12 n=4 b=AN t=30 sb=AN5 up=m25p3 | Integrales impropias básicas
+a) Estudia según $p>0$ la convergencia de $\displaystyle\int_1^{\infty}\frac{dx}{x^p}$ y calcula su valor cuando converja.
+b) Calcula $\displaystyle\int_0^1 \ln x\,dx$.
+> Escribe cada integral impropia como un límite.
+> En b) integra por partes y calcula $\lim_{\varepsilon\to0^+}\varepsilon\ln\varepsilon$.
+---
+**a)** Por definición, $\int_1^\infty x^{-p}\,dx = \lim_{M\to\infty}\int_1^M x^{-p}\,dx$.
+Si $p\ne 1$: $\int_1^M x^{-p}\,dx = \dfrac{M^{1-p}-1}{1-p}$, que tiende a $\dfrac1{p-1}$ si $p>1$ y a $+\infty$ si $p<1$.
+Si $p=1$: $\int_1^M \dfrac{dx}{x} = \ln M \to +\infty$.
+Converge si y solo si $p>1$, y vale $\dfrac1{p-1}$.
+
+**b)** El integrando no está acotado cerca de $0$: $\int_0^1\ln x\,dx = \lim_{\varepsilon\to0^+}\int_\varepsilon^1 \ln x\,dx$. Por partes ($u = \ln x$, $dv = dx$):
+$$\int_\varepsilon^1\ln x\,dx = \big[x\ln x - x\big]_\varepsilon^1 = -1 - \varepsilon\ln\varepsilon + \varepsilon.$$
+Por L'Hôpital, $\varepsilon\ln\varepsilon = \dfrac{\ln\varepsilon}{1/\varepsilon}\to \lim\dfrac{1/\varepsilon}{-1/\varepsilon^2} = \lim(-\varepsilon) = 0$.
+
+**Conclusión.** a) Converge si y solo si $p>1$, con valor $\frac1{p-1}$. b) $\int_0^1\ln x\,dx = -1$.
+!! Tratar $\int_0^1\ln x\,dx$ como una integral de Riemann ordinaria sin escribir el límite.
+===
+P id=e13 n=4 b=AL t=14 sb=AL2 up=m21p1 | Suma de cuadrados nula
+Halla todos los números reales $x$, $y$ que cumplen $x^2 + y^2 - 2x + 4y + 5 = 0$.
+> Completa cuadrados en $x$ y en $y$.
+---
+**Planteamiento.** Completamos cuadrados: $x^2-2x = (x-1)^2-1$ e $y^2+4y = (y+2)^2-4$.
+
+**Desarrollo.** La ecuación queda
+$$(x-1)^2 + (y+2)^2 = 0.$$
+Una suma de cuadrados de números reales es nula si y solo si cada cuadrado es nulo.
+
+**Conclusión.** La única solución real es $x = 1$, $y = -2$.
+!! No decir explícitamente que se trabaja en $\mathbb R$: en $\mathbb C$ la suma de cuadrados puede anularse sin que lo hagan los sumandos.
+===
+P id=e14 n=4 b=GE t=42 sb=GE2 up=m21p4 | Rectas paralelas a una distancia dada
+Sean $r: 3x - 4y + 1 = 0$ y $s: 6x - 8y + 12 = 0$.
+a) Comprueba que son paralelas y calcula la distancia entre ellas.
+b) Halla las rectas paralelas a $r$ que están a distancia $2$ de ella.
+> Escribe $s$ con el mismo vector normal que $r$.
+> $d(Ax+By+C_1=0,\ Ax+By+C_2=0) = \dfrac{|C_1-C_2|}{\sqrt{A^2+B^2}}$.
+---
+**a)** $s$ equivale a $3x-4y+6 = 0$: mismo vector normal $(3,-4)$ y distinto término independiente, luego $r\parallel s$ y son distintas.
+$$d(r,s) = \frac{|6-1|}{\sqrt{9+16}} = \frac55 = 1.$$
+
+**b)** Las paralelas a $r$ son $3x-4y+c=0$. Imponemos $\dfrac{|c-1|}{5} = 2$, es decir, $c-1 = \pm 10$.
+
+**Conclusión.** a) Son paralelas y distan $1$. b) $3x-4y+11 = 0$ y $3x-4y-9 = 0$.
+!! Aplicar la fórmula sin igualar antes los coeficientes de $x$ e $y$, o quedarse con una sola de las dos rectas.
+===
+P id=e15 n=4 b=GE t=46 sb=GE4 up=m25p4 | Bisectrices como lugar geométrico
+Halla el lugar geométrico de los puntos del plano que equidistan de las rectas $r: 3x+4y-2 = 0$ y $s: 4x+3y+1 = 0$, y comprueba que está formado por dos rectas perpendiculares.
+> Iguala las distancias y quita el valor absoluto con los dos signos.
+---
+**Planteamiento.** $P(x,y)$ pertenece al lugar si y solo si $d(P,r) = d(P,s)$:
+$$\frac{|3x+4y-2|}{5} = \frac{|4x+3y+1|}{5}\iff 3x+4y-2 = \pm(4x+3y+1).$$
+
+**Desarrollo.** Con el signo $+$: $x - y + 3 = 0$. Con el signo $-$: $7x + 7y - 1 = 0$. Las dos condiciones son equivalentes a la original, así que todo punto de cualquiera de las dos rectas pertenece al lugar. Sus vectores normales $(1,-1)$ y $(7,7)$ tienen producto escalar $0$: son perpendiculares.
+
+**Conclusión.** El lugar es la unión de las rectas $x-y+3 = 0$ y $7x+7y-1 = 0$, perpendiculares: las bisectrices de los ángulos que forman $r$ y $s$.
+!! Quedarse con un solo signo del valor absoluto y dar una única bisectriz.
+===
+P id=e16 n=3 b=GE t=45 sb=GE6 up=m04p2a | Volumen de un tronco de cono
+Un tronco de cono tiene radios de las bases $R = 3$ y $r = 1$ y altura $h = 6$. Calcula su volumen como diferencia de dos conos y comprueba el resultado con la fórmula $V = \frac{\pi h}{3}(R^2+Rr+r^2)$.
+> Completa el cono y usa la semejanza de triángulos para hallar su altura total.
+---
+**Planteamiento.** Completamos el tronco hasta un cono de altura $H$. El cono pequeño que se quita tiene altura $H-6$. Por semejanza, $\dfrac{H}{H-6} = \dfrac{R}{r} = 3$, luego $H = 9$ y el cono pequeño mide $3$ de altura.
+
+**Desarrollo.**
+$$V = \frac13\pi\cdot 3^2\cdot 9 - \frac13\pi\cdot1^2\cdot 3 = 27\pi - \pi = 26\pi.$$
+Con la fórmula: $\dfrac{6\pi}{3}(9 + 3 + 1) = 26\pi$. ✓
+
+**Conclusión.** $V = 26\pi$ unidades cúbicas.
+!! Usar la altura del tronco en lugar de la del cono completo al aplicar la fórmula del cono.
+===
+P id=e17 n=4 b=GE t=45 sb=GE6 up=m04p2a | Esferas y cubo
+Un cubo tiene arista $a$. Calcula los radios de la esfera inscrita, la esfera tangente a las aristas y la esfera circunscrita, y la razón entre los volúmenes de la circunscrita y la inscrita.
+> Las tres esferas tienen el centro en el centro del cubo.
+> Distancia del centro a una cara, a una arista y a un vértice.
+---
+**Planteamiento.** Por simetría, las tres esferas tienen el centro en el centro $O$ del cubo. Cada radio es la distancia de $O$ a una cara, a una arista o a un vértice.
+
+**Desarrollo.** Con el cubo $[0,a]^3$ y $O = (\tfrac a2,\tfrac a2,\tfrac a2)$:
+- a una cara: $\dfrac a2$;
+- al punto medio de una arista, $(\tfrac a2, 0, 0)$: $\sqrt{0+\tfrac{a^2}4+\tfrac{a^2}4} = \dfrac{a\sqrt2}{2}$;
+- a un vértice, $(0,0,0)$: $\sqrt{3\cdot\tfrac{a^2}{4}} = \dfrac{a\sqrt3}{2}$.
+
+La razón de volúmenes es el cubo de la razón de radios: $\left(\sqrt3\right)^3 = 3\sqrt3$.
+
+**Conclusión.** Radios $\frac a2$, $\frac{a\sqrt2}2$ y $\frac{a\sqrt3}2$; la esfera circunscrita tiene $3\sqrt3$ veces el volumen de la inscrita.
+!! Tomar la diagonal de una cara ($a\sqrt2$) como diámetro de la esfera circunscrita en lugar de la diagonal del cubo ($a\sqrt3$).
+===

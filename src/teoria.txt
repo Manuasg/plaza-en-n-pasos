@@ -1,0 +1,193 @@
+T NU1
+- **Principio de inducción.** Si $P(n_0)$ es cierta y $P(n)\Rightarrow P(n+1)$ para todo $n\ge n_0$, entonces $P(n)$ es cierta para todo $n\ge n_0$. Variante fuerte: suponer $P(n_0),\dots,P(n)$.
+- **Contrarrecíproco.** $p\Rightarrow q$ equivale a $\neg q\Rightarrow\neg p$.
+- **Reducción al absurdo.** Suponer $\neg q$ junto con las hipótesis y llegar a una contradicción.
+- **Desigualdad de Bernoulli.** $(1+x)^n\ge 1+nx$ para $x\ge-1$ y $n\in\mathbb N$.
+! En inducción hay que escribir las cuatro piezas: caso base, hipótesis de inducción, paso inductivo y conclusión.
+T NU2
+- **División euclídea.** Para $a\in\mathbb Z$ y $b>0$ existen $q, r$ únicos con $a = bq + r$ y $0\le r<b$.
+- **Algoritmo de Euclides.** $\operatorname{mcd}(a,b) = \operatorname{mcd}(b, a-qb)$.
+- **Identidad de Bézout.** Existen $x, y\in\mathbb Z$ con $ax+by = \operatorname{mcd}(a,b)$.
+- **Lema de Euclides.** Si $p$ es primo y $p\mid ab$, entonces $p\mid a$ o $p\mid b$. Más general: si $a\mid bc$ y $\operatorname{mcd}(a,b)=1$, entonces $a\mid c$.
+- **Relación mcd-mcm.** $\operatorname{mcd}(a,b)\cdot\operatorname{mcm}(a,b) = |ab|$.
+! El lema de Euclides exige que $p$ sea primo o que haya coprimalidad: $6\mid 4\cdot 3$ pero $6\nmid 4$ y $6\nmid 3$.
+T NU3
+- **Congruencias.** $a\equiv b\pmod m$ si $m\mid a-b$. Se conservan con sumas, productos y potencias.
+- **Pequeño teorema de Fermat.** Si $p$ es primo y $p\nmid a$, entonces $a^{p-1}\equiv1\pmod p$.
+- **Teorema de Euler.** Si $\operatorname{mcd}(a,m)=1$, entonces $a^{\varphi(m)}\equiv 1\pmod m$.
+- **Orden.** El menor $k>0$ con $a^k\equiv1$ divide a $\varphi(m)$, y $a^n\equiv a^{n\bmod k}$.
+- **Restos cuadráticos.** Los cuadrados módulo $4$ son $0, 1$; módulo $8$, $0, 1, 4$; módulo $3$, $0, 1$.
+! No se puede «dividir» en una congruencia sin comprobar que el divisor es primo con el módulo.
+T NU4
+- **Representación en base $b$.** $N = \overline{c_k\dots c_1c_0}_{(b)} = \sum c_i b^i$ con $0\le c_i\le b-1$ y $c_k\neq 0$, y es única.
+- **Criterios de divisibilidad.** En base $10$: por $3$ y $9$, suma de cifras; por $11$, suma alternada; en base $b$, el criterio de $b-1$ es la suma de cifras.
+! Las cifras deben ser menores que la base: es una restricción que hay que imponer siempre.
+T NU5
+- **Existencia.** $ax+by = c$ tiene solución entera si y solo si $\operatorname{mcd}(a,b)\mid c$.
+- **Solución general.** Si $(x_0,y_0)$ es una solución y $d = \operatorname{mcd}(a,b)$: $x = x_0 + \frac bd t$, $y = y_0 - \frac ad t$, $t\in\mathbb Z$.
+! Tras la solución general hay que imponer las restricciones del enunciado (positivas, acotadas…).
+T NU6
+- **Combinatoria.** $V_{n,k} = \frac{n!}{(n-k)!}$, $VR_{n,k} = n^k$, $C_{n,k} = \binom nk$, $CR_{n,k} = \binom{n+k-1}{k}$, permutaciones con repetición $\frac{n!}{a!b!\cdots}$.
+- **Inclusión-exclusión.** $|A\cup B\cup C| = \sum|A| - \sum|A\cap B| + |A\cap B\cap C|$.
+- **Grafos.** $\sum\deg v = 2|E|$; un árbol con $n$ vértices tiene $n-1$ aristas; un grafo conexo tiene un circuito euleriano si y solo si todos los grados son pares.
+- **Principio del palomar.** Si se reparten $n+1$ objetos en $n$ cajas, alguna tiene al menos dos.
+! Antes de contar, decide si importa el orden y si se puede repetir, y dilo por escrito.
+T NU7
+- **Recurrencia lineal de orden 2.** $a_{n+2} = pa_{n+1}+qa_n$: si $r^2 = pr+q$ tiene raíces distintas, $a_n = \alpha r_1^n+\beta r_2^n$; si la raíz es doble, $a_n = (\alpha+\beta n)r^n$.
+- **Progresiones.** Aritmética: $S_n = \frac{n(a_1+a_n)}2$. Geométrica: $S_n = a_1\frac{r^n-1}{r-1}$ ($r\ne1$).
+- **Suma telescópica.** $\sum_{k=1}^n (b_{k+1}-b_k) = b_{n+1}-b_1$.
+! Las constantes $\alpha, \beta$ salen de las condiciones iniciales, no se pueden dejar indeterminadas.
+T NU8
+- **Forma polar y De Moivre.** $z = r e^{i\theta}$, $z^n = r^n e^{in\theta}$.
+- **Raíces $n$-ésimas.** $z^n = re^{i\theta}$ tiene $n$ soluciones $\sqrt[n]r\,e^{i(\theta+2k\pi)/n}$, $k = 0,\dots,n-1$, vértices de un polígono regular.
+- **Raíces de la unidad.** Si $\omega\ne1$ es raíz $n$-ésima de la unidad, $1+\omega+\dots+\omega^{n-1} = 0$.
+- **Irracionalidad.** Si $p/q$ irreducible es raíz de un polinomio con coeficientes enteros, $p$ divide al término independiente y $q$ al coeficiente principal.
+- **Densidad.** Entre dos reales distintos hay infinitos racionales e infinitos irracionales.
+! El argumento está definido salvo múltiplos de $2\pi$: no olvides las $n$ raíces.
+T AL1
+- **Cardano-Vieta.** Si $x^3+ax^2+bx+c = (x-x_1)(x-x_2)(x-x_3)$: $\sigma_1 = x_1+x_2+x_3 = -a$, $\sigma_2 = x_1x_2+x_1x_3+x_2x_3 = b$, $\sigma_3 = x_1x_2x_3 = -c$.
+- **Funciones simétricas.** $\sum x_i^2 = \sigma_1^2-2\sigma_2$; $\sum\frac1{x_i} = \frac{\sigma_2}{\sigma_3}$ (si $\sigma_3\ne0$).
+- **Teorema del resto.** $P(a)$ es el resto de dividir $P(x)$ entre $x-a$; en particular $P(a)=0\iff(x-a)\mid P(x)$.
+- **Raíces racionales.** Si $p/q$ irreducible es raíz de $P\in\mathbb Z[x]$, $p\mid a_0$ y $q\mid a_n$.
+- **Teorema fundamental del álgebra.** Todo polinomio de grado $n\ge1$ tiene $n$ raíces complejas contadas con multiplicidad.
+! Ojo con los signos alternos de Cardano-Vieta y con las permutaciones de las soluciones.
+T AL2
+- **Medias.** Para $a_i>0$: $\frac{n}{\sum 1/a_i}\le\sqrt[n]{\prod a_i}\le\frac{\sum a_i}{n}\le\sqrt{\frac{\sum a_i^2}{n}}$, con igualdad si y solo si todos son iguales.
+- **Suma de cuadrados.** En $\mathbb R$, $\sum x_i^2 = 0\iff$ todos los $x_i = 0$.
+- **Cauchy-Schwarz.** $\left(\sum a_ib_i\right)^2\le\sum a_i^2\sum b_i^2$, con igualdad si son proporcionales.
+! En una desigualdad hay que discutir cuándo se da la igualdad, y al elevar al cuadrado comprobar el signo.
+T AL3
+- **Propiedades del determinante.** Es multilineal y alternado: sacar factores de una fila, sumar a una fila un múltiplo de otra no lo cambia, intercambiar dos filas cambia el signo; $\det(AB) = \det A\det B$.
+- **Rango y dependencia.** $\det A = 0$ si y solo si las columnas son linealmente dependientes.
+- **Vandermonde.** $\det(x_j^{i-1}) = \prod_{i<j}(x_j-x_i)$.
+- **Inversa.** $A$ es invertible si y solo si $\det A\ne0$, y $A^{-1} = \frac{1}{\det A}\operatorname{adj}(A)^T$.
+! Al hacer operaciones elementales, anota cuáles cambian el determinante y en qué factor.
+T AL4
+- **Teorema de Rouché-Frobenius.** $AX = B$ es compatible si y solo si $\operatorname{rg}A = \operatorname{rg}(A|B)$; determinado si además ese rango es el número de incógnitas.
+- **Regla de Cramer.** Si $A$ es cuadrada y $\det A\ne0$, $x_i = \frac{\det A_i}{\det A}$.
+- **Programación lineal.** Si el óptimo de una función lineal sobre un polígono convexo existe, se alcanza en un vértice (o en todo un lado).
+! En la discusión según un parámetro, estudia aparte cada valor que anula el determinante.
+T AL5
+- **Teorema de la dimensión.** Para $f:V\to W$ lineal con $\dim V$ finita: $\dim\ker f+\dim\operatorname{Im}f = \dim V$.
+- **Fórmula de Grassmann.** $\dim(U+W) = \dim U+\dim W-\dim(U\cap W)$.
+- **Diagonalización.** $A$ es diagonalizable si y solo si el polinomio característico se descompone y, para cada autovalor, la multiplicidad geométrica es igual a la algebraica.
+- **Autovectores.** Autovectores de autovalores distintos son linealmente independientes.
+! Para probar que algo es subespacio hay que comprobar que contiene el $0$ y es cerrado para combinaciones lineales.
+T AN1
+- **Criterio del sándwich.** Si $a_n\le b_n\le c_n$ y $a_n, c_n\to L$, entonces $b_n\to L$.
+- **Infinitésimos equivalentes ($x\to0$).** $\sin x\sim x$, $1-\cos x\sim\frac{x^2}2$, $\ln(1+x)\sim x$, $e^x-1\sim x$; solo en productos y cocientes.
+- **Número $e$.** Si $a_n\to\infty$, $\left(1+\frac1{a_n}\right)^{a_n}\to e$; para $1^\infty$: $\lim f^g = e^{\lim g(f-1)}$.
+- **Criterio de Stolz.** Si $b_n$ es estrictamente creciente y no acotada y $\frac{a_{n+1}-a_n}{b_{n+1}-b_n}\to L$, entonces $\frac{a_n}{b_n}\to L$.
+! Si el número de sumandos depende de $n$, no se puede pasar al límite término a término.
+T AN2
+- **Teorema de Bolzano.** Si $f$ es continua en $[a,b]$ y $f(a)f(b)<0$, existe $c\in(a,b)$ con $f(c)=0$.
+- **Valores intermedios (Darboux).** Una función continua en un intervalo alcanza todos los valores entre dos de sus valores.
+- **Teorema de Weierstrass.** Una función continua en un intervalo cerrado y acotado alcanza máximo y mínimo.
+! Bolzano se aplica a una función auxiliar ($g = f - h$) y hay que verificar su continuidad en el intervalo cerrado.
+T AN3
+- **Teorema de Rolle.** Si $f$ es continua en $[a,b]$, derivable en $(a,b)$ y $f(a)=f(b)$, existe $c\in(a,b)$ con $f'(c)=0$.
+- **Teorema del valor medio (Lagrange).** Con $f$ continua en $[a,b]$ y derivable en $(a,b)$, existe $c\in(a,b)$ con $f(b)-f(a) = f'(c)(b-a)$.
+- **Monotonía.** Si $f'>0$ en un intervalo, $f$ es estrictamente creciente en él.
+- **Extremos absolutos.** En $[a,b]$ se buscan entre los puntos críticos interiores, los puntos sin derivada y los extremos $a$, $b$.
+- **Número de raíces.** Entre dos raíces de $f$ hay al menos una de $f'$ (Rolle): si $f'$ tiene $k$ raíces, $f$ tiene como mucho $k+1$.
+! Cita siempre las hipótesis: continua en el cerrado y derivable en el abierto.
+T AN4
+- **Teorema de Taylor.** $f(x) = \sum_{k=0}^n\frac{f^{(k)}(a)}{k!}(x-a)^k + R_n(x)$ con $R_n = \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-a)^{n+1}$ (resto de Lagrange).
+- **Maclaurin.** $e^x = \sum\frac{x^k}{k!}$; $\sin x = x-\frac{x^3}{6}+\dots$; $\cos x = 1-\frac{x^2}2+\dots$; $\ln(1+x) = x-\frac{x^2}2+\dots$; $(1+x)^\alpha = 1+\alpha x+\binom\alpha2x^2+\dots$
+- **Criterio de la derivada $n$-ésima.** Si $f'(a)=\dots=f^{(n-1)}(a)=0\ne f^{(n)}(a)$: con $n$ par hay extremo, con $n$ impar hay inflexión.
+! En un límite con Taylor, desarrolla hasta el primer término que no se cancela.
+T AN5
+- **Regla de Barrow.** Si $f$ es continua en $[a,b]$ y $F' = f$, entonces $\int_a^b f = F(b)-F(a)$.
+- **Por partes.** $\int u\,dv = uv - \int v\,du$. **Cambio de variable:** $\int_a^b f(g(t))g'(t)\,dt = \int_{g(a)}^{g(b)}f(x)\,dx$.
+- **Integral impropia.** $\int_a^\infty f = \lim_{M\to\infty}\int_a^M f$; si $f$ no está acotada en $a$, $\int_a^b f = \lim_{\varepsilon\to0^+}\int_{a+\varepsilon}^b f$.
+- **Referencias.** $\int_1^\infty x^{-p}$ converge si y solo si $p>1$; $\int_0^1 x^{-p}$ converge si y solo si $p<1$.
+- **Comparación.** Si $0\le f\le g$ y $\int g$ converge, $\int f$ converge.
+- **Volúmenes de revolución.** Alrededor de $OX$: $V = \pi\int_a^b f(x)^2\,dx$.
+! Una integral impropia se escribe siempre como límite antes de calcularla.
+T AN6
+- **Sumas de Riemann.** Si $f$ es integrable en $[0,1]$, $\frac1n\sum_{k=1}^n f\left(\frac kn\right)\to\int_0^1 f$.
+- **Criterio de la integral.** Si $f\ge0$ es decreciente en $[1,\infty)$, $\sum f(n)$ y $\int_1^\infty f$ convergen o divergen a la vez.
+- **Series de referencia.** $\sum\frac1{n^p}$ converge si y solo si $p>1$; la geométrica $\sum r^n$ si y solo si $|r|<1$.
+- **Productos.** Para $\lim\sqrt[n]{\prod a_k}$ se toman logaritmos y se busca una suma de Riemann.
+! Hay que identificar explícitamente la función, el intervalo y la partición de la suma de Riemann.
+T AN7
+- **Teorema fundamental del cálculo.** Si $f$ es continua en $[a,b]$, $F(x) = \int_a^x f$ es derivable y $F' = f$.
+- **Con límites variables.** $\frac{d}{dx}\int_{u(x)}^{v(x)}f(t)\,dt = f(v(x))v'(x) - f(u(x))u'(x)$.
+- **Ecuación $f' = kf$.** Sus soluciones derivables en un intervalo son $f(x) = Ce^{kx}$ (derivar $f e^{-kx}$).
+- **Ecuación de Cauchy.** Las soluciones continuas de $f(x+y) = f(x)+f(y)$ son $f(x) = ax$.
+! Antes de derivar una ecuación integral hay que justificar que la función es derivable (por continuidad y el TFC).
+T GE1
+- **Teorema del coseno.** $a^2 = b^2+c^2-2bc\cos A$. **Teorema del seno:** $\frac a{\sin A} = 2R$.
+- **Fórmula de Herón.** $S = \sqrt{p(p-a)(p-b)(p-c)}$ con $p$ el semiperímetro; también $S = pr = \frac{abc}{4R}$.
+- **Puntos notables.** Baricentro, ortocentro y circuncentro están en la recta de Euler, con $HG = 2GO$.
+- **Potencia de un punto.** Si una recta por $P$ corta a la circunferencia en $A$ y $B$, $PA\cdot PB$ es constante ($= d^2-R^2$).
+- **Ángulos en la circunferencia.** El inscrito mide la mitad del central que abarca el mismo arco.
+! Distingue el caso agudo y el obtuso cuando el ángulo depende de la posición de los puntos.
+T GE2
+- **Distancia punto-recta.** $d(P, Ax+By+C=0) = \frac{|Ax_0+By_0+C|}{\sqrt{A^2+B^2}}$.
+- **Rectas paralelas.** $d = \frac{|C_1-C_2|}{\sqrt{A^2+B^2}}$ con los mismos $A$, $B$.
+- **Ángulo entre rectas.** $\cos\alpha = \frac{|\vec u\cdot\vec v|}{|\vec u||\vec v|}$.
+- **Movimientos del plano.** Traslaciones, giros, simetrías axiales y deslizantes; la composición de dos simetrías de ejes secantes es un giro de ángulo doble.
+- **Homotecia.** De centro $C$ y razón $k$: $P' = C + k(P-C)$; conserva ángulos y multiplica longitudes por $|k|$.
+! Al quitar un valor absoluto, estudia los dos signos.
+T GE3
+- **Posición relativa.** Se estudia con los rangos de la matriz de coeficientes y la ampliada (Rouché-Frobenius).
+- **Distancia punto-plano.** $d(P,\pi) = \frac{|Ax_0+By_0+Cz_0+D|}{\sqrt{A^2+B^2+C^2}}$.
+- **Rectas que se cruzan.** $d(r,s) = \frac{|[\vec{AB},\vec u,\vec v]|}{|\vec u\times\vec v|}$.
+- **Producto mixto.** $|[\vec u,\vec v,\vec w]|$ es el volumen del paralelepípedo; el tetraedro tiene $\frac16$ de ese volumen.
+- **Proyección y simétrico.** El simétrico de $P$ respecto de $\pi$ es $P' = 2M-P$, con $M$ la proyección ortogonal.
+! Para rectas que se cruzan, comprueba antes que no son paralelas ni secantes.
+T GE4
+- **Método.** Punto genérico $P(x,y,z)$, traducir la condición a una ecuación, simplificar con equivalencias.
+- **Lugares básicos.** Mediatriz (plano mediador), bisectrices (planos bisectores), circunferencia y esfera, cónicas como lugares de focos y directriz.
+- **Planos bisectores.** $\frac{|\pi_1(P)|}{\|\vec n_1\|} = \frac{|\pi_2(P)|}{\|\vec n_2\|}$ da dos planos perpendiculares.
+! Comprueba que todos los puntos de la figura obtenida cumplen la condición (equivalencias, no solo implicaciones) y discute los casos degenerados.
+T GE5
+- **Ecuación matricial.** Una cónica es $X^TAX = 0$ con $X = (1,x,y)^T$; si $\det A = 0$ es degenerada.
+- **Clasificación.** Con $A_{00}$ el menor de los términos cuadráticos: $A_{00}>0$ elipse, $<0$ hipérbola, $=0$ parábola.
+- **Elementos.** Elipse $a^2 = b^2+c^2$, excentricidad $e = c/a<1$; hipérbola $c^2 = a^2+b^2$, $e>1$; parábola $e=1$.
+- **Definiciones métricas.** Elipse: $PF+PF' = 2a$; hipérbola: $|PF-PF'| = 2a$; parábola: $d(P,F) = d(P,\text{directriz})$.
+! Antes de dar los elementos, lleva la cónica a forma reducida y di qué giro o traslación usas.
+T GE6
+- **Teorema de Euler.** En un poliedro convexo, $C + V = A + 2$.
+- **Poliedros regulares.** Solo hay cinco: tetraedro, cubo, octaedro, dodecaedro e icosaedro.
+- **Volúmenes.** Prisma $Bh$; pirámide y cono $\frac13Bh$; tronco $\frac h3(B+b+\sqrt{Bb})$; esfera $\frac43\pi R^3$.
+- **Teoremas de Pappus-Guldin.** Volumen de revolución $= 2\pi\bar d\cdot S$ y área lateral $= 2\pi\bar d\cdot L$, con $\bar d$ la distancia del centroide al eje.
+- **Principio de Cavalieri.** Sólidos con secciones de igual área a cada altura tienen el mismo volumen.
+! Distingue la diagonal de una cara ($a\sqrt2$) de la diagonal del cubo ($a\sqrt3$).
+T PR1
+- **Regla de Laplace.** En un espacio finito equiprobable, $P(A) = \frac{|A|}{|\Omega|}$.
+- **Suceso contrario.** $P(\overline A) = 1-P(A)$; útil para «al menos uno».
+- **Probabilidad geométrica.** $P(A) = \frac{\text{medida}(A)}{\text{medida}(\Omega)}$ con distribución uniforme.
+- **Axiomas de Kolmogorov.** $P\ge0$, $P(\Omega)=1$ y aditividad numerable para sucesos disjuntos.
+! Justifica que los resultados son equiprobables antes de aplicar Laplace.
+T PR2
+- **Probabilidad condicionada.** $P(A\mid B) = \frac{P(A\cap B)}{P(B)}$, con $P(B)>0$.
+- **Probabilidad total.** Si $\{B_i\}$ es un sistema completo de sucesos, $P(A) = \sum P(A\mid B_i)P(B_i)$.
+- **Teorema de Bayes.** $P(B_j\mid A) = \frac{P(A\mid B_j)P(B_j)}{\sum_i P(A\mid B_i)P(B_i)}$.
+! Declara explícitamente el sistema completo de sucesos y, si el enunciado es ambiguo, escribe tu interpretación.
+T PR3
+- **Dos sucesos.** $A$ y $B$ son independientes si $P(A\cap B) = P(A)P(B)$; entonces también lo son $A$ y $\overline B$, $\overline A$ y $\overline B$.
+- **Tres sucesos.** Son mutuamente independientes si se cumplen las cuatro igualdades: las tres de pares y $P(A\cap B\cap C) = P(A)P(B)P(C)$.
+- **Leyes de De Morgan.** $\overline{A\cup B} = \overline A\cap\overline B$ y $\overline{A\cap B} = \overline A\cup\overline B$.
+- **Inclusión-exclusión.** $P(A\cup B\cup C) = \sum P(A)-\sum P(A\cap B)+P(A\cap B\cap C)$.
+! Independencia dos a dos no implica independencia mutua; e independientes no es lo mismo que incompatibles.
+T PR4
+- **Esperanza y varianza.** $E[X] = \sum x_ip_i$, $V(X) = E[X^2]-E[X]^2$; $E$ es lineal y $V(aX+b) = a^2V(X)$.
+- **Binomial $B(n,p)$.** $P(X=k) = \binom nk p^k(1-p)^{n-k}$, $E = np$, $V = np(1-p)$.
+- **Poisson $P(\lambda)$.** $P(X=k) = e^{-\lambda}\frac{\lambda^k}{k!}$, $E = V = \lambda$.
+- **Suma de independientes.** $V(X+Y) = V(X)+V(Y)$ si $X$ e $Y$ son independientes.
+! $V(2X)=4V(X)$, pero $V(X_1+X_2)=2V(X)$ si $X_1$, $X_2$ son independientes con la misma distribución que $X$.
+T PR5
+- **Densidad.** $f\ge0$, $\int_{\mathbb R}f = 1$, $P(a<X<b) = \int_a^b f$ y $F' = f$ donde $f$ sea continua.
+- **Exponencial $\operatorname{Exp}(\lambda)$.** $F(x) = 1-e^{-\lambda x}$, $E = 1/\lambda$, sin memoria.
+- **Mínimo y máximo de independientes.** $P(\min>x) = \prod P(X_i>x)$ y $P(\max\le x) = \prod P(X_i\le x)$.
+- **Normal.** Si $X\sim N(\mu,\sigma)$, $Z = \frac{X-\mu}{\sigma}\sim N(0,1)$.
+- **Aproximación de la binomial.** Si $np$ y $n(1-p)$ son grandes, $B(n,p)\approx N\left(np,\sqrt{np(1-p)}\right)$ con corrección por continuidad.
+! En una variable continua $P(X = a) = 0$; comprueba que la densidad integra $1$.
+T PR6
+- **Parámetros.** Media, mediana y moda; varianza $s^2 = \frac1n\sum x_i^2-\bar x^2$; coeficiente de variación $s/\bar x$.
+- **Regresión lineal.** Recta de $Y$ sobre $X$: $y-\bar y = \frac{s_{xy}}{s_x^2}(x-\bar x)$; $r = \frac{s_{xy}}{s_xs_y}$.
+- **Intervalo de confianza para $\mu$ ($\sigma$ conocida).** $\bar x\pm z_{\alpha/2}\frac{\sigma}{\sqrt n}$.
+- **Teorema central del límite.** La media muestral es aproximadamente $N\left(\mu,\frac{\sigma}{\sqrt n}\right)$ para $n$ grande.
+! Distingue la varianza de la población de la cuasivarianza muestral y di cuál usas.

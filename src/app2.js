@@ -9,6 +9,7 @@ const IC = {
   chart:'<path d="M4 20h16"/><path d="M5 16l4-5 4 3 6-8"/>',
   target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8"/>',
   bank:'<path d="M5 4h11l3 3v13H5z"/><path d="M9 10h6M9 14h6"/>',
+  down:'<path d="M12 5v13"/><path d="M6 13l6 6 6-6"/>',
   up:'<path d="M12 19V6"/><path d="M6 11l6-6 6 6"/><path d="M5 20h14"/>',
   users:'<circle cx="9" cy="9" r="3"/><path d="M3 19c.8-3 3.2-5 6-5s5.2 2 6 5"/><path d="M16 6.5a3 3 0 010 5.5M18 14c1.6.7 2.6 2.4 3 5"/>',
   user:'<circle cx="12" cy="9" r="3.5"/><path d="M5 20c1-3.5 3.8-5.5 7-5.5s6 2 7 5.5"/>',
@@ -35,6 +36,7 @@ function chipOrigin(p){
   if(p.m==='oficial') return `<span class="chip of">${esc(refLabel(p.ref)||'Examen oficial de Murcia')}</span>`;
   if(p.m==='gemelo') return `<span class="chip ge">Gemelo · ${esc(refLabel(p.ref)||'Murcia')}</span>`;
   if(p.m==='estilo') return `<span class="chip">Estilo Murcia${p.ref?' · '+esc(refLabel(p.ref)):''}</span>`;
+  if(p.up){ const o=byId(p.up); return `<span class="chip">Escalón${o&&o.ref?' hacia '+esc(refLabel(o.ref)):''}</span>`; }
   return `<span class="chip">Preparación</span>`;
 }
 const chipLv = n => `<span class="chip">Nivel ${n} · ${esc(LEVELS[n-1].name)}</span>`;
@@ -130,6 +132,7 @@ function dimBars(prof, G){
 /* ================= Interfaz: estado de navegación ================= */
 const UI = { open:new Set(Store.get('ui.open',['bloques'])), pr:null, sim:null, diag:null, bank:{b:'',sb:'',m:'',n:'',q:''}, subsB:'', evo:56, imp:'' };
 function parseHash(){ const h=(location.hash||'#/inicio').slice(2); const [path, qs]=h.split('?'); const parts=path.split('/').filter(Boolean); const q={}; (qs||'').split('&').filter(Boolean).forEach(kv=>{ const [k,v]=kv.split('='); q[k]=decodeURIComponent(v||''); }); return {name:parts[0]||'inicio', arg:parts[1]||'', q}; }
+const ldStack = () => (UI.ladder||[]).slice();
 const go = h => { if(location.hash===h) render(); else location.hash=h; };
 
 function sideHTML(rt){
@@ -139,7 +142,7 @@ function sideHTML(rt){
   const tree = BK.map(b=>{ const ob=UI.open.has('b-'+b); const curB = (rt.name==='bloque'&&rt.arg===b);
     const subs = subsOf(b).map(s=>`<button class="nav-item" data-go="#/sub/${s.id}"${rt.name==='sub'&&rt.arg===s.id?' aria-current="page"':''} title="${esc(s.name)}"><span class="lbl">${s.id} · ${esc(s.name)}</span></button>`).join('');
     return `<button class="nav-item" data-go="#/bloque/${b}"${curB?' aria-current="page"':''} aria-expanded="${ob}">${dotb(b)}<span class="lbl">${esc(BLOQ[b].name)}</span><span data-act="tg" data-k="b-${b}" role="button" aria-label="Desplegar subbloques de ${esc(BLOQ[b].name)}" style="display:flex">${ico('chev','chev')}</span></button>${ob?`<div class="tree">${subs}</div>`:''}`; }).join('');
-  return `<div class="side-head"><div class="logo"><span class="mark">${MARK}</span><span class="wm"><b>Escalera Murcia</b><small>Oposición · Parte A</small></span></div>
+  return `<div class="side-head"><div class="logo"><span class="mark">${MARK}</span><span class="wm"><b>Plaza en n pasos</b><small>Oposición Murcia · Parte A</small></span></div>
     <button class="icon-btn collapse-btn" data-act="collapse" aria-label="Plegar o desplegar el menú" title="Plegar menú">${ico('side')}</button></div>
   <nav class="nav">
     <div class="nav-group">Estudiar</div>
@@ -236,6 +239,9 @@ V.bloque = (b) => {
   </div>
   <section class="card"><div class="card-h"><h2>Qué te falta para el nivel Murcia en ${esc(BLOQ[b].name.toLowerCase())}</h2><span class="sub">Subbloques de más a menos urgentes</span></div>
     ${gp.subs.map(x=>gapItem(b,x)).join('')}</section>
+  <section class="card"><div class="card-h"><h2>Recomendados para ti</h2><span class="sub">Un problema a tu nivel en cada uno de tus subbloques más urgentes</span></div>
+    ${(()=>{ const rows=gp.subs.filter(x=>x.status!=='ok').slice(0,4).map(x=>({sb:x.s.id, r:recsFor(x.s.id).find(y=>y.lab==='A tu nivel')||recsFor(x.s.id)[0]})).filter(y=>y.r);
+      return rows.length?`<div class="list">${rows.map(({sb,r})=>`<div class="li" data-go="#/practicar?id=${r.p.id}"><div class="stack" style="gap:4px"><span class="small muted">${sb} · ${esc(subById(sb).name)}</span><span class="t">${esc(r.p.ti)}</span><div class="row" style="gap:6px">${chipOrigin(r.p)}<span class="chip">Nivel ${r.p.n}</span></div></div><span class="btn sm">${ico('play')}Resolver</span></div>`).join('')}</div>`:'<p class="small muted">Ya estás en tu objetivo en todos los subbloques: sigue con simulacros.</p>'; })()}</section>
   <div class="grid g2">
     <section class="card"><div class="card-h"><h2>Tu redacción en este bloque</h2><span class="sub">Rúbrica oficial de Murcia</span></div>
       ${gp.weakDims.length?`<div class="note bad small" style="margin-bottom:12px"><b>Dónde pierdes puntos:</b> ${gp.weakDims.map(d=>`${esc(d.name)} — ${esc(d.tip)}`).join('<br>')}</div>`:''}
@@ -283,8 +289,37 @@ V.sub = (id) => {
     <section class="card"><div class="card-h"><h2>Temas del temario oficial</h2></div>
       <div class="stack small">${s.temas.map(n=>`<div><b class="num">Tema ${n}.</b> ${esc(TEMAS[n-1]||'')}</div>`).join('')}</div></section>
   </div>
+  <div class="grid g2">
+    <section class="card"><div class="card-h"><h2>Recomendados para tu nivel</h2><span class="sub">Nivel ${x?lvTxt(x.r):lvTxt(S.ratings[s.b].r)} en ${s.id}</span></div>${recsHTML([s.id])}</section>
+    <section class="card"><div class="card-h"><h2>Teoría que debes saber enunciar</h2><span class="sub">Con sus hipótesis</span></div>${teoHTML(s.id,{open:true, title:'Resultados clave'})}</section>
+  </div>
   <section class="card"><div class="card-h"><h2>Problemas de este subbloque</h2><span class="sub">Primero los de Murcia</span></div>${probList(ps)}</section>`;
 };
+/* ---------- Teoría y escalera ---------- */
+function teoHTML(sbId, {open=false, title='Teoría relacionada', note=''}={}){
+  const t=TEO[sbId]; if(!t||!t.it.length) return '';
+  return `<details class="teo" ${open?'open':''}><summary class="small"><b>${esc(title)}</b> <span class="muted">· ${esc(sbId)} · ${esc(subById(sbId).name)}</span></summary>
+    <div class="stack small" style="gap:6px;margin-top:8px">${note?`<span class="tiny muted">${esc(note)}</span>`:''}${t.it.map(x=>`<div>${mdi(x)}</div>`).join('')}
+    ${t.warn?`<div class="typical"><b>Trampa habitual:</b> ${mdi(t.warn)}</div>`:''}</div></details>`;
+}
+function ladderChain(p){
+  const down=[]; let cur=p; const seen=[p.id];
+  for(let i=0;i<3;i++){ const q=ladderFor(cur,-1,seen); if(!q) break; down.unshift(q); seen.push(q.id); cur=q; }
+  const up=ladderFor(p,1,seen);
+  return {down, up};
+}
+function ladderHTML(p){
+  const {down, up}=ladderChain(p); if(!down.length&&!up) return '';
+  const row=(q,me)=>`<div class="li ${me?'cur':''}" ${me?'':`data-go="#/p/${q.id}"`}><div class="row" style="gap:8px"><span class="chip">Nivel ${q.n}</span><span class="t">${esc(q.ti)}</span>${me?'<span class="pill-status st-warn">Este</span>':''}</div><span class="small muted">${q.sb}</span></div>`;
+  return `<section class="card"><div class="card-h"><h2>Escalera de este problema</h2><span class="sub">De más fácil a más difícil</span></div>
+    <div class="list">${down.map(q=>row(q)).join('')}${row(p,true)}${up?row(up):''}</div>
+    <p class="tiny muted" style="margin:8px 0 0">Si te atascas, baja un escalón, resuélvelo y vuelve a subir.</p></section>`;
+}
+function recsHTML(sbIds){
+  const rows=sbIds.flatMap(id=>recsFor(id).map(x=>({...x, sb:id})));
+  if(!rows.length) return '<p class="muted small">No hay problemas en este subbloque todavía.</p>';
+  return `<div class="list">${rows.map(({lab,p,sb})=>`<div class="li" data-go="#/practicar?id=${p.id}"><div class="stack" style="gap:4px"><span class="small muted">${esc(lab)}${sbIds.length>1?' · '+sb:''}</span><span class="t">${esc(p.ti)}</span><div class="row" style="gap:6px">${chipOrigin(p)}<span class="chip">Nivel ${p.n}</span></div></div><span class="btn sm">${ico('play')}Resolver</span></div>`).join('')}</div>`;
+}
 function probList(ps){
   if(!ps.length) return `<p class="muted">No hay problemas con estos filtros.</p>`;
   return `<div class="list">${ps.map(p=>{ const at=S.attempts[p.id]; const best=at?Math.max(...at.map(a=>a.s)):null;
@@ -301,7 +336,9 @@ V.p = (id) => {
     ${p.h.length?`<details><summary class="small"><b>Pistas (${p.h.length})</b></summary><ol class="small">${p.h.map(h=>`<li>${mdi(h)}</li>`).join('')}</ol></details>`:''}
     <div class="row"><button class="btn sm" data-act="aiCopy" data-kind="exp" data-id="${p.id}">Pedir explicación a mi IA</button><span class="tiny muted">Copia el ejercicio y su solución; pégalo en ${AIS.map(a=>a[0]).slice(0,3).join(', ')}…</span></div>
     <details><summary class="small"><b>Ver la solución</b></summary><div class="sol" style="margin-top:10px">${md(p.so)}</div>${p.er?`<div class="typical" style="margin-top:10px"><b>Error típico:</b> ${mdi(p.er)}</div>`:''}</details>
+    ${teoHTML(p.sb,{note:'No destripa el problema: son los resultados que suelen hacer falta en este subbloque.'})}
     <div class="row between"><span class="tiny muted">${p.src?'Fuente: '+esc(p.src):''}</span><a class="btn sm" href="${errataUrl(p)}" target="_blank" rel="noopener">Avisar de una errata</a></div></section>
+  ${ladderHTML(p)}
   ${(()=>{ const hs=S.hist.filter(h=>h.pid===p.id&&h.items).slice().reverse(); return `<section class="card stack"><div class="card-h"><h2>Tus correcciones de este problema</h2><span class="sub">${hs.length?hs.length+(hs.length>1?' intentos':' intento'):'Aún no lo has corregido'}</span></div>
     ${hs.length?hs.map((h,i)=>`<details ${i===0?'open':''}><summary><b>${esc(fdate(h.d))} · ${fmt1(h.s*10)} / 10</b> <span class="small muted">· ${h.mode==='simulacro'?'simulacro':'práctica'}${h.ia?' · corregido con IA':''} · ${h.items.filter(x=>x.v<1).length} fallos</span></summary><div class="stack" style="margin-top:10px">${reportHTML(h.items, h.falt)}</div></details>`).join(''):`<p class="muted small" style="margin:0">Cuando lo resuelvas y te corrijas, aquí verás la rúbrica anotada de cada intento.</p>`}
     <details><summary class="small"><b>Ver la rúbrica de este problema</b></summary><div class="stack small" style="margin-top:8px">${RUBRIC.map(dm=>`<div><b>${esc(dm.name)} (${dm.max})</b>${rubricFor(p).filter(it=>it.k===dm.k).map(it=>`<span style="display:block">• ${mdi(it.t)} <span class="muted num">(${fmt2(it.p)})</span></span>`).join('')}</div>`).join('')}</div></details></section>`; })()}
@@ -322,14 +359,19 @@ V.practicar = (arg, q) => {
       <button aria-pressed="${!f.b&&!f.sb}" data-go="#/practicar${f.murcia?'':'?todo=1'}">Lo que más necesitas</button>
       ${BK.map(b=>`<button aria-pressed="${f.b===b||(s&&f.sb&&subById(f.sb).b===b)}" data-go="#/practicar?b=${b}${f.murcia?'':'&todo=1'}">${esc(BLOQ[b].name)}</button>`).join('')}</div>
     <label class="row small" style="font-weight:500"><input type="checkbox" data-act="murciaOnly" ${f.murcia?'checked':''}> Solo problemas de Murcia o estilo Murcia</label></div>`;
-  const top = `${head(f.sb?'Practicar · '+f.sb:f.b?'Practicar · '+BLOQ[f.b].name:'Practicar · plan adaptativo', f.sb?subById(f.sb).name:'Tu siguiente problema', f.sb||f.b?'':'Te damos el problema que más acerca tu nota a tu objetivo, priorizando lo que cae en Murcia.')}${pr.one?'':filt}`;
+  const ld=ldStack(); const origin=ld.length?byId(ld[ld.length-1]):null;
+  const banner = origin&&origin.id!==p.id ? `<div class="note hi row between"><span><b>Has bajado un escalón</b> desde «${esc(origin.ti)}» (nivel ${origin.n}). Cuando resuelvas este, vuelve a subir.</span><button class="btn sm" data-act="ladderBack">${ico('up')}Volver a «${esc(origin.ti)}»</button></div>` : '';
+  const top0 = `${head(f.sb?'Practicar · '+f.sb:f.b?'Practicar · '+BLOQ[f.b].name:'Practicar · plan adaptativo', f.sb?subById(f.sb).name:'Tu siguiente problema', f.sb||f.b?'':'Te damos el problema que más acerca tu nota a tu objetivo, priorizando lo que cae en Murcia.')}${pr.one?'':filt}`;
+  const top = top0 + banner;
   const prob = `<section class="card prob stack"><div class="row between"><div class="row">${chipOrigin(p)}${chipSub(p.sb)}${chipLv(p.n)}</div>${pr.stage==='work'?`<span class="timer" data-t0="${pr.t0}">0:00</span>`:''}</div>
     <h2>${esc(p.ti)}</h2><div class="st">${md(p.st)}</div>
     ${pr.stage==='work'?`${p.h.slice(0,pr.hints).map((h,i)=>`<div class="note small"><b>Pista ${i+1}.</b> ${mdi(h)}</div>`).join('')}
+    ${teoHTML(p.sb,{title:'Ver la teoría relacionada', note:'Consultarla no cuenta como pista. Son los resultados que suelen hacer falta en este subbloque; en el examen tendrás que enunciarlos con sus hipótesis.'})}
     <div class="note small">Resuélvelo en papel como en el examen: planteamiento, desarrollo y conclusión. Sin calculadora.</div>
-    <div class="row">${pr.hints<p.h.length?`<button class="btn" data-act="hint">Pedir una pista (${p.h.length-pr.hints})</button>`:''}<button class="btn primary" data-act="toGrade">Ver la solución y corregirme</button><button class="btn ghost" data-act="skip">Cambiar de problema</button></div>`:''}</section>`;
+    <div class="row">${pr.hints<p.h.length?`<button class="btn" data-act="hint">Pedir una pista (${p.h.length-pr.hints})</button>`:''}<button class="btn primary" data-act="toGrade">Ver la solución y corregirme</button><button class="btn ghost" data-act="skip">Cambiar de problema</button></div>
+    ${(()=>{ const dn=ladderFor(p,-1,ldStack()), upq=ladderFor(p,1,ldStack()); return (dn||upq)?`<div class="row ladder">${dn?`<button class="btn sm" data-act="ladder" data-dir="down" data-id="${dn.id}" title="${esc(dn.ti)}">${ico('down')}Más fácil · nivel ${dn.n}</button>`:''}${upq?`<button class="btn sm ghost" data-act="ladder" data-dir="up" data-id="${upq.id}" title="${esc(upq.ti)}">${ico('up')}Más difícil · nivel ${upq.n}</button>`:''}<span class="tiny muted">Cambia a un problema del mismo subbloque un escalón por debajo o por encima.</span></div>`:''; })()}`:''}</section>`;
   if(pr.stage==='work') return top+prob;
-  if(pr.stage==='grade') return top+prob+`<section class="card"><div class="card-h"><h2>Solución</h2>${p.ref&&p.m!=='oficial'?`<span class="sub">Gemelo de ${esc(refLabel(p.ref))}</span>`:''}</div><div class="sol">${md(p.so)}</div>${p.er?`<div class="typical" style="margin-top:10px"><b>Error típico en este problema:</b> ${mdi(p.er)}</div>`:''}</section>
+  if(pr.stage==='grade') return top+prob+`<section class="card"><div class="card-h"><h2>Solución</h2>${p.ref&&p.m!=='oficial'?`<span class="sub">Gemelo de ${esc(refLabel(p.ref))}</span>`:''}</div><div class="sol">${md(p.so)}</div>${p.er?`<div class="typical" style="margin-top:10px"><b>Error típico en este problema:</b> ${mdi(p.er)}</div>`:''}<div style="margin-top:10px">${teoHTML(p.sb)}</div></section>
     ${aiCardHTML('pr', pr.ai)}
     <section class="card stack"><div class="card-h"><h2>Corrígete con la rúbrica detallada</h2><span class="sub">Dimensiones oficiales de Murcia (criterios de 2025)</span></div>
     <p class="small muted" style="margin:0">Compara tu hoja con la solución indicador a indicador. Valora cada subindicador en cinco niveles, de <b>nada</b> a <b>completo</b>, y, si no está completo, anota dónde fallaste: queda en tu historial de errores. Cada dimensión parte del indicador oficial del tribunal.${rubricFor(p).some(x=>x.own)?' Los indicadores de este problema están escritos para él.':''}</p>
@@ -340,6 +382,13 @@ V.practicar = (arg, q) => {
     <div class="kpis"><div class="kpi"><span class="l">${esc(BLOQ[p.b].name)}</span><span class="v">${lvTxt(res.r)}</span><span class="d">${res.dr>=0?'+':''}${fmt2(res.dr/200)} escalones${res.up?' · ¡subes de nivel!':res.down?' · bajas de nivel':''}</span></div>
     <div class="kpi"><span class="l">${p.sb} · ${esc(s?s.name:'')}</span><span class="v">${lvTxt(res.sbr)}</span><span class="d">Objetivo ${lvTxt(targetR(S,p.b))}</span></div>
     <div class="kpi"><span class="l">Nota estimada parte A</span><span class="v">${notaRango(S).txt}</span><span class="d">Objetivo ${fmt1(targetNota(S))}</span></div></div>
+    ${(()=>{ const sc=pr.score, ld=ldStack(), origin=ld.length?byId(ld[ld.length-1]):null; const dn=ladderFor(p,-1,ld), upq=ladderFor(p,1,ld);
+      const theoryWeak = pr.items.some(it=>(it.k==='con'||it.k==='rig')&&it.v<.75);
+      let msg='';
+      if(origin&&sc>=6.5) msg=`<div class="note ok row between"><span><b>Escalón superado.</b> Vuelve a subir al problema del que bajaste: «${esc(origin.ti)}» (nivel ${origin.n}).</span><button class="btn primary sm" data-act="ladderBack">${ico('up')}Volver a subir</button></div>`;
+      else if(sc<5&&dn) msg=`<div class="note bad row between"><span><b>Baja un escalón.</b> Antes de repetir este, resuelve uno más fácil del mismo tipo: «${esc(dn.ti)}» (nivel ${dn.n}).</span><button class="btn primary sm" data-act="ladder" data-dir="down" data-id="${dn.id}">${ico('down')}Bajar un escalón</button></div>`;
+      else if(sc>=7.5&&upq) msg=`<div class="note ok row between"><span><b>Sube un escalón:</b> «${esc(upq.ti)}» (nivel ${upq.n}).</span><button class="btn primary sm" data-act="ladder" data-dir="up" data-id="${upq.id}">${ico('up')}Subir un escalón</button></div>`;
+      return msg + (theoryWeak?teoHTML(p.sb,{open:true, title:'Repasa la teoría de este subbloque', note:'Has perdido puntos en conocimiento o rigor: estos son los resultados que hay que citar con sus hipótesis.'}):''); })()}
     ${reportHTML(pr.items, pr.rk.falt)}
     <details><summary class="small"><b>Volver a ver la solución</b></summary><div class="sol" style="margin-top:8px">${md(p.so)}</div></details>
     <div class="row"><button class="btn primary" data-act="next">Siguiente problema</button><button class="btn" data-go="#/bloque/${p.b}">Ver qué me falta en ${esc(BLOQ[p.b].name.toLowerCase())}</button><button class="btn ghost" data-go="#/p/${p.id}">Historial de este problema</button></div></section>`;
@@ -393,7 +442,7 @@ Cada falta resta 0,5 puntos, hasta un máximo de 3.
 ${AI_RULES}
 
 ## Formato obligatorio al final
-Termina SIEMPRE tu respuesta con este bloque de código JSON, con los ${n} subindicadores (del 0 al ${n-1}), sin comentarios dentro, para que la web Escalera Murcia pueda leerlo:
+Termina SIEMPRE tu respuesta con este bloque de código JSON, con los ${n} subindicadores (del 0 al ${n-1}), sin comentarios dentro, para que la web Plaza en n pasos pueda leerlo:
 \`\`\`json
 {"escalera":2,"problema":"${p.id}","legible":true,"confianza":"alta","indicadores":[${AI_JSON_ITEM(n)}],"ortografia":${AI_JSON_ORTO},"comentario":"resumen en una frase"}
 \`\`\`
@@ -764,7 +813,7 @@ V.cuenta = () => {
 /* ---------- Acceso ---------- */
 function authHTML(mode){
   const feat = ['Problemas de los exámenes de Murcia 2021 y 2025 resueltos paso a paso, con gemelos para practicar','Te corriges con la rúbrica oficial del tribunal de Murcia','Sabes exactamente qué subbloque te falta y cuándo llegarás a tu objetivo'];
-  return `<div class="auth"><div class="auth-brand"><span class="mark" style="font-size:44px">${MARK}</span><h1>Escalera Murcia</h1><p>Prepara la parte A de la oposición de Matemáticas de la Región de Murcia, escalón a escalón.</p>
+  return `<div class="auth"><div class="auth-brand"><span class="mark" style="font-size:44px">${MARK}</span><h1>Plaza en n pasos</h1><p>Prepara la parte A de la oposición de Matemáticas de la Región de Murcia, escalón a escalón.</p>
     <ul class="feat">${feat.map(f=>`<li>${ico('check')}<span>${esc(f)}</span></li>`).join('')}</ul><p class="small" style="margin-top:auto">en n pasos</p></div>
   <form class="auth-form" data-form="${mode}"><h2>${mode==='login'?'Entra en tu cuenta':'Crea tu cuenta'}</h2>
     ${mode==='register'?`<div class="field"><label for="f-name">Nombre</label><input type="text" id="f-name" name="name" autocomplete="name" required></div>`:''}

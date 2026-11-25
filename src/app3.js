@@ -70,6 +70,9 @@ const A = {
   hint(){ UI.pr.hints++; render(); },
   toGrade(){ UI.pr.secs=Math.round((Date.now()-UI.pr.t0)/1000); UI.pr.stage='grade'; render(); },
   skip(){ UI.pr.key=''; UI.pr.one=false; render(); },
+  ladder(el){ const cur=UI.pr&&UI.pr.id; UI.ladder=UI.ladder||[]; if(el.dataset.dir==='down'){ if(cur&&UI.ladder[UI.ladder.length-1]!==cur) UI.ladder.push(cur); } else { UI.ladder=[]; }
+    UI.pr=null; go('#/practicar?id='+el.dataset.id); window.scrollTo(0,0); },
+  ladderBack(){ const id=(UI.ladder||[]).pop(); UI.pr=null; if(id) go('#/practicar?id='+id); window.scrollTo(0,0); },
   practiceOne(el){ go('#/practicar?id='+el.dataset.id); },
   mark(el){ const key=el.dataset.key, i=+el.dataset.i, v=+el.dataset.v; const {rk}=rkKey(key); rk.m[i]=v; pressIn(el);
     const n=el.closest('.ri').querySelector('.ri-n'); if(n){ n.classList.toggle('hidden', v>=1); } updRub(key); },
@@ -111,7 +114,7 @@ const A = {
     const fails=items.filter(it=>it.v<1); if(fails.length) addErrors(fails.map(it=>({txt:it.t, dim:it.k, note:it.n, b:p.b, sb:p.sb})), p.id);
     pr.items=items; pr.res=res; pr.score=sc; pr.stage='done'; render(); window.scrollTo(0,0);
   },
-  next(){ if(UI.pr.one){ UI.pr=null; go('#/practicar'); } else { UI.pr.key=''; render(); window.scrollTo(0,0); } },
+  next(){ UI.ladder=[]; if(UI.pr.one){ UI.pr=null; go('#/practicar'); } else { UI.pr.key=''; render(); window.scrollTo(0,0); } },
   simStart(el){
     const e=MURCIA.find(x=>String(x.y)===el.dataset.y); const twin=!!el.dataset.twin;
     const ids=e.ids.map((id,i)=>{ if(!twin) return id; const g=bank().filter(p=>p.m==='gemelo'&&p.ref===`${e.y}-P${i+1}`); return g.length?g[Math.floor(Math.random()*g.length)].id:id; });

@@ -1,4 +1,4 @@
-# Escalera Murcia
+# Plaza en n pasos
 
 App web para preparar la parte A (problemas) de la oposición de Matemáticas de Secundaria de la Región de Murcia. Proyecto de «en n pasos».
 
