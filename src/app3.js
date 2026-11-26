@@ -157,7 +157,7 @@ const A = {
   impSave(){ const list=parseProblems(UI.imp); const ids=new Set(bank().map(p=>p.id)); list.forEach(p=>{ if(ids.has(p.id)) p.id=p.id+'-'+uid().slice(0,4); });
     Backend.addProblems(list); UI.imp=''; toast(list.length+' problemas añadidos.'); go('#/banco'); },
   style(el){ Store.set('ui.style', el.dataset.v); document.body.dataset.style=el.dataset.v; render(); },
-  export(){ const blob=new Blob([JSON.stringify({usuario:{name:ME.name,email:ME.email}, progreso:S},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='escalera-murcia-'+dayKey(Date.now())+'.json'; document.body.appendChild(a); a.click(); a.remove(); },
+  export(){ const blob=new Blob([JSON.stringify({usuario:{name:ME.name,email:ME.email}, progreso:S},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='plaza-en-n-pasos-'+dayKey(Date.now())+'.json'; document.body.appendChild(a); a.click(); a.remove(); },
   reset(el){ if(!UI.resetArm){ UI.resetArm=true; el.textContent='Pulsa otra vez para borrarlo todo'; setTimeout(()=>{ UI.resetArm=false; },5000); return; }
     UI.resetArm=false; S=freshState(); save(); UI.pr=null; toast('Progreso borrado.'); go('#/inicio'); },
   logout(){ Backend.logout(); ME=null; S=null; UI.pr=null; UI.sim=null; UI.diag=null; location.hash='#/inicio'; render(); },
@@ -196,6 +196,13 @@ document.addEventListener('submit', async ev=>{
 });
 document.addEventListener('keydown', ev=>{ if(ev.key==='Escape') closeMenu(); });
 let rzT, rzW=window.innerWidth; window.addEventListener('resize', ()=>{ clearTimeout(rzT); rzT=setTimeout(()=>{ if(window.innerWidth!==rzW){ rzW=window.innerWidth; if(ME && document.querySelector('.chart')) render(); } }, 250); });
+/* Al copiar texto de la web se añade la autoría (no afecta a los campos de texto ni a las instrucciones para la IA). */
+document.addEventListener('copy', ev=>{
+  const sel=window.getSelection&&window.getSelection(); const txt=sel?String(sel):''; const a=document.activeElement;
+  if(!txt || txt.length<60 || (a && /^(TEXTAREA|INPUT)$/.test(a.tagName))) return;
+  if(!sel.anchorNode || !$('#app').contains(sel.anchorNode)) return;
+  try{ ev.clipboardData.setData('text/plain', txt+'\n\n— © Plaza en n pasos · https://manuasg.github.io/plaza-en-n-pasos/ · Uso personal; prohibida su reproducción.'); ev.preventDefault(); }catch(e){}
+});
 window.addEventListener('hashchange', ()=>{ closeMenu(); render(); window.scrollTo(0,0); });
 
 (async function init(){

@@ -183,7 +183,7 @@ function parseProblems(text){
     const h=[]; const st=stRaw.split('\n').filter(l=>{ if(/^> /.test(l)){ h.push(l.slice(2).trim()); return false; } return true; }).join('\n').trim();
     let er=''; const so=soRaw.split('\n').filter(l=>{ if(/^!! /.test(l)){ er=l.slice(3).trim(); return false; } return true; }).join('\n').trim();
     const t=parseInt(at.t)||0; const bq=BK.includes(at.b)?at.b:bloqueDeTema(t);
-    out.push({id:at.id||('p-'+uid()), ti:m[2].trim(), st, so, h, er, n:clamp(parseInt(at.n)||3,1,7), b:bq, sb:subById(at.sb)?at.sb:subDeTema(t,bq), t, m:at.m||'', ref:at.ref||'', src:(at.src||'').replace(/-/g,' '), up:at.up||''});
+    out.push({id:at.id||('p-'+uid()), ti:m[2].trim(), st, so, h, er, n:clamp(parseInt(at.n)||3,1,7), b:bq, sb:subById(at.sb)?at.sb:subDeTema(t,bq), t, m:at.m||'', ref:at.ref||'', src:(at.src||'').replace(/-/g,' '), up:at.up||'', est:at.est||''});
   }
   return out;
 }
@@ -206,19 +206,27 @@ function dgPrior(){ const p=DG.grid.map(t=>Math.exp(-((t-DG.mu0)**2)/(2*DG.sd0**
 function dgLik(t, D, resp){ const L=1/(1+Math.pow(10,(D-t)/DG.S)); return resp==='ok' ? DG.C+(1-DG.C)*L : resp==='ns' ? (1-L) : (1-DG.C)*(1-L)+.02; }
 function dgUpdate(post, D, resp){ const p=post.map((x,i)=>x*dgLik(DG.grid[i],D,resp)); const z=p.reduce((a,c)=>a+c,0)||1; return p.map(x=>x/z); }
 function dgStats(post){ const m=post.reduce((a,x,i)=>a+x*DG.grid[i],0); const v=post.reduce((a,x,i)=>a+x*(DG.grid[i]-m)**2,0); return {m, sd:Math.sqrt(v)}; }
-const SEED = parseProblems($('#seed-probs').textContent);
-const DIAG = parseDiag($('#seed-diag').textContent);
+/* Los bancos van cifrados en la página (flujo xorshift de 32 bits, el mismo que en build.py): se descifran aquí. */
+function seedText(id){
+  const el=$('#'+id); if(!el) return ''; const t=el.textContent.trim(); if(!t) return '';
+  if(/\s/.test(t) && !/^[A-Za-z0-9+/=]+$/.test(t)) return t;   // texto plano (desarrollo)
+  const bin=atob(t); const u=new Uint8Array(bin.length); let s=0x2F6B1D35;
+  for(let i=0;i<bin.length;i++){ s^=s<<13; s>>>=0; s^=s>>>17; s^=s<<5; s>>>=0; u[i]=bin.charCodeAt(i)^(s>>>24); }
+  return new TextDecoder().decode(u);
+}
+const SEED = parseProblems(seedText('seed-probs'));
+const DIAG = parseDiag(seedText('seed-diag'));
 function parseRubs(text){ const out={}; let cur=null;
   text.split('\n').forEach(l=>{ l=l.trim(); if(!l||l[0]==='#') return; const r=l.match(/^R\s+(\S+)/); if(r){ cur=out[r[1]]=[]; return; }
     const m=l.match(/^(pla|con|tec|des|res|rig|pre)\s+([\d.]+)\s*\|\s*(.+)$/); if(m&&cur) cur.push({k:m[1], p:+m[2], t:m[3]}); });
   return out; }
-const RUBS = parseRubs(($('#seed-rub')||{textContent:''}).textContent);
+const RUBS = parseRubs(seedText('seed-rub'));
 /* Teoría por subbloque: resultados que hay que saber enunciar con sus hipótesis (líneas «- ») y la trampa típica («! »). */
 function parseTeo(text){ const out={}; let cur=null;
-  text.split('\n').forEach(l=>{ const m=l.match(/^T\s+(\w+)/); if(m){ cur=out[m[1]]={it:[], warn:''}; return; } if(!cur) return;
-    if(/^- /.test(l)) cur.it.push(l.slice(2).trim()); else if(/^! /.test(l)) cur.warn=l.slice(2).trim(); });
+  text.split('\n').forEach(l=>{ const m=l.match(/^T\s+(\w+)/); if(m){ cur=out[m[1]]={it:[], tec:[], warn:''}; return; } if(!cur) return;
+    if(/^- /.test(l)) cur.it.push(l.slice(2).trim()); else if(/^~ /.test(l)) cur.tec.push(l.slice(2).trim()); else if(/^! /.test(l)) cur.warn=l.slice(2).trim(); });
   return out; }
-const TEO = parseTeo(($('#seed-teo')||{textContent:''}).textContent);
+const TEO = parseTeo(seedText('seed-teo'));
 /* Escalera de un problema: el problema más cercano por debajo (dir=-1) o por encima (dir=+1).
    Primero el mismo subbloque; si no hay, el mismo bloque y tema; si no, el mismo bloque. Evita los ya superados y la pila actual. */
 function ladderFor(p, dir, avoid=[]){
@@ -230,13 +238,36 @@ function ladderFor(p, dir, avoid=[]){
   }
   return null;
 }
+/* ================= ¿Puede caer en Murcia? =================
+   Recuentos por subbloque de los 104 problemas oficiales de 20 convocatorias de otras comunidades (1994-2010),
+   clasificados por nosotros; solo se guardan los recuentos. */
+const OTRAS = {"AL1":3,"AL2":1,"AL3":3,"AL4":1,"AL5":5,"AN1":4,"AN2":2,"AN3":6,"AN4":4,"AN5":8,"AN6":1,"AN7":2,"GE1":11,"GE2":5,"GE3":1,"GE4":6,"GE5":4,"GE6":1,"NU2":4,"NU3":3,"NU4":1,"NU6":2,"NU7":5,"NU8":4,"PR1":11,"PR2":2,"PR4":3,"PR5":1}, OTRAS_N = 104, OTRAS_EX = 20;
+/* Cuota de cada subbloque: 65 % lo que ha caído en Murcia (desde 2018 cuenta doble), 25 % otras comunidades, 10 % reparto uniforme. */
+const SAL = (()=>{ const mw={}; let mt=0; APPEAR.forEach(e=>e.items.forEach(([,sb])=>{ mw[sb]=(mw[sb]||0)+yW(e.y); mt+=yW(e.y); }));
+  const mc={}; APPEAR.forEach(e=>e.items.forEach(([,sb])=>{ (mc[sb]=mc[sb]||[]).push(e.y); }));
+  const out={}; SUB.forEach(s=>{ const m=(mw[s.id]||0)/mt, o=(OTRAS[s.id]||0)/OTRAS_N; const sh=.65*m+.25*o+.10/SUB.length;
+    out[s.id]={m, o, sh, pe:1-Math.pow(1-sh,5), years:mc[s.id]||[], oc:OTRAS[s.id]||0}; });
+  return out; })();
+/* Parecido al estilo de Murcia (0-1): origen, nivel y marca opcional est=alto|medio|bajo del banco. */
+function estiloOf(p){
+  if(p.est) return {alto:.85, medio:.55, bajo:.25}[p.est]||.5;
+  if(p.m==='oficial') return 1; if(p.m==='gemelo') return .95; if(p.m==='estilo') return .85;
+  const byN=[.15,.2,.2,.35,.5,.65,.75][p.n-1]; return p.up?Math.min(byN,.35):byN;
+}
+function salida(p){
+  const S_=SAL[p.sb]||{pe:.05, years:[], oc:0}; const st=estiloOf(p); const sc=S_.pe*st;
+  const k = sc>=.15?'alta':sc>=.08?'media':sc>=.035?'baja':'muy baja';
+  return {sc, pe:S_.pe, st, k, last: st<.5 || S_.pe<.07, sub:S_};
+}
+const salNorm = p => Math.min(1, salida(p).sc/.25);
+const salPen = p => (1-salNorm(p))*260 + (salida(p).last?300:0);
 /* Recomendaciones para un subbloque según tu nivel en él: consolidar (un escalón por debajo), a tu nivel y reto. */
 function recsFor(sbId){
   const sb=subById(sbId); const r=S.subR[sbId]?S.subR[sbId].r:S.ratings[sb.b].r;
   const ps=bank().filter(q=>q.sb===sbId); const used=new Set(); const out=[];
   const solvedRecent=q=>{ const a=S.attempts[q.id]; return a&&a.length&&a[a.length-1].s>=.75; };
   [['Para consolidar',-150],['A tu nivel',0],['Reto',180]].forEach(([lab,off])=>{
-    const c=ps.filter(q=>!used.has(q.id)).sort((a,b)=>(Math.abs(probR(a)-r-off)+(solvedRecent(a)?300:0))-(Math.abs(probR(b)-r-off)+(solvedRecent(b)?300:0)))[0];
+    const cost=q=>Math.abs(probR(q)-r-off)+(solvedRecent(q)?300:0)+(1-salNorm(q))*120; const c=ps.filter(q=>!used.has(q.id)).sort((a,b)=>cost(a)-cost(b))[0];
     if(c){ used.add(c.id); out.push({lab, p:c}); } });
   return out;
 }
@@ -399,7 +430,7 @@ function pickNext({b=null, sb=null, level=null, murcia=false, exclude=null}={}){
   const score = p => { const at=S.attempts[p.id]; let pen=0;
     if(at&&at.length){ const l=at[at.length-1]; const age=Date.now()-l.d; pen = l.s>=.75 ? 500 : (age<2*DAY ? 350 : -40); }
     const subBonus = gaps[p.sb]!=null ? gaps[p.sb]*25 : 0;
-    return Math.abs(probR(p)-target)+pen+subBonus+Math.random()*40; };
+    return Math.abs(probR(p)-target)+pen+subBonus+salPen(p)+Math.random()*40; };
   return pool.slice().sort((a,c)=>score(a)-score(c))[0] || null;
 }
 

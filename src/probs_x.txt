@@ -1,0 +1,580 @@
+P id=x01 n=6 b=PR t=63 sb=PR1 m=estilo | Nadie recibe su propio trabajo
+Un profesor devuelve al azar los $n$ trabajos de una clase de $n$ alumnos, uno a cada alumno. Calcula la probabilidad $p_n$ de que ningún alumno reciba su propio trabajo y estudia su límite cuando $n\to\infty$.
+> Define $A_i$ = «el alumno $i$ recibe su trabajo» y calcula $P(A_1\cup\dots\cup A_n)$ por inclusión-exclusión.
+> Cuenta $P(A_{i_1}\cap\dots\cap A_{i_k})$: quedan $(n-k)!$ ordenaciones de $n!$.
+---
+**Planteamiento.** El espacio muestral son las $n!$ permutaciones, equiprobables. Sea $A_i$ = «el alumno $i$ recibe su trabajo». Buscamos $p_n = 1-P\left(\bigcup_{i=1}^n A_i\right)$.
+
+**Desarrollo.** Si fijamos $k$ alumnos que reciben su trabajo, los otros $n-k$ trabajos se reparten de $(n-k)!$ formas, así que $P(A_{i_1}\cap\dots\cap A_{i_k}) = \frac{(n-k)!}{n!}$, y hay $\binom nk$ elecciones. Por inclusión-exclusión,
+$$P\Big(\bigcup A_i\Big) = \sum_{k=1}^n(-1)^{k+1}\binom nk\frac{(n-k)!}{n!} = \sum_{k=1}^{n}\frac{(-1)^{k+1}}{k!}.$$
+Por tanto
+$$p_n = \sum_{k=0}^{n}\frac{(-1)^k}{k!}.$$
+
+**Límite.** Es la suma parcial de la serie de $e^x$ en $x=-1$, que converge para todo $x$: $p_n\to e^{-1}\approx 0{,}368$. Además $|p_n - e^{-1}|\le\frac1{(n+1)!}$ (serie alternada), así que con $n\ge 6$ la probabilidad ya es prácticamente constante.
+
+**Conclusión.** $p_n = \sum_{k=0}^n\frac{(-1)^k}{k!}\to\frac1e$.
+!! Sumar las probabilidades de los $A_i$ como si fueran incompatibles, o no justificar que el número de ordenaciones con $k$ aciertos fijados es $(n-k)!$.
+===
+P id=x02 n=5 b=PR t=63 sb=PR1 | Romper una varilla en tres trozos
+Se eligen al azar e independientemente dos puntos de una varilla de longitud $1$ y se corta por ellos. ¿Cuál es la probabilidad de que con los tres trozos se pueda formar un triángulo?
+> Llama $x$ e $y$ a las posiciones de los cortes: el espacio muestral es el cuadrado $[0,1]^2$.
+> Tres segmentos forman triángulo si y solo si cada uno mide menos que la mitad del total.
+---
+**Planteamiento.** Sean $x, y$ las posiciones de los cortes, uniformes e independientes: el punto $(x,y)$ es uniforme en el cuadrado unidad (área $1$), y la probabilidad es un área. Por simetría estudiamos $x<y$ (medio cuadrado) y duplicamos.
+
+**Condición.** Los trozos miden $x$, $y-x$ y $1-y$. Con perímetro $1$, la desigualdad triangular equivale a que cada lado sea menor que $\tfrac12$:
+$$x<\tfrac12,\qquad y-x<\tfrac12,\qquad y>\tfrac12.$$
+
+**Desarrollo.** En el triángulo $0<x<y<1$, la región es el triángulo de vértices $(0,\tfrac12)$, $(\tfrac12,\tfrac12)$ y $(\tfrac12,1)$, de área $\tfrac18$. Con el caso simétrico $y<x$, el área favorable es $\tfrac14$.
+
+**Conclusión.** La probabilidad es $\tfrac14$.
+!! Olvidar el caso $y<x$ (resultado $\tfrac18$) o usar la desigualdad triangular sin reducirla a «cada trozo menor que $\tfrac12$».
+===
+P id=x03 n=5 b=PR t=63 sb=PR1 | Urnas con la misma probabilidad de color
+Una urna tiene $r$ bolas rojas y $a$ azules ($r>a\ge1$). Se extraen dos sin reemplazamiento y la probabilidad de que sean del mismo color es $\tfrac12$. Demuestra que el número total de bolas es un cuadrado perfecto y halla todas las urnas posibles con 30 bolas como máximo.
+> Iguala $P(\text{mismo color})$ a $\tfrac12$ y simplifica hasta $(r-a)^2 = r+a$.
+---
+**Planteamiento.** Con $N = r+a$,
+$$P(\text{mismo color}) = \frac{r(r-1)+a(a-1)}{N(N-1)} = \frac12.$$
+
+**Desarrollo.** $2r^2-2r+2a^2-2a = (r+a)^2-(r+a)$, es decir $r^2-2ra+a^2 = r+a$:
+$$(r-a)^2 = N.$$
+Luego $N = m^2$ es un cuadrado perfecto con $m = r-a$, y $r = \frac{m^2+m}2$, $a = \frac{m^2-m}2$ (números triangulares consecutivos). Hace falta $a\ge1$, es decir, $m\ge2$.
+
+**Casos con $N\le30$.** $m = 2, 3, 4, 5$: $(r,a) = (3,1),\ (6,3),\ (10,6),\ (15,10)$, con $4, 9, 16, 25$ bolas.
+
+**Comprobación** con $(6,3)$: $\frac{6\cdot5+3\cdot2}{9\cdot 8} = \frac{36}{72} = \frac12$. ✓
+
+**Conclusión.** $N = (r-a)^2$, y las urnas son $(3,1)$, $(6,3)$, $(10,6)$ y $(15,10)$.
+!! Probar solo con números concretos en lugar de llegar a la identidad $(r-a)^2 = r+a$.
+===
+P id=x04 n=5 b=PR t=65 sb=PR4 | Un dado y después monedas
+Se lanza un dado equilibrado y sale $X$. Después se lanzan $X$ monedas equilibradas y sea $Y$ el número de caras. Calcula $E(Y)$ y $V(Y)$.
+> Condiciona a cada valor de $X$: si $X = k$, $Y$ es binomial $B(k,\tfrac12)$.
+> $V(Y) = E\big[V(Y\mid X)\big] + V\big(E[Y\mid X]\big)$.
+---
+**Planteamiento.** Si $X = k$, $Y\sim B(k,\tfrac12)$, luego $E(Y\mid X) = \frac X2$ y $V(Y\mid X) = \frac X4$. Para el dado, $E(X) = \frac72$ y $V(X) = \frac{91}{6}-\frac{49}4 = \frac{35}{12}$.
+
+**Esperanza.** Por la ley de la esperanza total, $E(Y) = E\left(\frac X2\right) = \frac74$.
+
+**Varianza.** Por la descomposición de la varianza,
+$$V(Y) = E\left(\frac X4\right)+V\left(\frac X2\right) = \frac78+\frac{35}{48} = \frac{77}{48}.$$
+(También: $E(Y^2) = E\left(\frac X4+\frac{X^2}4\right) = \frac78+\frac{91}{24} = \frac{14}{3}$ y $V(Y) = \frac{14}3-\frac{49}{16} = \frac{77}{48}$.)
+
+**Conclusión.** $E(Y) = \frac74$ y $V(Y) = \frac{77}{48}$.
+!! Calcular $V(Y)$ como $E(X)\cdot\frac14$, olvidando la variabilidad que aporta el propio $X$.
+===
+P id=x05 n=5 b=PR t=66 sb=PR5 | Radio aleatorio
+El radio $X$ de un círculo es una variable aleatoria con densidad $f(x) = kx^2(1-x)$ si $0\le x\le1$ y $0$ en otro caso. Calcula $k$, el radio medio y el área media del círculo. ¿Coincide el área media con el área del círculo de radio medio?
+> $\int_0^1 f = 1$. El área es $\pi X^2$: necesitas $E(X^2)$.
+---
+**Constante.** $\int_0^1 (x^2-x^3)\,dx = \frac13-\frac14 = \frac1{12}$, luego $k = 12$ (y $f\ge0$).
+
+**Radio medio.** $E(X) = 12\int_0^1(x^3-x^4)\,dx = 12\left(\frac14-\frac15\right) = \frac35$.
+
+**Área media.** $E(\pi X^2) = 12\pi\int_0^1 (x^4-x^5)\,dx = 12\pi\left(\frac15-\frac16\right) = \frac{2\pi}5$.
+
+**Comparación.** El círculo de radio medio tiene área $\pi\cdot\frac9{25} = \frac{9\pi}{25} < \frac{10\pi}{25}$. No coinciden: $E(X^2) - E(X)^2 = V(X) = \frac25-\frac9{25} = \frac1{25}>0$.
+
+**Conclusión.** $k = 12$, radio medio $\frac35$, área media $\frac{2\pi}5$, mayor que el área del círculo de radio medio.
+!! Suponer que $E(\pi X^2) = \pi E(X)^2$: la esperanza no conmuta con funciones no lineales.
+===
+P id=x06 n=5 b=PR t=64 sb=PR2 | Pronóstico del tiempo con dos estados
+Cada día es seco o lluvioso. La probabilidad de que un día sea como el anterior es $\tfrac23$. Si hoy es seco, calcula la probabilidad $p_n$ de que dentro de $n$ días sea seco y su límite.
+> Plantea $p_{n+1}$ en función de $p_n$ con la probabilidad total.
+---
+**Planteamiento.** Sea $S_n$ = «el día $n$ es seco», con $p_0 = 1$. Por la probabilidad total con el sistema completo $\{S_n, \overline{S_n}\}$:
+$$p_{n+1} = \tfrac23p_n+\tfrac13(1-p_n) = \tfrac13p_n+\tfrac13.$$
+
+**Desarrollo.** El punto fijo es $p = \tfrac12$. Restando, $p_{n+1}-\tfrac12 = \tfrac13\left(p_n-\tfrac12\right)$, así que
+$$p_n = \frac12+\frac12\left(\frac13\right)^n.$$
+Comprobación: $p_1 = \tfrac23$. ✓
+
+**Conclusión.** $p_n = \frac12+\frac1{2\cdot3^n}\to\frac12$: a largo plazo se pierde la información del día inicial.
+!! Multiplicar $\left(\tfrac23\right)^n$, que es la probabilidad de que todos los días sean secos, no la de que el día $n$ lo sea.
+===
+P id=x07 n=4 b=PR t=59 sb=PR6 | Recta de regresión con cinco datos
+Para cinco alumnos se anotan las horas de estudio $x$ y la nota $y$: $(1,2)$, $(2,4)$, $(3,5)$, $(4,4)$, $(5,5)$. Calcula el coeficiente de correlación, la recta de regresión de $y$ sobre $x$ y la nota estimada con $6$ horas. ¿Es fiable esa estimación?
+> $s_{xy} = \overline{xy}-\bar x\bar y$, $m = \frac{s_{xy}}{s_x^2}$, $r = \frac{s_{xy}}{s_xs_y}$.
+---
+**Medias y momentos.** $\bar x = 3$, $\bar y = 4$, $\overline{x^2} = 11$, $\overline{y^2} = \frac{86}5$, $\overline{xy} = \frac{66}5$. Luego $s_x^2 = 2$, $s_y^2 = \frac65$, $s_{xy} = \frac65$.
+
+**Correlación.** $r = \dfrac{6/5}{\sqrt{2\cdot 6/5}} = \dfrac{\sqrt{15}}5\approx0{,}77$: relación lineal positiva moderada.
+
+**Recta.** $y-4 = \frac35(x-3)$, es decir, $y = 0{,}6x+2{,}2$. Para $x = 6$: $y = 5{,}8$.
+
+**Fiabilidad.** Es poco fiable: $r^2\approx0{,}6$ (la recta explica el 60 % de la variabilidad), hay solo cinco datos y $x=6$ está fuera del rango observado (extrapolación).
+
+**Conclusión.** $r\approx0{,}77$, $y = 0{,}6x+2{,}2$ y una estimación de $5{,}8$ poco fiable.
+!! Usar la recta de $x$ sobre $y$ para estimar $y$, o no comentar la extrapolación.
+===
+P id=x08 n=5 b=PR t=67 sb=PR6 | Intervalo de confianza y tamaño muestral
+La estatura de una población sigue una normal de desviación típica $\sigma = 8$ cm. Una muestra de $64$ personas da media $170$ cm. a) Calcula el intervalo de confianza al 95 % para la media. b) ¿Qué tamaño muestral garantiza un error máximo de $0{,}5$ cm con la misma confianza?
+> $\bar x\pm z_{\alpha/2}\frac\sigma{\sqrt n}$ con $z_{0{,}025} = 1{,}96$.
+---
+**a)** La media muestral sigue $N\left(\mu,\frac{\sigma}{\sqrt n}\right) = N(\mu, 1)$. El intervalo es
+$$170\pm1{,}96\cdot\frac8{\sqrt{64}} = 170\pm1{,}96 = (168{,}04;\ 171{,}96).$$
+
+**b)** Se pide $1{,}96\frac{8}{\sqrt n}\le0{,}5$, es decir, $n\ge\left(\frac{1{,}96\cdot8}{0{,}5}\right)^2 = 983{,}45$.
+
+**Conclusión.** a) $(168{,}04;\ 171{,}96)$ cm. b) Hacen falta al menos $984$ personas.
+!! Redondear $n$ hacia abajo: el tamaño mínimo se redondea siempre hacia arriba.
+===
+P id=x09 n=5 b=NU t=8 sb=NU7 | Recurrencia de orden dos
+La sucesión $(a_n)$ cumple $a_0 = 0$, $a_1 = 1$ y $a_{n+2} = 5a_{n+1}-6a_n$. Halla su término general, demuestra que $a_n$ es impar para $n\ge1$ y calcula $\lim\frac{a_{n+1}}{a_n}$.
+> Ecuación característica: $r^2 = 5r-6$.
+---
+**Término general.** $r^2-5r+6 = 0$ tiene raíces $2$ y $3$, así que $a_n = \alpha 3^n+\beta2^n$. Con $a_0 = 0$ y $a_1 = 1$: $\alpha+\beta = 0$ y $3\alpha+2\beta = 1$, de donde $\alpha = 1$, $\beta = -1$:
+$$a_n = 3^n-2^n.$$
+Comprobación: $a_2 = 5$ y $5\cdot1-6\cdot0 = 5$. ✓
+
+**Paridad.** Para $n\ge1$, $3^n$ es impar y $2^n$ es par, así que $a_n$ es impar.
+
+**Límite.** $\dfrac{a_{n+1}}{a_n} = \dfrac{3-2\left(\frac23\right)^n}{1-\left(\frac23\right)^n}\to3$.
+
+**Conclusión.** $a_n = 3^n-2^n$, impar para $n\ge1$, y el cociente tiende a $3$.
+!! Dejar las constantes sin determinar o no comprobar la fórmula en los primeros términos.
+===
+P id=x10 n=5 b=NU t=8 sb=NU7 | Filas de números impares de longitud
+Se escriben los naturales en filas: la fila $1$ tiene un número, la fila $2$ tres, la fila $3$ cinco, y así sucesivamente ($1$ | $2\ 3\ 4$ | $5\ 6\ 7\ 8\ 9$ | …). a) ¿En qué número acaba la fila $n$? b) Demuestra que la suma de la fila $n$ es $n^3+(n-1)^3$. c) ¿En qué fila está $2026$?
+> Las filas $1$ a $n$ contienen $1+3+\dots+(2n-1)$ números.
+---
+**a)** Las $n$ primeras filas tienen $\sum_{k=1}^n(2k-1) = n^2$ números, así que la fila $n$ termina en $n^2$ y empieza en $(n-1)^2+1$.
+
+**b)** La fila $n$ es una progresión aritmética de $2n-1$ términos:
+$$S_n = \frac{(2n-1)\big[(n-1)^2+1+n^2\big]}{2} = (2n-1)(n^2-n+1) = 2n^3-3n^2+3n-1.$$
+Y $n^3+(n-1)^3 = n^3+n^3-3n^2+3n-1$ coincide.
+
+**c)** $45^2 = 2025 < 2026 \le 46^2 = 2116$, luego $2026$ está en la fila $46$, que empieza en $45^2+1 = 2026$: es su primer número.
+
+**Conclusión.** La fila $n$ acaba en $n^2$, suma $n^3+(n-1)^3$, y $2026$ abre la fila $46$.
+!! Contar mal los términos de la fila ($2n-1$) o confundir el primero con $n^2-1$.
+===
+P id=x11 n=6 b=NU t=9 sb=NU8 m=estilo | Producto de distancias entre raíces de la unidad
+Sea $\omega = e^{2\pi i/n}$ con $n\ge2$. a) Demuestra que $\prod_{k=1}^{n-1}(x-\omega^k) = 1+x+\dots+x^{n-1}$. b) Deduce que $\prod_{k=1}^{n-1}|1-\omega^k| = n$. c) Deduce que $\prod_{k=1}^{n-1}\sin\frac{k\pi}{n} = \frac{n}{2^{n-1}}$.
+> Las raíces de $x^n-1$ son $1, \omega,\dots,\omega^{n-1}$.
+> $|1-e^{i\theta}| = 2\left|\sin\frac\theta2\right|$.
+---
+**a)** Las $n$ raíces de $x^n-1$ son $\omega^k$, $k = 0,\dots,n-1$, distintas, luego $x^n-1 = \prod_{k=0}^{n-1}(x-\omega^k)$. Como $x^n-1 = (x-1)(1+x+\dots+x^{n-1})$, simplificando el factor $x-1$ (igualdad de polinomios) se obtiene a).
+
+**b)** Evaluando en $x = 1$: $\prod_{k=1}^{n-1}(1-\omega^k) = n$, y tomando módulos, $\prod|1-\omega^k| = n$.
+
+**c)** $|1-e^{i\theta}| = |e^{i\theta/2}|\,|e^{-i\theta/2}-e^{i\theta/2}| = 2\left|\sin\frac\theta2\right|$. Con $\theta = \frac{2k\pi}n$, $|1-\omega^k| = 2\sin\frac{k\pi}n$ (positivo para $1\le k\le n-1$). Entonces $2^{n-1}\prod\sin\frac{k\pi}n = n$.
+
+**Conclusión.** $\prod_{k=1}^{n-1}\sin\frac{k\pi}{n} = \frac n{2^{n-1}}$.
+!! Evaluar en $x=1$ el producto que incluye el factor $x-1$, que da $0 = 0$ y no dice nada.
+===
+P id=x12 n=5 b=NU t=9 sb=NU8 | El coseno de 72 grados
+Sea $z = e^{2\pi i/5}$. a) Demuestra que $1+z+z^2+z^3+z^4 = 0$. b) Calcula la suma y el producto de $u = z+z^4$ y $v = z^2+z^3$. c) Deduce el valor exacto de $\cos 72^\circ$.
+> $z^5 = 1$ y $z\ne 1$. $z^4 = \bar z$.
+---
+**a)** $(z-1)(1+z+z^2+z^3+z^4) = z^5-1 = 0$ y $z\ne1$.
+
+**b)** $u+v = -1$ por a). $uv = z^3+z^4+z^6+z^7 = z^3+z^4+z+z^2 = -1$ (usando $z^5 = 1$). Luego $u$ y $v$ son raíces de $t^2+t-1 = 0$: $t = \frac{-1\pm\sqrt5}2$.
+
+**c)** $u = z+\bar z = 2\cos72^\circ>0$ y $v = 2\cos144^\circ<0$. Por tanto $u = \frac{\sqrt5-1}2$ y
+$$\cos72^\circ = \frac{\sqrt5-1}4.$$
+
+**Conclusión.** $\cos 72^\circ = \frac{\sqrt5-1}{4}\approx0{,}309$.
+!! No justificar cuál de las dos raíces corresponde a $u$ (el signo del coseno).
+===
+P id=x13 n=4 b=NU t=1 sb=NU4 | Hallar la base de numeración
+Halla la base $b$ en la que es correcta la igualdad $2\cdot 124_{(b)} = 303_{(b)}$. Después, demuestra que en esa base un número es múltiplo de $b-1$ si y solo si lo es la suma de sus cifras, y aplícalo a $3241_{(b)}$.
+> Escribe cada número como polinomio en $b$. Las cifras deben ser menores que $b$.
+---
+**Base.** $2(b^2+2b+4) = 3b^2+3 \iff b^2-4b-5 = 0\iff b = 5$ (descartamos $b=-1$). Las cifras usadas ($0$ a $4$) son menores que $5$. ✓
+
+**Criterio.** Si $N = \sum c_i5^i$, como $5\equiv1\pmod 4$, $N\equiv\sum c_i\pmod4$: $N$ y la suma de sus cifras dan el mismo resto entre $4$.
+
+**Aplicación.** $3241_{(5)}$: suma de cifras $10\equiv2\pmod4$, luego no es múltiplo de $4$. Comprobación: $3\cdot125+2\cdot25+4\cdot5+1 = 446 = 4\cdot111+2$. ✓
+
+**Conclusión.** $b = 5$; el criterio de divisibilidad por $4$ en base $5$ es la suma de cifras, y $3241_{(5)}$ deja resto $2$.
+!! No comprobar que las cifras son menores que la base.
+===
+P id=x14 n=5 b=NU t=15 sb=NU5 | Sellos de 7 y 12 céntimos
+Con sellos de $7$ y de $12$ céntimos se quiere franquear exactamente una carta de $2{,}20$ €. ¿De cuántas formas se puede hacer?
+> Resuelve $7x+12y = 220$ en enteros no negativos.
+---
+**Existencia.** $\operatorname{mcd}(7,12) = 1$ divide a $220$: hay soluciones enteras.
+
+**Solución particular.** Módulo $12$: $7x\equiv220\equiv4$. Como $7\cdot7 = 49\equiv1$, $x\equiv28\equiv4\pmod{12}$. Con $x = 4$: $y = \frac{220-28}{12} = 16$.
+
+**Solución general.** $x = 4+12t$, $y = 16-7t$, $t\in\mathbb Z$.
+
+**Restricciones.** $x\ge0\Rightarrow t\ge0$; $y\ge0\Rightarrow t\le2$. Soluciones: $(4,16)$, $(16,9)$, $(28,2)$.
+
+**Conclusión.** Hay tres formas: $4$ sellos de 7 y $16$ de 12; $16$ y $9$; o $28$ y $2$.
+!! Dar la solución general sin imponer que el número de sellos sea no negativo.
+===
+P id=x15 n=5 b=NU t=2 sb=NU6 | Pares de subconjuntos
+Sea $X$ un conjunto de $n$ elementos. Cuenta los pares ordenados $(A,B)$ de subconjuntos de $X$ tales que: a) $A\cap B = \varnothing$; b) $A\cup B = X$; c) $A\subseteq B$ y $A\ne B$.
+> Decide, elemento a elemento, dónde puede estar.
+---
+**Idea.** Un par $(A,B)$ queda determinado por la situación de cada elemento: en $A$ y $B$, solo en $A$, solo en $B$ o en ninguno. Las decisiones son independientes (principio del producto).
+
+**a)** Cada elemento puede estar solo en $A$, solo en $B$ o en ninguno: $3^n$.
+
+**b)** Cada elemento debe estar en alguno: solo $A$, solo $B$ o ambos: $3^n$.
+
+**c)** $A\subseteq B$: cada elemento está en ambos, solo en $B$ o en ninguno: $3^n$ pares. Restamos los $2^n$ con $A = B$: $3^n-2^n$.
+
+**Conclusión.** a) $3^n$. b) $3^n$. c) $3^n-2^n$.
+!! Contar sumando sobre el tamaño de $B$ sin cerrar la suma $\sum\binom nk2^k = 3^n$.
+===
+P id=x16 n=5 b=NU t=4 sb=NU2 | Máximo común divisor y mínimo común múltiplo
+Halla todos los pares de naturales $a<b$ con $\operatorname{mcd}(a,b) = 15$ y $\operatorname{mcm}(a,b) = 450$.
+> Escribe $a = 15m$, $b = 15k$ con $\operatorname{mcd}(m,k) = 1$.
+---
+**Planteamiento.** $a = 15m$, $b = 15k$ con $m<k$ coprimos. Como $\operatorname{mcd}\cdot\operatorname{mcm} = ab$, $15\cdot450 = 225mk$, es decir $mk = 30$.
+
+**Desarrollo.** Factorizaciones de $30 = 2\cdot3\cdot5$ en dos factores coprimos con $m<k$: $(1,30)$, $(2,15)$, $(3,10)$, $(5,6)$.
+
+**Conclusión.** $(15,450)$, $(30,225)$, $(45,150)$, $(75,90)$.
+!! Olvidar que $m$ y $k$ deben ser coprimos, o usar $ab = \operatorname{mcd}\cdot\operatorname{mcm}$ sin justificarlo.
+===
+P id=x17 n=6 b=NU t=4 sb=NU3 m=estilo | Divisibilidad de n⁷ − n
+Demuestra que $n^7-n$ es divisible por $42$ para todo entero $n$.
+> $42 = 2\cdot3\cdot7$. Aplica el pequeño teorema de Fermat a cada primo.
+---
+**Planteamiento.** Como $2$, $3$ y $7$ son primos distintos, basta probar que cada uno divide a $n^7-n$.
+
+**Primo 7.** Por el pequeño teorema de Fermat (en la forma $n^p\equiv n\pmod p$, válida para todo $n$), $n^7\equiv n\pmod 7$.
+
+**Primo 3.** $n^3\equiv n\pmod3$, luego $n^7 = (n^3)^2n\equiv n^2\cdot n = n^3\equiv n\pmod 3$.
+
+**Primo 2.** $n^2\equiv n\pmod 2$, y por inducción $n^k\equiv n\pmod2$; en particular $n^7\equiv n$.
+
+**Conclusión.** $2$, $3$ y $7$ dividen a $n^7-n$ y son coprimos dos a dos, luego $42\mid n^7-n$.
+!! Usar $n^{p-1}\equiv1$ sin excluir el caso $p\mid n$, o concluir sin mencionar que los primos son coprimos.
+===
+P id=x18 n=6 b=AL t=19 sb=AL3 m=estilo | Determinante tridiagonal de orden n
+Calcula el determinante $D_n$ de orden $n$ con $5$ en la diagonal principal, $2$ en las dos diagonales contiguas y $0$ en el resto.
+> Desarrolla por la primera fila para obtener una recurrencia.
+---
+**Recurrencia.** Desarrollando por la primera fila y después el menor resultante por su primera columna:
+$$D_n = 5D_{n-1}-4D_{n-2}\qquad(n\ge3),\qquad D_1 = 5,\ D_2 = 25-4 = 21.$$
+
+**Resolución.** $r^2-5r+4 = 0$ da $r = 1$ y $r = 4$: $D_n = \alpha+\beta4^n$. Con $D_1$ y $D_2$: $\alpha+4\beta = 5$ y $\alpha+16\beta = 21$, luego $\beta = \frac43$, $\alpha = -\frac13$.
+$$D_n = \frac{4^{n+1}-1}{3}.$$
+Comprobación: $D_3 = 5\cdot21-4\cdot5 = 85 = \frac{256-1}3$. ✓ (Es la suma $1+4+\dots+4^n$.)
+
+**Conclusión.** $D_n = \dfrac{4^{n+1}-1}{3}$.
+!! Desarrollar el menor de forma incorrecta y obtener $D_n = 5D_{n-1}-2D_{n-2}$.
+===
+P id=x19 n=5 b=AL t=18 sb=AL3 | Raíces cuadradas de una matriz diagonal
+Halla todas las matrices $X\in M_2(\mathbb R)$ tales que $X^2 = \begin{pmatrix}4&0\\0&9\end{pmatrix}$.
+> Si $X^2 = A$, entonces $X$ conmuta con $A$.
+---
+**Planteamiento.** Sea $A = \operatorname{diag}(4,9)$. Como $XA = X\cdot X^2 = X^2\cdot X = AX$, $X$ conmuta con $A$.
+
+**Desarrollo.** Con $X = \begin{pmatrix}a&b\\c&d\end{pmatrix}$: $XA = \begin{pmatrix}4a&9b\\4c&9d\end{pmatrix}$ y $AX = \begin{pmatrix}4a&4b\\9c&9d\end{pmatrix}$. Igualando, $5b = 0$ y $5c = 0$: $X$ es diagonal. Entonces $X^2 = \operatorname{diag}(a^2,d^2)$, con $a^2 = 4$ y $d^2 = 9$.
+
+**Conclusión.** Hay cuatro soluciones: $X = \operatorname{diag}(\pm2,\pm3)$.
+!! Suponer de entrada que $X$ es diagonal sin justificarlo (con autovalores iguales habría infinitas soluciones).
+===
+P id=x20 n=5 b=AL t=17 sb=AL4 | Discusión de un sistema con parámetro
+Discute y resuelve según $a\in\mathbb R$:
+$$\begin{cases}ax+y+z = 1\\ x+ay+z = a\\ x+y+az = a^2\end{cases}$$
+> Calcula el determinante y aplica Rouché-Frobenius.
+---
+**Determinante.** $\det A = a^3-3a+2 = (a-1)^2(a+2)$.
+
+**Caso $a\ne1, -2$.** Rango $3$ = número de incógnitas: compatible determinado. Por Cramer:
+$$x = -\frac{a+1}{a+2},\qquad y = \frac1{a+2},\qquad z = \frac{(a+1)^2}{a+2}.$$
+
+**Caso $a = 1$.** Las tres ecuaciones son $x+y+z = 1$: $\operatorname{rg}A = \operatorname{rg}(A|B) = 1$, compatible indeterminado con dos parámetros: $(1-\lambda-\mu,\lambda,\mu)$.
+
+**Caso $a = -2$.** $\operatorname{rg}A = 2$. Sumando las tres ecuaciones: $0 = 1-2+4 = 3$, imposible: $\operatorname{rg}(A|B) = 3$, incompatible.
+
+**Conclusión.** Compatible determinado si $a\ne1,-2$; indeterminado si $a = 1$; incompatible si $a = -2$.
+!! Dividir por $a+2$ o $a-1$ sin haber estudiado antes esos casos.
+===
+P id=x21 n=6 b=AL t=11 sb=AL5 m=estilo | Un grupo de matrices
+Para $t\in\mathbb R$ sea $M(t) = \begin{pmatrix}1&t&t^2/2\\0&1&t\\0&0&1\end{pmatrix}$ y $G = \{M(t): t\in\mathbb R\}$. a) Demuestra que $M(s)M(t) = M(s+t)$. b) Prueba que $G$ es un grupo abeliano con el producto de matrices, isomorfo a $(\mathbb R,+)$. c) Calcula $M(t)^n$ y $M(t)^{-1}$.
+> Multiplica y usa $\frac{s^2}2+st+\frac{t^2}2 = \frac{(s+t)^2}2$.
+---
+**a)** El producto tiene diagonal $1$, entradas $(1,2)$ y $(2,3)$ iguales a $s+t$, y entrada $(1,3)$ igual a $\frac{t^2}2+st+\frac{s^2}2 = \frac{(s+t)^2}2$. Luego $M(s)M(t) = M(s+t)$.
+
+**b)** Por a), $G$ es cerrado; el producto de matrices es asociativo; $M(0) = I$ es el neutro; $M(-t)$ es el inverso de $M(t)$; y $M(s)M(t) = M(s+t) = M(t)M(s)$. La aplicación $\varphi:(\mathbb R,+)\to G$, $\varphi(t) = M(t)$, es un homomorfismo por a), sobreyectiva por definición e inyectiva ($M(t) = I\Rightarrow t = 0$): es un isomorfismo.
+
+**c)** Por inducción con a), $M(t)^n = M(nt)$, y $M(t)^{-1} = M(-t)$.
+
+**Conclusión.** $G\cong(\mathbb R,+)$, $M(t)^n = M(nt)$ y $M(t)^{-1} = M(-t)$.
+!! Olvidar comprobar que el inverso está en $G$ o la inyectividad del isomorfismo.
+===
+P id=x22 n=5 b=AL t=12 sb=AL5 | La derivación en los polinomios
+Sea $P_n$ el espacio de polinomios reales de grado menor o igual que $n\ge1$ y $D:P_n\to P_n$, $D(p) = p'$. a) Prueba que $D$ es lineal y escribe su matriz en la base $\{1,x,\dots,x^n\}$. b) Halla su núcleo y su imagen y comprueba el teorema de la dimensión. c) ¿Es $D$ diagonalizable?
+> Calcula $D^{n+1}$.
+---
+**a)** $(\alpha p+\beta q)' = \alpha p'+\beta q'$. Como $D(x^k) = kx^{k-1}$, la columna $k$ de la matriz tiene un $k$ en la fila $k-1$ y ceros en el resto: matriz triangular superior estricta.
+
+**b)** $\ker D$ = polinomios constantes, dimensión $1$. $\operatorname{Im}D = P_{n-1}$ (todo polinomio de grado $\le n-1$ es derivada de uno de grado $\le n$), dimensión $n$. Y $1+n = \dim P_n$. ✓
+
+**c)** La matriz es triangular con diagonal nula: el único autovalor es $0$, con multiplicidad algebraica $n+1$. Su multiplicidad geométrica es $\dim\ker D = 1<n+1$. No es diagonalizable. (Además $D^{n+1} = 0$ y $D\ne0$: un endomorfismo nilpotente no nulo nunca es diagonalizable.)
+
+**Conclusión.** $\ker D$ = constantes, $\operatorname{Im}D = P_{n-1}$, y $D$ no es diagonalizable.
+!! Afirmar que es diagonalizable por tener «todos los autovalores reales» sin comparar multiplicidades.
+===
+P id=x23 n=6 b=AL t=13 sb=AL1 m=estilo | Cuártica con raíces enteras en progresión aritmética
+Halla $a$ y $b$ para que las raíces de $x^4-10x^3+ax^2+bx+24$ sean enteras y estén en progresión aritmética.
+> Escribe las raíces como $c-3d$, $c-d$, $c+d$, $c+3d$.
+---
+**Planteamiento.** Raíces $c-3d$, $c-d$, $c+d$, $c+3d$. Por Cardano-Vieta, la suma es $4c = 10$, luego $c = \frac52$, y el producto es
+$$\left(c^2-9d^2\right)\left(c^2-d^2\right) = 24.$$
+
+**Desarrollo.** Con $u = d^2$: $\left(\frac{25}4-9u\right)\left(\frac{25}4-u\right) = 24\iff144u^2-1000u+241 = 0$, de donde $u = \frac14$ o $u = \frac{241}{36}$. Para que las raíces sean enteras, $c\pm d$ deben ser enteros: solo sirve $d = \pm\frac12$ (con $u = \frac{241}{36}$, $d$ es irracional). Las raíces son $1, 2, 3, 4$.
+
+**Coeficientes.** $(x-1)(x-2)(x-3)(x-4) = x^4-10x^3+35x^2-50x+24$.
+
+**Conclusión.** $a = 35$, $b = -50$, con raíces $1, 2, 3, 4$. (Sin exigir raíces enteras habría una segunda solución con $d^2 = \frac{241}{36}$.)
+!! Parametrizar como $c-d, c, c+d, c+2d$, que complica la simetría, o no descartar la segunda solución.
+===
+P id=x24 n=5 b=AL t=14 sb=AL2 | Suma de cuadrados igual a la suma
+a) Halla las soluciones enteras de $x^2+y^2+z^2 = x+y+z$. b) Halla las soluciones reales de $x^2+y^2+z^2+3 = 2(x+y+z)$.
+> Para enteros, $k^2-k = k(k-1)\ge0$.
+---
+**a)** La ecuación es $\sum(x^2-x) = 0$. Para un entero $k$, $k(k-1)\ge0$ (producto de enteros consecutivos, nunca de signos opuestos), con igualdad si y solo si $k\in\{0,1\}$. Una suma de términos no negativos es nula si y solo si cada uno lo es: $x, y, z\in\{0,1\}$. Hay $2^3 = 8$ soluciones.
+
+**b)** Completando cuadrados: $(x-1)^2+(y-1)^2+(z-1)^2 = 0$. En $\mathbb R$, solo $x = y = z = 1$.
+
+**Conclusión.** a) Las $8$ ternas con coordenadas $0$ o $1$. b) $(1,1,1)$.
+!! En a), buscar soluciones a tanteo sin probar que no hay más.
+===
+P id=x25 n=5 b=AN t=25 sb=AN2 | Puntos fijos
+a) Sea $f:[0,1]\to[0,1]$ continua. Demuestra que existe $c\in[0,1]$ con $f(c) = c$. b) Demuestra que la ecuación $\cos x = x$ tiene exactamente una solución real.
+> Aplica Bolzano a $g(x) = f(x)-x$.
+---
+**a)** Sea $g(x) = f(x)-x$, continua en $[0,1]$. $g(0) = f(0)\ge0$ y $g(1) = f(1)-1\le0$. Si alguno es $0$, ya está. Si no, $g(0)>0>g(1)$ y, por el teorema de Bolzano, existe $c\in(0,1)$ con $g(c) = 0$.
+
+**b)** Sea $h(x) = \cos x-x$, continua y derivable en $\mathbb R$. Fuera de $[-1,1]$ no hay soluciones porque $|\cos x|\le1$. $h(0) = 1>0$ y $h(1) = \cos1-1<0$: por Bolzano hay una raíz en $(0,1)$. En $[-1,0]$, $h(x) = \cos x - x\ge\cos 1>0$, sin raíces. Además $h'(x) = -\sin x-1\le0$, y solo se anula en puntos aislados, así que $h$ es estrictamente decreciente: la raíz es única.
+
+**Conclusión.** a) $f$ tiene un punto fijo. b) $\cos x = x$ tiene una única solución, en $(0,1)$.
+!! Aplicar Bolzano directamente a $f$ en lugar de a la función auxiliar, o probar existencia sin unicidad.
+===
+P id=x26 n=5 b=AN t=27 sb=AN4 | Límite exponencial con Taylor
+Halla $a$ para que $\displaystyle\lim_{x\to0}\left(\cos x+ax^2\right)^{1/x^2} = e$.
+> Es una indeterminación $1^\infty$: $\lim f^g = e^{\lim g(f-1)}$.
+> $\cos x = 1-\frac{x^2}2+o(x^2)$.
+---
+**Planteamiento.** La base tiende a $1$ y el exponente a $\infty$. Como $\ln(1+t)\sim t$ cuando $t\to0$,
+$$\lim\left(\cos x+ax^2\right)^{1/x^2} = \exp\left(\lim_{x\to0}\frac{\cos x+ax^2-1}{x^2}\right).$$
+
+**Desarrollo.** Por Taylor, $\cos x - 1 = -\frac{x^2}2+o(x^2)$, luego
+$$\frac{\cos x+ax^2-1}{x^2} = a-\frac12+\frac{o(x^2)}{x^2}\to a-\frac12.$$
+
+**Conclusión.** El límite es $e^{a-1/2}$, que vale $e$ si y solo si $a = \frac32$.
+!! Sustituir $\cos x$ por $1$ antes de tiempo y concluir que el límite es $1$.
+===
+P id=x27 n=6 b=AN t=29 sb=AN6 m=estilo | Límite de una raíz de factoriales
+Calcula $\displaystyle\lim_{n\to\infty}\frac1n\sqrt[n]{\frac{(2n)!}{n!}}$.
+> Toma logaritmos y busca una suma de Riemann de $\ln(1+x)$ en $[0,1]$.
+---
+**Planteamiento.** Sea $L_n$ la expresión. $\dfrac{(2n)!}{n!\,n^n} = \prod_{k=1}^n\dfrac{n+k}{n} = \prod_{k=1}^n\left(1+\frac kn\right)$, luego
+$$\ln L_n = \frac1n\sum_{k=1}^n\ln\left(1+\frac kn\right).$$
+
+**Desarrollo.** Es una suma de Riemann de $f(x) = \ln(1+x)$, continua en $[0,1]$, con la partición regular de $n$ intervalos y los extremos derechos. Por tanto
+$$\ln L_n\to\int_0^1\ln(1+x)\,dx = \big[(1+x)\ln(1+x)-x\big]_0^1 = 2\ln2-1.$$
+
+**Conclusión.** Por la continuidad de la exponencial, $L_n\to e^{2\ln 2-1} = \dfrac4e$.
+!! No decir qué función, intervalo y partición forman la suma de Riemann.
+===
+P id=x28 n=6 b=AN t=8 sb=AN6 | Series con logaritmos
+Estudia la convergencia de $\displaystyle\sum_{n\ge2}\frac{1}{n\ln n}$ y de $\displaystyle\sum_{n\ge2}\frac{1}{n(\ln n)^2}$.
+> Criterio de la integral con el cambio $u = \ln x$.
+---
+**Hipótesis.** $f(x) = \frac1{x(\ln x)^p}$ ($p = 1, 2$) es continua, positiva y decreciente en $[2,\infty)$ (producto de factores positivos crecientes en el denominador). Se puede aplicar el criterio de la integral.
+
+**Primera serie.** $\int_2^M\frac{dx}{x\ln x} = \ln(\ln M)-\ln(\ln 2)\to\infty$: diverge.
+
+**Segunda serie.** $\int_2^M\frac{dx}{x(\ln x)^2} = \frac1{\ln2}-\frac1{\ln M}\to\frac1{\ln 2}$: converge.
+
+**Conclusión.** $\sum\frac1{n\ln n}$ diverge y $\sum\frac{1}{n(\ln n)^2}$ converge.
+!! Aplicar el criterio de la integral sin comprobar que $f$ es positiva y decreciente.
+===
+P id=x29 n=6 b=AN t=26 sb=AN3 m=estilo | Número de raíces según un parámetro
+Discute, según $m\in\mathbb R$, el número de soluciones reales distintas de $3x^4-4x^3-12x^2+m = 0$.
+> Estudia $f(x) = 3x^4-4x^3-12x^2$ y córtala con la recta $y = -m$.
+---
+**Planteamiento.** Las soluciones son las abscisas de los cortes de $y = f(x) = 3x^4-4x^3-12x^2$ con la recta horizontal $y = -m$.
+
+**Estudio de $f$.** $f'(x) = 12x(x-2)(x+1)$: decrece en $(-\infty,-1)$, crece en $(-1,0)$, decrece en $(0,2)$ y crece en $(2,\infty)$. Mínimos $f(-1) = -5$ y $f(2) = -32$; máximo relativo $f(0) = 0$; $f\to+\infty$ en $\pm\infty$. Por continuidad y monotonía en cada tramo, cada valor intermedio se alcanza una sola vez en cada tramo.
+
+**Discusión** (con $k = -m$):
+- $k<-32$ ($m>32$): ninguna.
+- $k = -32$ ($m = 32$): una ($x = 2$, doble).
+- $-32<k<-5$ ($5<m<32$): dos.
+- $k = -5$ ($m = 5$): tres ($x=-1$ doble y dos más).
+- $-5<k<0$ ($0<m<5$): cuatro.
+- $k = 0$ ($m = 0$): tres ($x = 0$ doble y dos más).
+- $k>0$ ($m<0$): dos.
+
+**Conclusión.** $0$ soluciones si $m>32$; $1$ si $m = 32$; $2$ si $5<m<32$ o $m<0$; $3$ si $m = 5$ o $m = 0$; $4$ si $0<m<5$.
+!! Olvidar los casos frontera, donde una raíz es doble.
+===
+P id=x30 n=6 b=AN t=29 sb=AN7 m=estilo | Ecuación integral de segundo orden
+Halla las funciones continuas $f:\mathbb R\to\mathbb R$ tales que $f(x) = x+\displaystyle\int_0^x(x-t)f(t)\,dt$ para todo $x$.
+> Separa $\int_0^x(x-t)f(t)\,dt = x\int_0^xf - \int_0^x tf(t)\,dt$ y deriva dos veces, justificándolo.
+---
+**Derivabilidad.** $f(x) = x+x\int_0^xf(t)\,dt-\int_0^xtf(t)\,dt$. Como $f$ es continua, por el teorema fundamental del cálculo las dos integrales son derivables, luego $f$ es derivable y
+$$f'(x) = 1+\int_0^xf+xf(x)-xf(x) = 1+\int_0^xf(t)\,dt.$$
+De nuevo por el TFC, $f'$ es derivable y $f'' = f$, con $f(0) = 0$ y $f'(0) = 1$.
+
+**Resolución.** Las soluciones de $f'' = f$ son $f(x) = Ae^x+Be^{-x}$. Con las condiciones iniciales, $A+B = 0$ y $A-B = 1$: $f(x) = \frac{e^x-e^{-x}}2 = \sinh x$.
+
+**Comprobación.** $\int_0^x(x-t)\sinh t\,dt = \sinh x-x$ (por partes), y $x+\sinh x-x = \sinh x$. ✓
+
+**Conclusión.** La única solución es $f(x) = \sinh x$.
+!! Derivar dentro de la integral sin separar la $x$ del integrando, o no justificar la segunda derivada.
+===
+P id=x31 n=6 b=AN t=31 sb=AN5 | Área encerrada por la astroide
+Calcula el área encerrada por la curva $x^{2/3}+y^{2/3} = 1$.
+> Parametriza $x = \cos^3t$, $y = \sin^3t$ y usa $A = \frac12\oint(x\,dy - y\,dx)$ o la simetría.
+---
+**Planteamiento.** La curva es simétrica respecto de los dos ejes: $A = 4A_1$, con $A_1$ el área en el primer cuadrante, $A_1 = \int_0^1 y\,dx$. Parametrizamos $x = \cos^3t$, $y = \sin^3t$, $t\in[0,\frac\pi2]$ (al ir $x$ de $0$ a $1$, $t$ va de $\frac\pi2$ a $0$).
+
+**Desarrollo.** $dx = -3\cos^2t\sin t\,dt$:
+$$A_1 = \int_{\pi/2}^{0}\sin^3t\,(-3\cos^2t\sin t)\,dt = 3\int_0^{\pi/2}\sin^4t\cos^2t\,dt.$$
+Con $\int_0^{\pi/2}\sin^4t\cos^2t\,dt = \int_0^{\pi/2}\sin^4t\,dt-\int_0^{\pi/2}\sin^6t\,dt = \frac{3\pi}{16}-\frac{5\pi}{32} = \frac{\pi}{32}$ (fórmulas de Wallis), $A_1 = \frac{3\pi}{32}$.
+
+**Conclusión.** $A = \dfrac{3\pi}{8}$.
+!! Equivocarse en el sentido de recorrido y obtener un área negativa sin interpretarlo.
+===
+P id=x32 n=5 b=AN t=25 sb=AN1 | Sucesión recurrente con raíces
+Sea $x_1 = 0$ y $x_{n+1} = \sqrt{2+x_n}$. Demuestra que $(x_n)$ es convergente y calcula su límite.
+> Prueba por inducción que $0\le x_n<2$ y que es creciente.
+---
+**Acotación.** Por inducción, $0\le x_n<2$: es cierto para $n = 1$, y si $0\le x_n<2$, entonces $x_{n+1} = \sqrt{2+x_n}\in[\sqrt2, 2)$.
+
+**Monotonía.** $x_{n+1}^2-x_n^2 = 2+x_n-x_n^2 = (2-x_n)(1+x_n)>0$, y como son no negativos, $x_{n+1}>x_n$.
+
+**Límite.** Creciente y acotada: converge (teorema de la convergencia monótona) a un $L\in[0,2]$. Tomando límites en $x_{n+1}^2 = 2+x_n$ (continuidad): $L^2 = L+2$, con soluciones $2$ y $-1$; como $L\ge0$, $L = 2$.
+
+**Conclusión.** $x_n\to2$.
+!! Calcular el límite de la ecuación de punto fijo sin haber probado antes que la sucesión converge.
+===
+P id=x33 n=6 b=GE t=38 sb=GE1 m=estilo | Triángulo interior formado por cevianas
+En un triángulo $ABC$, los puntos $M$, $N$ y $P$ están en los lados $AB$, $BC$ y $CA$ con $AM = \frac14AB$, $BN = \frac14BC$ y $CP = \frac14CA$. Las cevianas $AN$, $BP$ y $CM$ forman un triángulo interior. Calcula la razón entre su área y la de $ABC$.
+> La razón de áreas es afín: puedes tomar $A(0,0)$, $B(1,0)$, $C(0,1)$.
+---
+**Planteamiento.** Las afinidades conservan razones de áreas y la razón en que un punto divide un segmento, así que basta resolver el caso $A(0,0)$, $B(1,0)$, $C(0,1)$, de área $\frac12$. Entonces $M = (\frac14,0)$, $N = (\frac34,\frac14)$, $P = (0,\frac34)$.
+
+**Intersecciones.**
+- $AN\cap BP$: $AN$: $(3s, s)/4$; $BP$: $(1-w, \frac34w)$. Resolviendo, $Q_1 = \left(\frac9{13},\frac3{13}\right)$.
+- $BP\cap CM$: $Q_2 = \left(\frac1{13},\frac9{13}\right)$.
+- $CM\cap AN$: $Q_3 = \left(\frac3{13},\frac1{13}\right)$.
+
+**Área.** Con la fórmula del determinante,
+$$[Q_1Q_2Q_3] = \frac12\left|\det\begin{pmatrix}\frac{1}{13}-\frac{9}{13} & \frac{9}{13}-\frac{3}{13}\\ \frac{3}{13}-\frac{9}{13} & \frac{1}{13}-\frac{3}{13}\end{pmatrix}\right| = \frac12\cdot\frac{|16+36|}{169} = \frac{2}{13}.$$
+
+**Conclusión.** La razón es $\dfrac{2/13}{1/2} = \dfrac{4}{13}$.
+!! Usar un triángulo equilátero «por comodidad» sin justificar que la razón es invariante afín.
+===
+P id=x34 n=4 b=GE t=40 sb=GE1 | Potencia de un punto
+Desde un punto $P$ exterior a una circunferencia de radio $8$ se trazan dos secantes. La primera corta a la circunferencia en $A$ y $B$ con $PA = 4$ y $AB = 5$. La segunda la corta en $C$ y $D$ con $PC = 3$. Calcula $CD$ y la distancia de $P$ al centro.
+> $PA\cdot PB = PC\cdot PD = d^2-R^2$.
+---
+**Potencia.** $\operatorname{Pot}(P) = PA\cdot PB = 4\cdot 9 = 36$.
+
+**Segunda secante.** $PC\cdot PD = 36\Rightarrow PD = 12$, luego $CD = 12-3 = 9$.
+
+**Distancia al centro.** $d^2-R^2 = 36\Rightarrow d^2 = 100$, $d = 10$.
+
+**Conclusión.** $CD = 9$ y $P$ dista $10$ del centro.
+!! Usar $PA\cdot AB$ en lugar de $PA\cdot PB$.
+===
+P id=x35 n=4 b=GE t=51 sb=GE2 | Vértices de un cuadrado por giros
+Un cuadrado tiene centro $O(2,1)$ y un vértice en $A(5,2)$. Halla los otros tres vértices y su área.
+> Los vértices se obtienen girando $\vec{OA}$ $90^\circ$ alrededor de $O$.
+---
+**Planteamiento.** Los vértices de un cuadrado se obtienen del primero mediante giros de $90^\circ$, $180^\circ$ y $270^\circ$ con centro en $O$. El giro de $90^\circ$ lleva $(u,v)$ a $(-v,u)$.
+
+**Desarrollo.** $\vec{OA} = (3,1)$. Girando: $(-1,3)$, $(-3,-1)$, $(1,-3)$. Los vértices son $A(5,2)$, $B(1,4)$, $C(-1,0)$, $D(3,-2)$.
+
+**Área.** La semidiagonal mide $|\vec{OA}| = \sqrt{10}$, la diagonal $2\sqrt{10}$ y el área $\frac{d^2}2 = 20$. Comprobación: $AB = \sqrt{16+4} = \sqrt{20}$. ✓
+
+**Conclusión.** $B(1,4)$, $C(-1,0)$, $D(3,-2)$; área $20$.
+!! Girar respecto del origen en lugar de respecto del centro del cuadrado.
+===
+P id=x36 n=5 b=GE t=44 sb=GE3 | Distancia entre rectas que se cruzan
+Sean $r: (1,0,0)+t(1,1,0)$ y $s: (0,0,3)+u(1,-1,1)$. Comprueba que se cruzan, calcula su distancia y los pies de la perpendicular común.
+> $d = \frac{|[\vec{PQ},\vec u,\vec v]|}{|\vec u\times\vec v|}$.
+---
+**Posición.** $\vec u\times\vec v = (1,1,0)\times(1,-1,1) = (1,-1,-2)\ne\vec0$: no son paralelas. Con $\vec{PQ} = (-1,0,3)$, $[\vec{PQ},\vec u,\vec v] = \vec{PQ}\cdot(\vec u\times\vec v) = -1-6 = -7\ne0$: no son coplanarias, se cruzan.
+
+**Distancia.** $d = \dfrac{7}{\sqrt6} = \dfrac{7\sqrt6}6$.
+
+**Perpendicular común.** Con $R = (1+t, t, 0)$ y $S = (u, -u, 3+u)$, imponemos $\vec{RS}\perp\vec u$ y $\vec{RS}\perp\vec v$: $t = -\frac12$, $u = -\frac23$. Pies: $R\left(\frac12,-\frac12,0\right)$ y $S\left(-\frac23,\frac23,\frac73\right)$; $|\vec{RS}| = \frac76\sqrt6$. ✓
+
+**Conclusión.** Se cruzan a distancia $\frac{7\sqrt6}{6}$; la perpendicular común une $\left(\frac12,-\frac12,0\right)$ y $\left(-\frac23,\frac23,\frac73\right)$.
+!! No comprobar que se cruzan antes de aplicar la fórmula (si se cortan, la distancia es $0$).
+===
+P id=x37 n=5 b=GE t=53 sb=GE4 | La escalera que resbala
+Un segmento de longitud $2\ell$ se mueve con un extremo en el eje $OX$ y el otro en el eje $OY$. a) Halla el lugar geométrico de su punto medio. b) Halla el lugar del punto que divide el segmento en la razón $1:2$ desde el extremo de $OX$.
+> Extremos $A(a,0)$, $B(0,b)$ con $a^2+b^2 = 4\ell^2$.
+---
+**Planteamiento.** $A(a,0)$, $B(0,b)$ con $a^2+b^2 = 4\ell^2$; $a$ y $b$ recorren todos los valores compatibles.
+
+**a)** $M = \left(\frac a2,\frac b2\right)$, luego $a = 2x$, $b = 2y$ y $x^2+y^2 = \ell^2$. Recíprocamente, para todo punto de esa circunferencia, $A(2x,0)$ y $B(0,2y)$ dan un segmento válido. El lugar es la circunferencia de centro $O$ y radio $\ell$.
+
+**b)** $P = A+\frac13(B-A) = \left(\frac{2a}3,\frac b3\right)$: $a = \frac{3x}2$, $b = 3y$, y
+$$\frac{9x^2}{4}+9y^2 = 4\ell^2\iff\frac{x^2}{(4\ell/3)^2}+\frac{y^2}{(2\ell/3)^2} = 1.$$
+Es una elipse de semiejes $\frac{4\ell}3$ y $\frac{2\ell}3$ (todo punto se alcanza, como en a)).
+
+**Conclusión.** a) Circunferencia $x^2+y^2 = \ell^2$. b) Elipse $\frac{9x^2}{16\ell^2}+\frac{9y^2}{4\ell^2} = 1$.
+!! Dar la ecuación sin comprobar el recíproco (que todos sus puntos se alcanzan).
+===
+P id=x38 n=6 b=GE t=54 sb=GE4 m=estilo | Ver una parábola en ángulo recto
+Halla el lugar geométrico de los puntos desde los que se trazan a la parábola $y^2 = 4px$ ($p>0$) dos tangentes perpendiculares.
+> La recta $y = mx+\frac pm$ es tangente a la parábola para todo $m\ne0$.
+---
+**Tangentes.** Sustituyendo $y = mx+n$ en $y^2 = 4px$ y exigiendo discriminante nulo se obtiene $n = \frac pm$ ($m\ne0$). La recta vertical no es tangente salvo $x = 0$, que solo se cruza con tangentes horizontales, inexistentes.
+
+**Condición.** Por $(x_0,y_0)$ pasa la tangente de pendiente $m$ si $y_0 = mx_0+\frac pm$, es decir, $x_0m^2-y_0m+p = 0$. Si $x_0\ne0$, es una ecuación de segundo grado en $m$ y el producto de las raíces es $\frac p{x_0}$. Las tangentes son perpendiculares si $m_1m_2 = -1$:
+$$\frac p{x_0} = -1\iff x_0 = -p.$$
+Con $x_0 = -p$ el discriminante es $y_0^2+4p^2>0$: siempre hay dos tangentes reales.
+
+**Conclusión.** El lugar es la directriz $x = -p$.
+!! No comprobar que para cada punto de la directriz existen efectivamente dos tangentes reales.
+===
+P id=x39 n=6 b=GE t=49 sb=GE5 | Clasificar una cónica y hallar sus elementos
+Clasifica la cónica $5x^2+4xy+8y^2-32x-56y+80 = 0$ y halla su centro, sus ejes y sus semiejes.
+> La matriz de la parte cuadrática es $\begin{pmatrix}5&2\\2&8\end{pmatrix}$.
+---
+**Clasificación.** Los autovalores de $\begin{pmatrix}5&2\\2&8\end{pmatrix}$ son $4$ y $9$ (traza $13$, determinante $36$): ambos positivos, género elipse.
+
+**Centro.** Anulando las derivadas parciales: $10x+4y = 32$ y $4x+16y = 56$, de donde $(x,y) = (2,3)$. Valor en el centro: $f(2,3) = -36$.
+
+**Forma reducida.** En los ejes de los autovectores, $4X^2+9Y^2-36 = 0$, es decir, $\dfrac{X^2}9+\dfrac{Y^2}4 = 1$: elipse real (no degenerada ni imaginaria).
+
+**Ejes.** El eje mayor (autovalor $4$) tiene dirección $(-2,1)$: $x+2y = 8$. El menor (autovalor $9$), dirección $(1,2)$: $2x-y = 1$.
+
+**Conclusión.** Elipse de centro $(2,3)$, semiejes $3$ y $2$, ejes $x+2y = 8$ (mayor) y $2x-y = 1$ (menor).
+!! Asociar el semieje mayor al autovalor mayor (es al revés: $\frac{36}{4} = 9$).
+===
+P id=x40 n=4 b=GE t=45 sb=GE6 | Volumen y área del toro
+Un círculo de radio $r$ gira alrededor de una recta de su plano que dista $R>r$ de su centro. Calcula el volumen y el área del toro engendrado.
+> Teoremas de Pappus-Guldin: el centroide del círculo y de la circunferencia es el centro.
+---
+**Planteamiento.** El círculo no corta al eje ($R>r$). Su centroide está a distancia $R$ del eje y recorre una circunferencia de longitud $2\pi R$.
+
+**Volumen.** Primer teorema de Pappus-Guldin: $V = 2\pi R\cdot\pi r^2 = 2\pi^2Rr^2$.
+
+**Área.** Segundo teorema, con la circunferencia de longitud $2\pi r$: $S = 2\pi R\cdot2\pi r = 4\pi^2Rr$.
+
+**Conclusión.** $V = 2\pi^2Rr^2$ y $S = 4\pi^2Rr$.
+!! Aplicar Pappus sin comprobar que la figura no corta al eje de giro.
+===
+P id=x41 n=5 b=GE t=45 sb=GE6 | Cono de volumen máximo inscrito en una esfera
+Halla las dimensiones del cono circular recto de volumen máximo inscrito en una esfera de radio $R$.
+> Si $h$ es la altura, el radio de la base cumple $r^2 = h(2R-h)$.
+---
+**Planteamiento.** Con el vértice en el polo de la esfera y altura $h\in(0,2R)$, el teorema de la altura en el triángulo rectángulo inscrito da $r^2 = h(2R-h)$. Entonces
+$$V(h) = \frac\pi3r^2h = \frac\pi3(2Rh^2-h^3).$$
+
+**Optimización.** $V'(h) = \frac\pi3(4Rh-3h^2) = 0\iff h = \frac{4R}3$ en $(0,2R)$. $V'>0$ antes y $V'<0$ después: máximo absoluto (además $V\to0$ en los extremos).
+
+**Dimensiones.** $h = \frac{4R}3$, $r^2 = \frac{4R}3\cdot\frac{2R}3 = \frac{8R^2}9$, $r = \frac{2\sqrt2}{3}R$, y $V_{\max} = \frac{32\pi R^3}{81}$.
+
+**Conclusión.** Altura $\frac43R$, radio $\frac{2\sqrt2}3R$; ocupa $\frac{8}{27}$ del volumen de la esfera.
+!! No justificar que el punto crítico es máximo absoluto en el intervalo.
+===

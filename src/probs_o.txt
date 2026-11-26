@@ -156,6 +156,30 @@ Como los $q_i$ están en intervalos abiertos disjuntos y ordenados, $0<q_1<q_2<\
 **Conclusión.** Los $q_i$ obtenidos cumplen lo pedido. $\blacksquare$
 !! Aplicar el teorema del valor medio una sola vez en $[0,1]$ y tomar $q_1=\dots=q_n$: el enunciado exige que sean distintos.
 ===
+P id=m06c2 n=6 b=GE t=45 sb=GE6 m=oficial ref=2006-C2 src=Murcia-2006 | Murcia 2006 · Cuestión 2
+Un sólido está formado por dos conos rectos de base circular iguales que comparten la base. Cortar el sólido por un plano paralelo a una generatriz de forma que la sección obtenida tenga área máxima.
+> Un plano paralelo a una generatriz corta a un cono en una parábola. Comprueba que el plano es también paralelo a una generatriz del otro cono.
+> El área de un segmento parabólico es $\tfrac23$ de la cuerda por la altura (Arquímedes).
+---
+**Planteamiento.** Sean $R$ el radio de la base común, $h$ la altura de cada cono y $g = \sqrt{R^2+h^2}$ la generatriz. Tomamos la base en el plano $z = 0$, centrada en el origen, y los vértices en $V_1(0,0,h)$ y $V_2(0,0,-h)$. La generatriz de $V_1$ que pasa por $(R,0,0)$ tiene dirección $(-R,0,h)$; por simetría podemos suponer que es la elegida. Los planos paralelos a ella y perpendiculares al plano $y=0$ (los demás se obtienen girando el sólido) son
+$$\pi_d:\ hx + Rz = hd,\qquad -R<d<R,$$
+que cortan a la base en la cuerda $x = d$, de longitud $2\sqrt{R^2-d^2}$.
+
+**Las dos secciones son parabólicas.** La generatriz del cono inferior que une $V_2(0,0,-h)$ con $(-R,0,0)$ tiene dirección $(-R,0,h)$, la misma que la generatriz elegida del cono superior. Por tanto, $\pi_d$ es paralelo a una generatriz de cada cono y corta a cada uno en un arco de parábola. La sección es la unión de dos segmentos parabólicos con la misma cuerda (la de la base común), uno en cada cono.
+
+**Alturas de los segmentos.** Por simetría respecto de $y = 0$, el vértice de cada parábola está en ese plano.
+- Cono superior ($z\ge0$, es decir, $x\le d$): la generatriz $z = h\left(1+\frac xR\right)$, $x<0$, corta a $\pi_d$ en $x = \frac{d-R}{2}$, $z = \frac{h(d+R)}{2R}$. Su distancia a la cuerda, medida en el plano, es $\frac{d+R}{2}\sqrt{1+\frac{h^2}{R^2}} = \frac{(R+d)\,g}{2R}$.
+- Cono inferior ($z<0$, $x>d$): la generatriz $z = h\left(\frac xR-1\right)$, $x>0$, corta a $\pi_d$ en $x = \frac{R+d}{2}$; su distancia a la cuerda es $\frac{(R-d)\,g}{2R}$.
+
+**Área de la sección.** Por la fórmula de Arquímedes,
+$$S(d) = \frac23\cdot 2\sqrt{R^2-d^2}\left[\frac{(R+d)g}{2R}+\frac{(R-d)g}{2R}\right] = \frac43\,g\sqrt{R^2-d^2}.$$
+
+**Máximo.** $S$ es continua en $[-R,R]$, se anula en los extremos y $\sqrt{R^2-d^2}$ es máxima si y solo si $d = 0$ (también $S'(d) = -\frac43 g\frac{d}{\sqrt{R^2-d^2}}$ se anula solo en $d=0$, donde cambia de signo de $+$ a $-$).
+
+**Conclusión.** La sección de área máxima se obtiene con el plano paralelo a la generatriz que pasa por el centro de la base común. Está formada por dos segmentos parabólicos iguales, de cuerda $2R$ y altura $\frac g2$, y su área es
+$$S_{\max} = \frac43\,R\sqrt{R^2+h^2}.$$
+!! No ver que el plano también es paralelo a una generatriz del segundo cono (la sección no es una parábola y una hipérbola) o medir la altura del segmento en vertical en lugar de dentro del plano.
+===
 P id=m06c3 n=6 b=AL t=13 sb=AL1 m=oficial ref=2006-C3 src=Murcia-2006 | Murcia 2006 · Cuestión 3
 **a)** Sea $m$ una raíz entera del polinomio $P(x)$ de coeficientes enteros. Caracterizar las raíces enteras del polinomio $P(x)\pm p$, siendo $p$ primo.
 **b)** Sea $P(x)=0$ una ecuación polinómica de séptimo grado con coeficientes enteros tal que $P(4) = 11$ y $P(8) = 7$. Determinar la solución entera en caso de que exista. ¿Es irrelevante el grado del polinomio? Justificar la respuesta.

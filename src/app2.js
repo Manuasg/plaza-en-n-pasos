@@ -47,7 +47,7 @@ function bulletHTML(r, tR, b){
   return `<div class="bullet" role="img" aria-label="Nivel ${lvTxt(r)} de 7; objetivo ${lvTxt(tR)}"><i style="width:${v/max*100}%;background:${bcol(b)}"></i><b style="left:calc(${t/max*100}% - 1px)"></b></div>`;
 }
 /* Comentarios y erratas: abren una incidencia del repositorio con el ID del problema ya escrito (sin servidor). */
-const FB_REPO='https://github.com/Manuasg/escalera-murcia/issues/new';
+const FB_REPO='https://github.com/Manuasg/plaza-en-n-pasos/issues/new';
 const fbUrl=(title,body)=>FB_REPO+'?title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body);
 const errataUrl=p=>fbUrl('Errata en '+p.id+' · '+p.ti, `**Problema:** ${p.id} (${p.ti})\n**Dónde está el error:** enunciado / pista / solución / rúbrica (borra lo que no aplique)\n\n**Qué dice ahora:**\n\n**Qué debería decir:**\n`);
 const comentUrl=()=>fbUrl('Comentario sobre la web', `**Qué estabas haciendo:**\n\n**Qué ha pasado o qué echas en falta:**\n\n**Dispositivo (móvil, tablet, ordenador):**\n`);
@@ -295,11 +295,26 @@ V.sub = (id) => {
   </div>
   <section class="card"><div class="card-h"><h2>Problemas de este subbloque</h2><span class="sub">Primero los de Murcia</span></div>${probList(ps)}</section>`;
 };
+/* ---------- Probabilidad de salir ---------- */
+const SALCLS={'alta':'st-ok','media':'st-warn','baja':'st-bad','muy baja':'st-bad'};
+const salChip = p => { const s=salida(p); return `<span class="pill-status ${SALCLS[s.k]}" title="Probabilidad estimada de que caiga un ejercicio así en Murcia">Salir: ${s.k}</span>${s.last&&!p.up?'<span class="chip" title="Se parece poco a lo que cae en Murcia: hazlo cuando domines los demás">Para el final</span>':''}`; };
+function salCard(p){
+  const s=salida(p), sb=s.sub, sub=subById(p.sb);
+  const why=[]; why.push(`un ejercicio de ${p.sb} (${esc(sub.name.toLowerCase())}) cae en torno al <b>${Math.round(sb.pe*100)} %%</b> de los exámenes de Murcia`.replace('%%','%'));
+  why.push(sb.years.length?`en Murcia ha caído en ${sb.years.join(', ')}`:'en Murcia no ha caído nunca');
+  why.push(`en otras comunidades, ${sb.oc} de ${OTRAS_N} problemas oficiales (20 convocatorias)`);
+  const est = p.m==='oficial'?'es un problema oficial de Murcia':p.m==='gemelo'?'es un gemelo de un problema de Murcia':p.m==='estilo'?'está escrito con el estilo de Murcia':p.up?'es un escalón de preparación, más fácil que lo que cae':`es un problema de preparación de nivel ${p.n}`;
+  return `<section class="card stack"><div class="card-h"><h2>¿Puede caer en Murcia?</h2>${salChip(p)}</div>
+    <p class="small" style="margin:0">Estimamos que ${why[0]}; ${why[1]}, y ${why[2]}. Además, este ejercicio ${est} (parecido al estilo de Murcia: ${Math.round(s.st*100)} %%).</p>`.replace('%%','%')+
+    `${p.up?`<div class="note small"><b>Es un escalón.</b> Así no cae en el examen: sirve para preparar ${byId(p.up)?'«'+esc(byId(p.up).ti)+'»':'un problema de Murcia'}. Úsalo cuando te atasques en ese problema.</div>`:''}${s.last&&!p.up?'<div class="note small"><b>Déjalo para el final.</b> Se parece poco a lo que suele caer en Murcia. Te lo proponemos menos en la práctica adaptativa; hazlo cuando domines los de probabilidad alta y media.</div>':''}
+    <p class="tiny muted" style="margin:0">Es una estimación orientativa a partir de exámenes anteriores; los tribunales cambian. <a href="#/metodo">Cómo la calculamos</a></p></section>`;
+}
 /* ---------- Teoría y escalera ---------- */
 function teoHTML(sbId, {open=false, title='Teoría relacionada', note=''}={}){
   const t=TEO[sbId]; if(!t||!t.it.length) return '';
   return `<details class="teo" ${open?'open':''}><summary class="small"><b>${esc(title)}</b> <span class="muted">· ${esc(sbId)} · ${esc(subById(sbId).name)}</span></summary>
     <div class="stack small" style="gap:6px;margin-top:8px">${note?`<span class="tiny muted">${esc(note)}</span>`:''}${t.it.map(x=>`<div>${mdi(x)}</div>`).join('')}
+    ${t.tec&&t.tec.length?`<div><b>Técnicas habituales</b>${t.tec.map(x=>`<span style="display:block">• ${mdi(x)}</span>`).join('')}</div>`:''}
     ${t.warn?`<div class="typical"><b>Trampa habitual:</b> ${mdi(t.warn)}</div>`:''}</div></details>`;
 }
 function ladderChain(p){
@@ -323,7 +338,7 @@ function recsHTML(sbIds){
 function probList(ps){
   if(!ps.length) return `<p class="muted">No hay problemas con estos filtros.</p>`;
   return `<div class="list">${ps.map(p=>{ const at=S.attempts[p.id]; const best=at?Math.max(...at.map(a=>a.s)):null;
-    return `<div class="li" data-go="#/p/${p.id}"><div class="stack" style="gap:4px"><span class="t">${esc(p.ti)}</span><div class="row" style="gap:6px">${chipOrigin(p)}<span class="chip">${dotb(p.b)}${p.sb}</span><span class="chip">Nivel ${p.n}</span></div><div class="ex">${mdi(snippet(p.st))}</div></div>
+    return `<div class="li" data-go="#/p/${p.id}"><div class="stack" style="gap:4px"><span class="t">${esc(p.ti)}</span><div class="row" style="gap:6px">${chipOrigin(p)}<span class="chip">${dotb(p.b)}${p.sb}</span><span class="chip">Nivel ${p.n}</span>${salChip(p)}</div><div class="ex">${mdi(snippet(p.st))}</div></div>
     <div class="small num">${best==null?'':best>=.75?`<span class="pill-status st-ok">${fmt1(best*10)}</span>`:`<span class="pill-status st-warn">${fmt1(best*10)}</span>`}</div></div>`; }).join('')}</div>`;
 }
 
@@ -338,6 +353,7 @@ V.p = (id) => {
     <details><summary class="small"><b>Ver la solución</b></summary><div class="sol" style="margin-top:10px">${md(p.so)}</div>${p.er?`<div class="typical" style="margin-top:10px"><b>Error típico:</b> ${mdi(p.er)}</div>`:''}</details>
     ${teoHTML(p.sb,{note:'No destripa el problema: son los resultados que suelen hacer falta en este subbloque.'})}
     <div class="row between"><span class="tiny muted">${p.src?'Fuente: '+esc(p.src):''}</span><a class="btn sm" href="${errataUrl(p)}" target="_blank" rel="noopener">Avisar de una errata</a></div></section>
+  ${salCard(p)}
   ${ladderHTML(p)}
   ${(()=>{ const hs=S.hist.filter(h=>h.pid===p.id&&h.items).slice().reverse(); return `<section class="card stack"><div class="card-h"><h2>Tus correcciones de este problema</h2><span class="sub">${hs.length?hs.length+(hs.length>1?' intentos':' intento'):'Aún no lo has corregido'}</span></div>
     ${hs.length?hs.map((h,i)=>`<details ${i===0?'open':''}><summary><b>${esc(fdate(h.d))} · ${fmt1(h.s*10)} / 10</b> <span class="small muted">· ${h.mode==='simulacro'?'simulacro':'práctica'}${h.ia?' · corregido con IA':''} · ${h.items.filter(x=>x.v<1).length} fallos</span></summary><div class="stack" style="margin-top:10px">${reportHTML(h.items, h.falt)}</div></details>`).join(''):`<p class="muted small" style="margin:0">Cuando lo resuelvas y te corrijas, aquí verás la rúbrica anotada de cada intento.</p>`}
@@ -363,7 +379,7 @@ V.practicar = (arg, q) => {
   const banner = origin&&origin.id!==p.id ? `<div class="note hi row between"><span><b>Has bajado un escalón</b> desde «${esc(origin.ti)}» (nivel ${origin.n}). Cuando resuelvas este, vuelve a subir.</span><button class="btn sm" data-act="ladderBack">${ico('up')}Volver a «${esc(origin.ti)}»</button></div>` : '';
   const top0 = `${head(f.sb?'Practicar · '+f.sb:f.b?'Practicar · '+BLOQ[f.b].name:'Practicar · plan adaptativo', f.sb?subById(f.sb).name:'Tu siguiente problema', f.sb||f.b?'':'Te damos el problema que más acerca tu nota a tu objetivo, priorizando lo que cae en Murcia.')}${pr.one?'':filt}`;
   const top = top0 + banner;
-  const prob = `<section class="card prob stack"><div class="row between"><div class="row">${chipOrigin(p)}${chipSub(p.sb)}${chipLv(p.n)}</div>${pr.stage==='work'?`<span class="timer" data-t0="${pr.t0}">0:00</span>`:''}</div>
+  const prob = `<section class="card prob stack"><div class="row between"><div class="row">${chipOrigin(p)}${chipSub(p.sb)}${chipLv(p.n)}${salChip(p)}</div>${pr.stage==='work'?`<span class="timer" data-t0="${pr.t0}">0:00</span>`:''}</div>
     <h2>${esc(p.ti)}</h2><div class="st">${md(p.st)}</div>
     ${pr.stage==='work'?`${p.h.slice(0,pr.hints).map((h,i)=>`<div class="note small"><b>Pista ${i+1}.</b> ${mdi(h)}</div>`).join('')}
     ${teoHTML(p.sb,{title:'Ver la teoría relacionada', note:'Consultarla no cuenta como pista. Son los resultados que suelen hacer falta en este subbloque; en el examen tendrás que enunciarlos con sus hipótesis.'})}
@@ -705,6 +721,11 @@ V.metodo = () => {
     <p class="small">Es adaptativa y bayesiana. Para cada bloque partimos de una distribución de posibles niveles centrada en 1.300 (entre 2.º de Bachillerato y 1.º de grado) y muy ancha. Cada respuesta la actualiza con el modelo de respuesta al ítem de tres parámetros:</p>
     <p>$$P(\text{acierto}\mid\theta) = c + (1-c)\,\frac{1}{1+10^{(D-\theta)/250}},\qquad c = 0{,}25$$</p>
     <p class="small">$c$ es la probabilidad de acertar al azar con cuatro opciones, y «No lo sé» no la incluye. La siguiente pregunta de cada bloque es la de dificultad más cercana a tu nivel estimado en ese momento, que es la que más información da, y procuramos que toque subbloques distintos. Tu punto de partida es la media de la distribución final y el margen de error es su desviación típica. En la prueba completa (6 preguntas por bloque) ese margen suele quedar por debajo de un escalón. Los subbloques que han salido parten de tu nivel en el bloque, corregido según acertaste o fallaste sus preguntas.</p></section>
+  <section class="card stack"><h2>8. Probabilidad de que salga un ejercicio</h2>
+    <p class="small">Para cada subbloque estimamos qué parte de un examen de Murcia le corresponde, mezclando tres fuentes: lo que ha caído en Murcia desde 2002 (65 %, con los exámenes desde 2018 contando doble), lo que ha caído en 20 convocatorias de otras comunidades entre 1994 y 2010 (25 %, 104 problemas clasificados por subbloque) y un reparto uniforme entre los 32 subbloques (10 %), para no dar nunca probabilidad cero. Con esa cuota $q$ y cinco ejercicios por examen:</p>
+    <p>$$P(\text{cae el subbloque}) = 1-(1-q)^5$$</p>
+    <p class="small">Después la multiplicamos por el parecido del ejercicio al estilo de Murcia: 1 si es oficial, 0,95 si es gemelo, 0,85 si es de estilo Murcia y entre 0,2 y 0,75 si es de preparación, según su nivel. El resultado se muestra como probabilidad <b>alta</b> (≥ 0,15), <b>media</b> (≥ 0,08), <b>baja</b> (≥ 0,035) o <b>muy baja</b>. Los ejercicios con parecido menor de 0,5 o de subbloques que casi nunca caen se marcan «Para el final»: la práctica adaptativa solo los propone cuando ya has superado los demás de tu nivel, y el banco los ordena al final.</p>
+    <div class="scroll-x"><table class="tbl"><thead><tr><th>Subbloque</th><th>En Murcia</th><th>Otras comunidades</th><th>Cae en un examen</th></tr></thead><tbody>${SUB.slice().sort((a,b)=>SAL[b.id].pe-SAL[a.id].pe).map(s=>`<tr><td>${dotb(s.b)} ${s.id} · ${esc(s.name)}</td><td class="small">${SAL[s.id].years.join(', ')||'—'}</td><td class="num">${SAL[s.id].oc}</td><td class="num">${Math.round(SAL[s.id].pe*100)} %</td></tr>`).join('')}</tbody></table></div></section>
   <section class="card stack"><h2>Límites del método</h2>
     <div class="stack small">
       <span>• <b>Te corriges tú.</b> La estimación es tan buena como tu corrección. Por eso la rúbrica baja a indicadores concretos: es más difícil engañarse marcando «bien» un paso concreto que poniéndose un 7 a ojo.</span>
@@ -756,15 +777,16 @@ V.oficial = () => `${head('Fuentes oficiales','Información oficial','Los docume
 /* ---------- Banco, importar, alumnos, cuenta ---------- */
 V.banco = () => {
   const f=UI.bank; const q=f.q.trim().toLowerCase();
-  const ps=bank().filter(p=>(!f.b||p.b===f.b)&&(!f.sb||p.sb===f.sb)&&(!f.n||p.n===+f.n)&&(f.m===''||(f.m==='prep'?!p.m:p.m===f.m))&&(!q||(p.ti+' '+p.st).toLowerCase().includes(q)));
+  const ps=bank().filter(p=>(!f.b||p.b===f.b)&&(!f.sb||p.sb===f.sb)&&(!f.n||p.n===+f.n)&&(f.m===''||(f.m==='prep'?!p.m:p.m===f.m))&&(!q||(p.ti+' '+p.st).toLowerCase().includes(q))&&(!f.sal||salida(p).k===f.sal)).sort((x,y)=>salida(y).sc-salida(x).sc);
   const cnt=m=>bank().filter(p=>m==='prep'?!p.m:p.m===m).length;
   return `${head(bank().length+' problemas resueltos','Banco de problemas','Todos los problemas tienen solución completa redactada como pide el tribunal. Los gemelos reproducen la estructura de un ejercicio real de Murcia con otros datos.')}
   <section class="card stack"><div class="seg" role="group" aria-label="Origen">${[['','Todos'],['oficial','Oficiales de Murcia ('+cnt('oficial')+')'],['gemelo','Gemelos ('+cnt('gemelo')+')'],['estilo','Estilo Murcia ('+cnt('estilo')+')'],['prep','Preparación ('+cnt('prep')+')']].map(([v,l])=>`<button aria-pressed="${f.m===v}" data-act="bf" data-f="m" data-v="${v}">${l}</button>`).join('')}</div>
-    <div class="grid g4"><div class="field"><label for="bf-b">Bloque</label><select id="bf-b" data-change="bfSel" data-f="b"><option value="">Todos</option>${BK.map(b=>`<option value="${b}" ${f.b===b?'selected':''}>${esc(BLOQ[b].name)}</option>`).join('')}</select></div>
+    <div class="grid g4" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"><div class="field"><label for="bf-b">Bloque</label><select id="bf-b" data-change="bfSel" data-f="b"><option value="">Todos</option>${BK.map(b=>`<option value="${b}" ${f.b===b?'selected':''}>${esc(BLOQ[b].name)}</option>`).join('')}</select></div>
     <div class="field"><label for="bf-sb">Subbloque</label><select id="bf-sb" data-change="bfSel" data-f="sb"><option value="">Todos</option>${SUB.filter(s=>!f.b||s.b===f.b).map(s=>`<option value="${s.id}" ${f.sb===s.id?'selected':''}>${s.id} · ${esc(s.name)}</option>`).join('')}</select></div>
     <div class="field"><label for="bf-n">Nivel</label><select id="bf-n" data-change="bfSel" data-f="n"><option value="">Todos</option>${LEVELS.map(l=>`<option value="${l.n}" ${+f.n===l.n?'selected':''}>${l.n} · ${esc(l.name)}</option>`).join('')}</select></div>
+    <div class="field"><label for="bf-sal">Probabilidad de salir</label><select id="bf-sal" data-change="bfSel" data-f="sal"><option value="">Todas</option>${['alta','media','baja','muy baja'].map(k=>`<option value="${k}" ${f.sal===k?'selected':''}>${k[0].toUpperCase()+k.slice(1)}</option>`).join('')}</select></div>
     <div class="field"><label for="bf-q">Buscar</label><input type="search" id="bf-q" value="${esc(f.q)}" data-change="bfSel" data-f="q" placeholder="Palabra del enunciado"></div></div></section>
-  <section class="card"><div class="card-h"><h2>${ps.length} problemas</h2></div>${probList(ps)}</section>`;
+  <section class="card"><div class="card-h"><h2>${ps.length} problemas</h2><span class="sub">De más a menos probable en Murcia · los marcados «Para el final» se parecen poco a lo que cae</span></div>${probList(ps)}</section>`;
 };
 V.importar = () => {
   if(ME.role!=='profesor') return V.inicio();
@@ -799,6 +821,12 @@ V.alumno = (id) => {
   <section class="card"><h2>Lo que le falta</h2>${top.slice(0,5).map(({b,x})=>gapItem(b,x,s)).join('')}</section>
   <section class="card"><h2>Rúbrica</h2>${dimBars(dimProfile(s), targetNota(s))}</section>`;
 };
+V.legal = () => `${head('Plaza en n pasos','Aviso legal y derechos','')}
+  <section class="card stack small">
+    <p><b>Titularidad.</b> Los problemas, soluciones, rúbricas detalladas, fichas de teoría, preguntas de la prueba de nivel, textos, diseño y código de esta web son obra de Plaza en n pasos («en n pasos»). © 2026. Todos los derechos reservados.</p>
+    <p><b>Uso permitido.</b> Puedes usar la web y sus contenidos para tu preparación personal. No está permitido copiarlos, reproducirlos, distribuirlos, publicarlos en otras webs o academias, ni extraerlos de forma automatizada (scraping, descarga masiva o uso para entrenar modelos de inteligencia artificial) sin autorización expresa por escrito. Esta reserva de derechos se hace a efectos del artículo 67.3 del Real Decreto-ley 24/2021 (excepción de minería de textos y datos).</p>
+    <p><b>Material oficial.</b> Los enunciados de los exámenes oficiales y los criterios de valoración son documentos públicos de la Comunidad Autónoma de la Región de Murcia; las soluciones y los comentarios que los acompañan son propios.</p>
+    <p><b>Errores.</b> Si encuentras una errata, usa el botón «Avisar de una errata» del problema.</p></section>`;
 V.cuenta = () => {
   const style=Store.get('ui.style','editorial');
   return `${head('Mi cuenta', ME.name, esc(ME.email)+' · '+(ME.role==='profesor'?'Profesor · clase '+esc(ME.classCode):'Opositor'+(ME.classCode?' · clase '+esc(ME.classCode):'')))}

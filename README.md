@@ -2,7 +2,9 @@
 
 App web para preparar la parte A (problemas) de la oposición de Matemáticas de Secundaria de la Región de Murcia. Proyecto de «en n pasos».
 
-Versión de prueba gratuita. Los datos de cada usuario se guardan en su navegador.
+Versión de prueba gratuita en https://manuasg.github.io/plaza-en-n-pasos/. Los datos de cada usuario se guardan en su navegador.
+
+**Todos los derechos reservados** (ver `LICENSE`). Que el código sea visible no autoriza a copiarlo ni a reutilizar sus contenidos.
 
 ## Cómo está organizado
 
@@ -12,7 +14,9 @@ Versión de prueba gratuita. Los datos de cada usuario se guardan en su navegado
 | `src/app1.js` | Datos (bloques, subbloques, temas, apariciones en Murcia), modelo de nivel y estimaciones |
 | `src/app2.js` | Vistas, gráficos y rúbrica detallada |
 | `src/app3.js` | Navegación y acciones |
-| `src/probs.txt`, `probs_m.txt`, `probs_o.txt` | Banco de problemas resueltos (preparación, Murcia y gemelos, oficiales antiguos) |
+| `src/probs.txt`, `probs_m.txt`, `probs_o.txt`, `probs_e.txt`, `probs_x.txt` | Banco de problemas resueltos (preparación, Murcia y gemelos, oficiales antiguos, escalones y ampliación) |
+| `src/teoria.txt` | Teoría por subbloque: resultados con hipótesis, técnicas y trampas |
+| `tools/otras_comunidades.json` | Clasificación por subbloque de 104 problemas oficiales de otras comunidades (solo recuentos) |
 | `src/rub.txt` | Rúbricas específicas por problema |
 | `src/diag.txt` | Preguntas de la prueba de nivel |
 | `public/docs/` | Documentos oficiales (criterios de valoración y enunciado de 2021) |
