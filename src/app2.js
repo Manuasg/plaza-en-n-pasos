@@ -868,9 +868,12 @@ V.privacidad = () => `${head('Plaza en n pasos','Privacidad y protección de dat
     <p class="tiny muted" style="margin:0">Última actualización: ${esc(PRIV.fecha)}. Si en el futuro las cuentas pasan a guardarse en un servidor, esta información se actualizará antes de hacerlo y te lo avisaremos.</p></section>`;
 V.legal = () => `${head('Plaza en n pasos','Aviso legal y derechos','')}
   <section class="card stack small">
+    <p><b>Titular.</b> ${esc(PRIV.resp)}. Contacto: ${PRIV.email?`<a href="mailto:${esc(PRIV.email)}">${esc(PRIV.email)}</a>`:'<i>pendiente de publicar</i>'}.</p>
     <p><b>Titularidad.</b> Los problemas, soluciones, rúbricas detalladas, fichas de teoría, preguntas de la prueba de nivel, textos, diseño y código de esta web son obra de Plaza en n pasos («en n pasos»). © 2026. Todos los derechos reservados.</p>
     <p><b>Uso permitido.</b> Puedes usar la web y sus contenidos para tu preparación personal. No está permitido copiarlos, reproducirlos, distribuirlos, publicarlos en otras webs o academias, ni extraerlos de forma automatizada (scraping, descarga masiva o uso para entrenar modelos de inteligencia artificial) sin autorización expresa por escrito. Esta reserva de derechos se hace a efectos del artículo 67.3 del Real Decreto-ley 24/2021 (excepción de minería de textos y datos).</p>
+    <p><b>Web no oficial.</b> Plaza en n pasos es una iniciativa particular. No está vinculada a la Consejería de Educación ni a ningún otro organismo de la Comunidad Autónoma de la Región de Murcia, ni a los tribunales de oposición. Las estimaciones de nota y de probabilidad son orientativas y no garantizan ningún resultado; la información oficial es la publicada en el BORM.</p>
     <p><b>Material oficial.</b> Los enunciados de los exámenes oficiales y los criterios de valoración son documentos públicos de la Comunidad Autónoma de la Región de Murcia; las soluciones y los comentarios que los acompañan son propios.</p>
+    <p><b>Componentes de terceros.</b> Fuentes Barlow, Barlow Condensed y Space Grotesk (licencia SIL Open Font License) y MathJax (licencia Apache 2.0), servidos desde esta misma web.</p>
     <p><b>Errores.</b> Si encuentras una errata, usa el botón «Avisar de una errata» del problema.</p></section>`;
 V.cuenta = () => {
   const style=Store.get('ui.style','editorial');
