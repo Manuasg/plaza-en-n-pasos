@@ -295,6 +295,35 @@ V.sub = (id) => {
   </div>
   <section class="card"><div class="card-h"><h2>Problemas de este subbloque</h2><span class="sub">Primero los de Murcia</span></div>${probList(ps)}</section>`;
 };
+/* ---------- Tutorial inicial ----------
+   Cada paso: ruta, selector que se resalta (o null para centrar), título y texto. Si el elemento no está visible
+   (por ejemplo, el menú en el móvil), el cuadro se centra. */
+const isDemo = () => !!(ME && /@demo\.es$/.test(ME.email));
+function tourSteps(){
+  const st=[
+    {r:'#/inicio', sel:null, t:'Bienvenido a Plaza en n pasos', x: isDemo()
+      ? 'Estás en una <b>cuenta de demostración</b>: tiene ocho semanas de progreso inventado para que veas la web en uso. Puedes tocarlo todo; los cambios se guardan solo en este navegador. En dos minutos te enseño lo principal.'
+      : 'Esta web te prepara para la <b>parte A (problemas)</b> de la oposición de Matemáticas de Murcia: practicas con problemas como los del examen, te corriges con la rúbrica del tribunal y ves cuánto te falta. En dos minutos te enseño lo principal.'},
+    {r:'#/inicio', sel:'.kpis', t:'Tu situación de un vistazo', x:'Tu <b>nivel</b> (escala de 1 a 7, donde 7 es aprobar un problema de Murcia), la <b>nota estimada</b> de la parte A como rango, tu <b>objetivo</b> y cuándo llegarás. Al principio los rangos son amplios: se estrechan con cada problema que corriges.'},
+    {r:'#/diagnostico', sel:'[data-act="diagStart"]', t:'Empieza por la prueba de nivel', x:'Son 15 o 30 preguntas de opción múltiple que se adaptan a tus respuestas. Te sitúa en cada bloque y subbloque para que la web te proponga problemas a tu medida. Si no sabes una, marca «No lo sé»: es mejor que adivinar.'},
+    {r:'#/practicar', sel:'.prob', t:'Practicar', x:'Cada problema indica su origen, subbloque y nivel. Hazlo en papel. Tienes <b>pistas</b>, la <b>teoría relacionada</b> (no cuenta como pista) y los botones <b>Más fácil / Más difícil</b> para bajar o subir un escalón si te atascas.'},
+    {r:'#/practicar', sel:'[data-act="toGrade"]', t:'Corrígete como el tribunal', x:'Al ver la solución te corriges con la <b>rúbrica oficial de Murcia</b> desglosada en indicadores concretos, o pegas tu hoja en tu propia IA (ChatGPT, Claude, Gemini…) con las instrucciones que te damos. La nota mueve tu nivel.'},
+    {r:'#/banco', sel:'.li .pill-status', t:'¿Puede caer en el examen?', x:'Cada problema lleva una <b>probabilidad de salir</b> según lo que ha caído en Murcia y en otras comunidades y lo que se parece al estilo de Murcia. Los marcados <b>«Para el final»</b> se parecen poco: la práctica te los deja para cuando domines los demás.'},
+    {r:'#/murcia', sel:'[data-act="simStart"]', t:'Simulacros de Murcia', x:'Exámenes reales con su tiempo. Antes de empezar haces el <b>triaje</b> (orden y minutos de cada ejercicio) y al final comparas el plan con lo que hiciste. El <b>modo rescate</b> entrena a sacar puntos con el planteamiento cuando no te da tiempo.'},
+    {r:'#/objetivos', sel:'.choice', t:'Tu objetivo y tu plan', x:'Elige tu meta (plaza, aprobar, interinidad…), tus horas por semana y la fecha del examen. Calculamos el nivel que necesitas en cada bloque y un plan semanal.'},
+  ];
+  if(ME&&ME.role==='profesor') st.push({r:'#/alumnos', sel:'.card', t:'Tus alumnos', x:'Comparte tu código de clase. Verás el nivel, la nota estimada y el bloque más flojo de cada alumno que se registre con él en este navegador.'});
+  st.push({r:'#/inicio', sel:'#side .nav', t:'Y además…', x:'En el menú tienes el temario por <b>bloques y subbloques</b>, tu <b>evolución</b> y <b>cómo te medimos</b>. En cada problema puedes <b>avisar de una errata</b>. Este tutorial está siempre en <b>Mi cuenta</b>. ¡A por la plaza, paso a paso!'});
+  return st;
+}
+function tourHTML(){
+  const st=tourSteps(); const i=UI.tour.i; const s=st[i]; const last=i===st.length-1;
+  return `<div class="tour-hl" id="tour-hl"></div><div class="tour-pop" id="tour-pop" role="dialog" aria-modal="true" aria-labelledby="tour-t">
+    <div class="row between"><span class="tiny muted">Paso ${i+1} de ${st.length}</span><button class="icon-btn" data-act="tourEnd" aria-label="Cerrar el tutorial">✕</button></div>
+    <h3 id="tour-t" style="margin:4px 0 6px">${esc(s.t)}</h3><p class="small" style="margin:0">${s.x}</p>
+    <div class="tour-dots">${st.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
+    <div class="row between" style="margin-top:10px"><button class="btn ghost sm" data-act="tourEnd">Saltar</button><div class="row">${i>0?`<button class="btn sm" data-act="tourPrev">Anterior</button>`:''}<button class="btn primary sm" data-act="${last?'tourEnd':'tourNext'}">${last?'Empezar':'Siguiente'}</button></div></div></div>`;
+}
 /* ---------- Probabilidad de salir ---------- */
 const SALCLS={'alta':'st-ok','media':'st-warn','baja':'st-bad','muy baja':'st-bad'};
 const salChip = p => { const s=salida(p); return `<span class="pill-status ${SALCLS[s.k]}" title="Probabilidad estimada de que caiga un ejercicio así en Murcia">Salir: ${s.k}</span>${s.last&&!p.up?'<span class="chip" title="Se parece poco a lo que cae en Murcia: hazlo cuando domines los demás">Para el final</span>':''}`; };
@@ -821,6 +850,22 @@ V.alumno = (id) => {
   <section class="card"><h2>Lo que le falta</h2>${top.slice(0,5).map(({b,x})=>gapItem(b,x,s)).join('')}</section>
   <section class="card"><h2>Rúbrica</h2>${dimBars(dimProfile(s), targetNota(s))}</section>`;
 };
+/* ---------- Privacidad (art. 13 RGPD) ----------
+   PRIV: datos del responsable. Rellenar nombre completo y correo de contacto antes de abrir el registro real. */
+const PRIV = {resp:'Manuel, autor de «en n pasos»', email:'', fecha:'26 de noviembre de 2026'};
+V.privacidad = () => `${head('Plaza en n pasos','Privacidad y protección de datos','Información sobre el tratamiento de tus datos, conforme al artículo 13 del Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018 (LOPDGDD).')}
+  <section class="card stack small">
+    <div class="note ok"><b>En resumen.</b> En esta versión de prueba tu cuenta y tu progreso se guardan <b>solo en tu navegador</b>. No los recibimos, no los vemos y no los compartimos con nadie. No usamos cookies, analítica ni publicidad.</div>
+    <h3 style="margin:4px 0 0">Responsable</h3><p style="margin:0">${esc(PRIV.resp)}. Contacto: ${PRIV.email?`<a href="mailto:${esc(PRIV.email)}">${esc(PRIV.email)}</a>`:'<i>correo de contacto pendiente de publicar</i>'}.</p>
+    <h3 style="margin:4px 0 0">Qué datos y para qué</h3>
+    <p style="margin:0">• <b>Cuenta:</b> nombre, correo y contraseña. La contraseña se guarda transformada con un resumen criptográfico (SHA-256 con sal), nunca en claro. Sirven para separar el progreso de varias personas que usen el mismo navegador.<br>• <b>Progreso:</b> tus correcciones, notas, errores anotados, simulacros, prueba de nivel y objetivos (incluidas las horas de estudio y la fecha de examen que indiques). Sirven para calcular tu nivel y tu plan.<br>• <b>Modo profesor:</b> el código de clase permite al profesor ver, <b>en ese mismo navegador</b>, el progreso de los alumnos que se registraron con su código.</p>
+    <h3 style="margin:4px 0 0">Base jurídica</h3><p style="margin:0">La ejecución del servicio que solicitas al registrarte (art. 6.1.b RGPD). No hay decisiones automatizadas con efectos jurídicos: las estimaciones de nivel son orientativas.</p>
+    <h3 style="margin:4px 0 0">Dónde están y cuánto tiempo</h3><p style="margin:0">En el almacenamiento local (<i>localStorage</i>) de tu navegador, en tu dispositivo, hasta que borres tu cuenta o los datos del navegador. Ese almacenamiento es estrictamente necesario para que la web funcione, por eso no pedimos consentimiento de cookies; no se usa para ningún otro fin.</p>
+    <h3 style="margin:4px 0 0">Destinatarios y proveedores</h3><p style="margin:0">Nadie recibe tus datos de cuenta ni tu progreso. La web está alojada en GitHub Pages (GitHub, Inc.), que, como cualquier servidor, registra la dirección IP de quien visita la página por motivos técnicos y de seguridad, según su propia política de privacidad. Las fuentes tipográficas y el motor de fórmulas se sirven desde esta misma web, sin conexiones a terceros.</p>
+    <h3 style="margin:4px 0 0">Herramientas opcionales que salen de la web</h3><p style="margin:0">• <b>Corregir con tu IA:</b> las instrucciones y las fotos de tu hoja las envías tú a la IA que elijas (ChatGPT, Claude, Gemini…), bajo las condiciones de ese servicio. Esta web no las recibe.<br>• <b>Erratas y comentarios:</b> se publican como incidencias en GitHub, visibles para cualquiera y asociadas a tu cuenta de GitHub. No escribas en ellas datos personales.</p>
+    <h3 style="margin:4px 0 0">Tus derechos</h3><p style="margin:0">Puedes acceder a tus datos y llevártelos («Descargar mis datos»), rectificar tu nombre, borrar tu progreso o eliminar tu cuenta desde <a href="#/cuenta">Mi cuenta</a>. También puedes oponerte o pedir la limitación del tratamiento escribiendo al responsable, y presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">aepd.es</a>).</p>
+    <h3 style="margin:4px 0 0">Edad</h3><p style="margin:0">El servicio está pensado para personas adultas que preparan oposiciones docentes.</p>
+    <p class="tiny muted" style="margin:0">Última actualización: ${esc(PRIV.fecha)}. Si en el futuro las cuentas pasan a guardarse en un servidor, esta información se actualizará antes de hacerlo y te lo avisaremos.</p></section>`;
 V.legal = () => `${head('Plaza en n pasos','Aviso legal y derechos','')}
   <section class="card stack small">
     <p><b>Titularidad.</b> Los problemas, soluciones, rúbricas detalladas, fichas de teoría, preguntas de la prueba de nivel, textos, diseño y código de esta web son obra de Plaza en n pasos («en n pasos»). © 2026. Todos los derechos reservados.</p>
@@ -835,7 +880,10 @@ V.cuenta = () => {
   <section class="card stack"><h2>Comentarios y erratas</h2><p class="small muted">Esta es una versión de prueba y tu opinión la mejora. Se abre una página de GitHub con el formulario ya preparado (hace falta una cuenta gratuita de GitHub). En cada problema hay además un botón «Avisar de una errata» con su identificador ya puesto.</p>
     <div class="row"><a class="btn primary" href="${comentUrl()}" target="_blank" rel="noopener">Enviar un comentario</a></div></section>
   <section class="card stack"><h2>Datos</h2><p class="small muted">En esta versión de demostración tus datos se guardan en este navegador. En la versión publicada irán a un servidor con copia de seguridad.</p>
-    <div class="row"><button class="btn" data-act="export">Descargar mis datos</button><button class="btn bad" data-act="reset">Borrar mi progreso</button><button class="btn" data-act="logout">Cerrar sesión</button></div></section>`;
+    <div class="row"><button class="btn" data-act="export">Descargar mis datos</button><button class="btn bad" data-act="reset">Borrar mi progreso</button><button class="btn bad" data-act="delAccount">Eliminar mi cuenta</button><button class="btn" data-act="logout">Cerrar sesión</button></div>
+    <div class="row" style="align-items:flex-end"><div class="field" style="flex:1;min-width:200px"><label for="c-name">Tu nombre</label><input type="text" id="c-name" value="${esc(ME.name)}" autocomplete="name"></div><button class="btn sm" data-act="saveName">Guardar nombre</button></div>
+    <p class="tiny muted" style="margin:0">Más información en <a href="#/privacidad">Privacidad y protección de datos</a>.</p></section>
+  <section class="card stack"><h2>Tutorial</h2><p class="small muted" style="margin:0">Un recorrido de dos minutos por lo principal de la web.</p><div class="row"><button class="btn" data-act="tourStart">Ver el tutorial</button></div></section>`;
 };
 
 /* ---------- Acceso ---------- */
@@ -849,9 +897,11 @@ function authHTML(mode){
     <div class="field"><label for="f-pass">Contraseña</label><input type="password" id="f-pass" name="pass" autocomplete="${mode==='login'?'current-password':'new-password'}" required></div>
     ${mode==='register'?`<div class="field"><label>Soy</label><div class="seg"><label class="row" style="font-weight:500"><input type="radio" name="role" value="alumno" checked> Opositor</label><label class="row" style="font-weight:500"><input type="radio" name="role" value="profesor"> Profesor o academia</label></div></div>
     <div class="field"><label for="f-code">Código de clase (opcional)</label><input type="text" id="f-code" name="classCode" placeholder="MAT-XXXX"></div>`:''}
+    ${mode==='register'?`<label class="row small" style="font-weight:500;align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" name="priv" value="1" required style="margin-top:3px"> <span>He leído la <a href="#/privacidad" target="_blank">información sobre privacidad</a>. Mi cuenta y mi progreso se guardan solo en este navegador.</span></label>`:''}
     <div class="note bad small hidden" id="f-err"></div>
     <button class="btn primary" type="submit">${mode==='login'?'Entrar':'Crear cuenta'}</button>
     <button class="btn ghost" type="button" data-act="${mode==='login'?'toRegister':'toLogin'}">${mode==='login'?'¿No tienes cuenta? Regístrate':'Ya tengo cuenta'}</button>
+    <p class="tiny muted" style="margin:0"><a href="#/privacidad">Privacidad</a> · <a href="#/legal">Aviso legal</a></p>
     <div class="divider">Cuentas de demostración</div>
     <div class="row"><button class="btn sm" type="button" data-act="demo" data-u="alumno@demo.es">Opositor</button><button class="btn sm" type="button" data-act="demo" data-u="lucia@demo.es">Opositora avanzada</button><button class="btn sm" type="button" data-act="demo" data-u="profe@demo.es">Profesor</button></div></form></div>`;
 }

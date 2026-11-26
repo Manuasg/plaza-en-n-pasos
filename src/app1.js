@@ -303,6 +303,7 @@ const Backend = {
   async login(email, pass){ const u=this.users()[email.trim().toLowerCase()]; if(!u || u.hash !== await hashPass(pass,u.salt)) throw new Error('Correo o contraseña incorrectos.'); Store.set('session', u.id); return u; },
   logout(){ Store.del('session'); },
   current(){ const id=Store.get('session',null); return id ? Object.values(this.users()).find(u=>u.id===id)||null : null; },
+  deleteUser(u){ const users=this.users(); delete users[u.email]; Store.set('users', users); Store.del('state.'+u.id); Store.del('tour.'+u.id); Store.del('session'); },
   updateUser(u){ const users=this.users(); users[u.email]=u; Store.set('users', users); },
   loadState(id){ const s=Store.get('state.'+id, null); return s&&s.v===3?s:null; },
   saveState(id, s){ Store.set('state.'+id, s); },

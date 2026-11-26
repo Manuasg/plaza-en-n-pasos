@@ -7,9 +7,16 @@
 <meta name="googlebot" content="noarchive">
 <meta name="copyright" content="© 2026 Plaza en n pasos. Todos los derechos reservados.">
 <title>Plaza en n pasos · Oposición de Matemáticas de Murcia</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap">
 <style>
+/* Fuentes servidas desde la propia web (sin enviar la IP de los visitantes a Google). Licencia SIL OFL. */
+@font-face{font-family:'Barlow';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-italic.woff2) format('woff2')}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-condensed-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/barlow-condensed-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/space-grotesk-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/space-grotesk-latin-700-normal.woff2) format('woff2')}
 /* Kit «en n pasos»: marfil, tinta y ámbar. Menú lateral plegable a la izquierda, contenido fluido.
    Colores de bloque validados (daltonismo y contraste) sobre el fondo marfil. */
 :root{
@@ -231,11 +238,17 @@ mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
 .teo summary{cursor:pointer}
 .li.cur{background:rgba(239,177,83,.14);cursor:default}
 .ladder{gap:8px;align-items:center}
+/* Tutorial */
+.tour-hl{position:fixed;z-index:80;border-radius:12px;box-shadow:0 0 0 9999px rgba(18,23,33,.58);outline:3px solid var(--hi);transition:all .25s ease;pointer-events:none}
+.tour-pop{position:fixed;z-index:81;background:var(--sheet);color:var(--ink);border-radius:14px;padding:14px 16px;box-shadow:0 12px 40px rgba(0,0,0,.3);max-width:calc(100vw - 24px)}
+.tour-pop.center{left:50%!important;top:50%!important;transform:translate(-50%,-50%);width:min(420px,calc(100vw - 24px))}
+.tour-dots{display:flex;gap:5px;margin-top:10px}.tour-dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.tour-dots i.on{background:var(--hi)}
+@media (max-width:640px){.tour-pop:not(.center){left:12px!important;right:12px;width:auto!important;top:auto!important;bottom:12px}}
 </style>
 <script>
 window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},svg:{fontCache:'global'},startup:{typeset:false}};
 </script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js" async></script>
+<script src="vendor/mathjax/tex-svg.js" async></script>
 </head>
 <body data-style="editorial">
 <div class="layout">
@@ -244,7 +257,7 @@ window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$
     <div class="topbar"><button class="icon-btn" data-act="menuOpen" aria-label="Abrir el menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><span class="mark">n<svg viewBox="0 0 18 18" aria-hidden="true"><rect x="0" y="12" width="5" height="5" rx="1" fill="#EFB153"/><rect x="6.5" y="6" width="5" height="5" rx="1" fill="#EFB153"/><rect x="13" y="0" width="5" height="5" rx="1" fill="#EFB153"/></svg></span><b style="font-family:var(--brand)">Plaza en n pasos</b></div>
     <div class="beta" role="note">Versión de prueba gratuita · Tus datos se guardan solo en este navegador: si cambias de dispositivo o borras el historial, se pierden.</div>
     <main id="app"></main>
-    <footer class="foot"><span>© 2026 Plaza en n pasos · Todos los derechos reservados · <a href="#/legal">Aviso legal</a></span><span>Preparación de la parte A · Oposición de Matemáticas · Región de Murcia</span></footer>
+    <footer class="foot"><span>© 2026 Plaza en n pasos · Todos los derechos reservados · <a href="#/legal">Aviso legal</a> · <a href="#/privacidad">Privacidad</a></span><span>Preparación de la parte A · Oposición de Matemáticas · Región de Murcia</span></footer>
   </div>
 </div>
 <div class="scrim" data-act="menuClose"></div>

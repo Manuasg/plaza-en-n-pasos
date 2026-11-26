@@ -1,13 +1,34 @@
 /* ================= Render y acciones ================= */
 function render(){
   const rt=parseHash(); const side=$('#side'), app=$('#app');
-  if(!ME){ document.body.classList.add('noauth'); side.innerHTML=''; app.innerHTML=authHTML(UI.auth||'login'); return; }
+  if(!ME){ document.body.classList.add('noauth'); side.innerHTML=''; app.innerHTML=(rt.name==='privacidad'||rt.name==='legal')?`<div style="max-width:860px;margin:0 auto;padding:24px">${V[rt.name]()}<p><a href="#/inicio">← Volver</a></p></div>`:authHTML(UI.auth||'login'); return; }
   document.body.classList.remove('noauth');
   side.innerHTML=sideHTML(rt);
   const fn=V[rt.name]||V.inicio;
   let html; try{ html=fn(rt.arg, rt.q); }catch(e){ console.error(e); html=`<div class="note bad">Algo ha fallado al mostrar esta página. <a href="#/inicio">Volver al panel</a></div>`; }
-  app.innerHTML=html; bindCharts(app); typeset(app); tick();
+  app.innerHTML=html; bindCharts(app); typeset(app); tick(); drawTour();
 }
+/* Tutorial: capa con el elemento resaltado y un cuadro explicativo. */
+function drawTour(){
+  let root=$('#tour'); if(!UI.tour||!ME){ if(root) root.remove(); document.body.classList.remove('touring'); return; }
+  if(!root){ root=document.createElement('div'); root.id='tour'; document.body.appendChild(root); }
+  document.body.classList.add('touring'); root.innerHTML=tourHTML(); placeTour(true);
+}
+function placeTour(scroll){
+  const st=tourSteps(); const s=UI.tour&&st[UI.tour.i]; const hl=$('#tour-hl'), pop=$('#tour-pop'); if(!s||!hl||!pop) return;
+  const el=s.sel?document.querySelector(s.sel):null; const vis=el && el.getClientRects().length && el.offsetWidth>0;
+  if(!vis){ hl.style.cssText='left:50%;top:50%;width:0;height:0'; pop.classList.add('center'); pop.style.left=pop.style.top=''; return; }
+  if(scroll){ const r0=el.getBoundingClientRect(); if(r0.top<70||r0.bottom>innerHeight-40) el.scrollIntoView({block:'center'}); }
+  const r=el.getBoundingClientRect(); const pad=6;
+  hl.style.cssText=`left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+2*pad}px;height:${r.height+2*pad}px`;
+  pop.classList.remove('center'); const pw=Math.min(380, innerWidth-24), ph=pop.offsetHeight||220;
+  let top = r.bottom+pad+12; if(top+ph>innerHeight-12) top = r.top-pad-12-ph; if(top<12) top = Math.max(12, innerHeight-ph-12);
+  let left = Math.min(Math.max(12, r.left), innerWidth-pw-12);
+  pop.style.width=pw+'px'; pop.style.left=left+'px'; pop.style.top=top+'px';
+}
+window.addEventListener('scroll', ()=>{ if(UI.tour) placeTour(false); }, {passive:true});
+window.addEventListener('resize', ()=>{ if(UI.tour) placeTour(false); });
+function tourGo(i){ const st=tourSteps(); UI.tour={i:clamp(i,0,st.length-1)}; const r=st[UI.tour.i].r; closeMenu(); if(location.hash===r) render(); else location.hash=r; }
 function tick(){
   document.querySelectorAll('.timer[data-t0]').forEach(el=>{ const s=Math.floor((Date.now()-(+el.dataset.t0))/1000); el.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); });
   document.querySelectorAll('.timer[data-end]').forEach(el=>{ const s=Math.max(0,Math.floor(((+el.dataset.end)-Date.now())/1000)); el.textContent=Math.floor(s/3600)+':'+String(Math.floor(s%3600/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
@@ -160,6 +181,13 @@ const A = {
   export(){ const blob=new Blob([JSON.stringify({usuario:{name:ME.name,email:ME.email}, progreso:S},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='plaza-en-n-pasos-'+dayKey(Date.now())+'.json'; document.body.appendChild(a); a.click(); a.remove(); },
   reset(el){ if(!UI.resetArm){ UI.resetArm=true; el.textContent='Pulsa otra vez para borrarlo todo'; setTimeout(()=>{ UI.resetArm=false; },5000); return; }
     UI.resetArm=false; S=freshState(); save(); UI.pr=null; toast('Progreso borrado.'); go('#/inicio'); },
+  saveName(){ const v=($('#c-name').value||'').trim(); if(!v){ toast('Escribe un nombre.'); return; } ME.name=v; Backend.updateUser(ME); toast('Nombre guardado.'); render(); },
+  delAccount(el){ if(!UI.delArm){ UI.delArm=true; el.textContent='Pulsa otra vez: se borran tu cuenta y tu progreso'; setTimeout(()=>{ UI.delArm=false; },5000); return; }
+    UI.delArm=false; Backend.deleteUser(ME); ME=null; S=null; UI.pr=null; UI.sim=null; UI.diag=null; location.hash='#/inicio'; render(); toast('Cuenta eliminada de este navegador.'); },
+  tourStart(){ tourGo(0); },
+  tourNext(){ tourGo(UI.tour.i+1); },
+  tourPrev(){ tourGo(UI.tour.i-1); },
+  tourEnd(){ UI.tour=null; if(ME) Store.set('tour.'+ME.id, true); drawTour(); toast('Puedes volver a ver el tutorial en Mi cuenta.'); },
   logout(){ Backend.logout(); ME=null; S=null; UI.pr=null; UI.sim=null; UI.diag=null; location.hash='#/inicio'; render(); },
   toRegister(){ UI.auth='register'; render(); },
   toLogin(){ UI.auth='login'; render(); },
@@ -179,7 +207,7 @@ const INP = {
   rnote(el){ const {rk}=rkKey(el.dataset.key); rk.n[+el.dataset.i]=el.value; },
   imp(el){ UI.imp=el.value; const n=parseProblems(UI.imp).length; const b=document.querySelector('[data-act="impSave"]'); if(b){ b.disabled=!n; b.textContent='Añadir '+n+' '+(n===1?'problema':'problemas'); } }
 };
-async function login(u){ ME=u; S=Backend.loadState(u.id)||freshState(); if(!Backend.loadState(u.id)) save(); UI.auth=null; location.hash='#/inicio'; render(); window.scrollTo(0,0); }
+async function login(u){ ME=u; S=Backend.loadState(u.id)||freshState(); if(!Backend.loadState(u.id)) save(); UI.auth=null; UI.tour = Store.get('tour.'+u.id, false) ? null : {i:0}; location.hash='#/inicio'; render(); window.scrollTo(0,0); }
 
 document.addEventListener('click', ev=>{
   const el=ev.target.closest('[data-act],[data-go]'); if(!el) return;
@@ -191,10 +219,11 @@ document.addEventListener('input', ev=>{ const el=ev.target; if(el.dataset && el
 document.addEventListener('submit', async ev=>{
   const f=ev.target.closest('form[data-form]'); if(!f) return; ev.preventDefault();
   const fd=Object.fromEntries(new FormData(f)); const err=$('#f-err');
+  if(f.dataset.form==='register' && !fd.priv){ err.textContent='Marca la casilla de privacidad para crear la cuenta.'; err.classList.remove('hidden'); return; }
   try{ const u = f.dataset.form==='login' ? await Backend.login(fd.email||'', fd.pass||'') : await Backend.register({name:fd.name||'', email:fd.email||'', pass:fd.pass||'', role:fd.role||'alumno', classCode:fd.classCode||''}); await login(u); }
   catch(e){ err.textContent=e.message; err.classList.remove('hidden'); }
 });
-document.addEventListener('keydown', ev=>{ if(ev.key==='Escape') closeMenu(); });
+document.addEventListener('keydown', ev=>{ if(ev.key==='Escape'){ closeMenu(); if(UI.tour) A.tourEnd(); } else if(UI.tour && ev.key==='ArrowRight'){ const st=tourSteps(); if(UI.tour.i<st.length-1) A.tourNext(); } else if(UI.tour && ev.key==='ArrowLeft' && UI.tour.i>0) A.tourPrev(); });
 let rzT, rzW=window.innerWidth; window.addEventListener('resize', ()=>{ clearTimeout(rzT); rzT=setTimeout(()=>{ if(window.innerWidth!==rzW){ rzW=window.innerWidth; if(ME && document.querySelector('.chart')) render(); } }, 250); });
 /* Al copiar texto de la web se añade la autoría (no afecta a los campos de texto ni a las instrucciones para la IA). */
 document.addEventListener('copy', ev=>{
